@@ -30,4 +30,19 @@
 - GitHub: github.com/cathackr/SmartCompute
 - Location: Argentina (remote worldwide)
 
-Payment: PayPal,Dolar App, Bitso, Cuenta DNI, Mercado Pago,BNA+, Bank Transfer, Crypto (BTC/USDT)
+## 💰 Payment Methods
+
+### For Argentine Clients:
+- **MercadoPago**: Link directo (acepta todas las tarjetas)
+- **Transferencia bancaria**: CBU disponible
+- **Efectivo**: Coordinamos por Rapipago/PagoFacil
+
+### For International Clients:
+- **Crypto**: USDT (TRC20), BTC, ETH via Bitso
+- **Bank transfer**: USD account available
+- **Wire transfer**: SWIFT available
+
+### Special Discounts:
+- 🪙 Crypto payments: 5% OFF
+- 🇦🇷 Argentine companies: 20% OFF  
+- 💵 Cash/Efectivo: 10% OFF
