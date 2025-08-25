@@ -46,3 +46,26 @@
 - 🪙 Crypto payments: 5% OFF
 - 🇦🇷 Argentine companies: 20% OFF  
 - 💵 Cash/Efectivo: 10% OFF
+## Métodos de Pago
+
+Argentina:
+- MercadoPago: link.mercadopago.com.ar/smartcompu1
+- Transferencia: Alias smartcompute.dni
+- Efectivo coordinado
+
+Internacional:
+- USDT : Para pagar por transferencia USD:
+
+Beneficiario: Martin Dario Tribarne
+Banco: Lead Bank
+Cuenta: 215583683513
+ABA: 101019644
+Tipo: Checking Account
+
+Monto: $299 USD (Audit) o $199 USD (PRO)
+- Bitcoin accepted: Para pagar con Bitcoin:
+
+Wallet BTC: bc1qxqufcy2sqfk4xvqq0gs2v3uzv9et24gswed3dtlrzevlfxyshehspga2wn
+
+O escaneá el QR que te mando
+Monto: Equivalente a $299 USD
