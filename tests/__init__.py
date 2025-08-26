@@ -1,0 +1,3 @@
+"""
+SmartCompute Test Suite
+"""

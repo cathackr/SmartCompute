@@ -1,0 +1,3 @@
+"""
+Core SmartCompute functionality
+"""

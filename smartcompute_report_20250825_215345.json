@@ -1,0 +1,33 @@
+{
+  "timestamp": "2025-08-25 21:53:45",
+  "system_profile": {
+    "os": "Linux",
+    "architecture": "x86_64",
+    "cpu": "Intel(R) Core(TM) i5-7300HQ CPU @ 2.50GHz",
+    "cores": 4,
+    "ram_gb": 7.6,
+    "gpu": "nvidia:NVIDIA GeForce GTX 1050"
+  },
+  "optimization_applied": {
+    "system": "x86_64",
+    "strategy_used": "gpu_accelerated",
+    "optimizations_applied": [
+      "memory_cache_0GB",
+      "avx2_vectorization",
+      "cuda_acceleration"
+    ],
+    "performance_gain": 26
+  },
+  "security_status": {
+    "anomaly_score": 31.272396153214093,
+    "cpu_current": 1.5,
+    "cpu_zscore": 0.20320131187885893,
+    "memory_current": 68.1,
+    "memory_zscore": 2.9240383034425506,
+    "severity": "low"
+  },
+  "recommendations": [
+    "Low RAM (7.6GB): Memory optimization critical",
+    "Consider upgrading to 8GB+ for better performance"
+  ]
+}

@@ -1,0 +1,29 @@
+[bandit]
+# Bandit configuration for SmartCompute security scanning
+
+# Tests to skip (comma-separated list of test IDs)
+skips = B101,B601
+
+# Tests to run (comma-separated list of test IDs)
+# tests = 
+
+# Paths to exclude from scanning
+exclude = /tests,/venv,/env,.venv,.env,/alembic
+
+# Report format: txt, json, csv, xml
+# format = txt
+
+# Output file (default: stdout)
+# output = bandit-report.txt
+
+# Confidence level filter (LOW, MEDIUM, HIGH)
+confidence = MEDIUM
+
+# Severity level filter (LOW, MEDIUM, HIGH)
+severity = MEDIUM
+
+# Assert used for tests (B101)
+assert_used = skip
+
+# SQL injection detection
+sql_injection_false_positive = skip

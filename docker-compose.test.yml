@@ -1,0 +1,61 @@
+# Docker Compose override for testing
+version: '3.8'
+
+services:
+  # Test runner service
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: smartcompute-test
+    environment:
+      - DATABASE_URL=postgresql://smartcompute:test_password@postgres:5432/smartcompute_test
+      - REDIS_URL=redis://redis:6379/1
+      - TESTING=true
+    volumes:
+      - ./tests:/app/tests:ro
+      - ./coverage:/app/coverage
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    command: ["python", "-m", "pytest", "tests/", "-v", "--cov=app", "--cov-report=html:/app/coverage/html"]
+    networks:
+      - test-network
+
+  # Test database
+  postgres-test:
+    image: postgres:15-alpine
+    container_name: smartcompute-postgres-test
+    environment:
+      POSTGRES_USER: smartcompute
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: smartcompute_test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smartcompute -d smartcompute_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - test-network
+
+  # Test Redis
+  redis-test:
+    image: redis:7-alpine
+    container_name: smartcompute-redis-test
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge
+
+volumes:
+  coverage:
+    driver: local
