@@ -3,17 +3,23 @@ SmartCompute FastAPI Application
 Performance-based anomaly detection API
 """
 
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Request, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Dict, List, Optional, Any
 import time
 import asyncio
+import json
 from contextlib import asynccontextmanager
 
 from ..core.smart_compute import SmartComputeEngine
 from ..core.portable_system import PortableSystemDetector
 from ..services.monitoring import MonitoringService
+from ..services.crypto_payments import (
+    crypto_service, 
+    CryptoPaymentRequest, 
+    PaymentResponse
+)
 
 
 class SystemInfo(BaseModel):
@@ -292,4 +298,124 @@ async def health_check():
             "portable_detector": portable_detector is not None,
             "monitoring_service": monitoring_service is not None
         }
+    }
+
+
+# === CRYPTO PAYMENT ENDPOINTS ===
+
+@app.post("/api/v1/crypto/create-payment", response_model=PaymentResponse)
+async def create_crypto_payment(request: CryptoPaymentRequest):
+    """Create a new USDT payment request"""
+    try:
+        payment_response = crypto_service.create_payment(request)
+        return payment_response
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Payment creation failed: {str(e)}")
+
+
+@app.get("/api/v1/crypto/verify/{payment_id}")
+async def verify_payment(payment_id: str):
+    """Verify payment status by payment ID"""
+    try:
+        payment_status = crypto_service.verify_payment(payment_id)
+        return payment_status
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Payment verification failed: {str(e)}")
+
+
+@app.post("/api/v1/crypto/webhook")
+async def crypto_webhook(request: Request, x_signature: Optional[str] = Header(None)):
+    """Handle crypto payment webhook notifications"""
+    try:
+        body = await request.body()
+        payload_str = body.decode('utf-8')
+        
+        # Verify webhook signature if provided
+        if x_signature and not crypto_service.verify_webhook_signature(payload_str, x_signature):
+            raise HTTPException(status_code=401, detail="Invalid webhook signature")
+        
+        payload = json.loads(payload_str)
+        result = crypto_service.process_webhook(payload)
+        
+        # Here you can add logic to handle the payment confirmation
+        # For example: send email, update database, provision service, etc.
+        if result.get('event') == 'payment_confirmed':
+            # Payment confirmed - provision service
+            print(f"💰 Payment confirmed for invoice {result['invoice_id']}")
+            # TODO: Add service provisioning logic here
+        
+        return {"status": "webhook_processed", "result": result}
+        
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid JSON payload")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Webhook processing failed: {str(e)}")
+
+
+@app.get("/api/v1/crypto/rates")
+async def get_crypto_rates():
+    """Get current cryptocurrency rates for payments"""
+    try:
+        rates = crypto_service.get_payment_rates()
+        return rates
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Rate check failed: {str(e)}")
+
+
+@app.get("/api/v1/crypto/currencies")
+async def get_available_currencies():
+    """Get list of supported cryptocurrencies"""
+    try:
+        currencies = crypto_service.get_available_cryptocurrencies()
+        return {
+            "currencies": currencies,
+            "recommended": ["BTC", "ETH", "USDT", "LTC"],
+            "total_available": len(currencies)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Currency check failed: {str(e)}")
+
+
+@app.get("/api/v1/crypto/services")
+async def get_crypto_services():
+    """Get available services and pricing for crypto payments"""
+    return {
+        "services": [
+            {
+                "id": "audit",
+                "name": "Performance Audit",
+                "description": "3 hours comprehensive analysis + PDF report",
+                "price_usd": 299.0,
+                "crypto_price_usd": 284.05,  # 5% discount
+                "discount_percent": 5
+            },
+            {
+                "id": "installation", 
+                "name": "SmartCompute PRO Installation",
+                "description": "Full system installation + 60 days support",
+                "price_usd": 199.0,
+                "crypto_price_usd": 189.05,  # 5% discount
+                "discount_percent": 5
+            },
+            {
+                "id": "monitoring",
+                "name": "Monthly Monitoring",
+                "description": "24/7 automated monitoring + alerts",
+                "price_usd": 150.0,
+                "crypto_price_usd": 142.50,  # 5% discount
+                "discount_percent": 5
+            }
+        ],
+        "payment_methods": {
+            "usdt_trc20": "USDT (TRC20) - Recommended",
+            "usdt_erc20": "USDT (ERC20) - Higher fees"
+        },
+        "benefits": [
+            "5% automatic discount on crypto payments",
+            "Instant payment verification",
+            "No chargebacks",
+            "Global accessibility"
+        ]
     }
