@@ -1,3 +1,58 @@
+# SmartCompute - Performance-based anomaly detection system
+# Production-ready requirements
+
+# Core scientific computing
 numpy>=1.21.0
 psutil>=5.8.0
-cupy-cuda11x>=11.0.0  # Optional, for GPU support
+
+# Optional GPU support (install based on system)
+# cupy-cuda11x>=11.0.0  # For NVIDIA CUDA systems
+# cupy-cuda12x>=12.0.0  # For newer CUDA versions
+
+# Web framework and API
+fastapi==0.115.0
+uvicorn[standard]==0.31.0
+pydantic==2.8.2
+
+# Database and migrations
+sqlalchemy==2.0.32
+alembic==1.13.2
+
+# Async tasks and background processing
+celery==5.5.5
+redis>=4.5.0  # For celery broker
+
+# Environment and configuration
+python-dotenv==1.0.1
+pydantic-settings==2.4.0
+
+# HTTP client for external services
+requests==2.32.3
+httpx>=0.27.0  # For async HTTP requests
+
+# Authentication and security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.9  # For form data
+
+# Logging and monitoring
+structlog>=24.1.0
+prometheus-client>=0.20.0
+
+# Data validation and serialization
+email-validator==2.2.0
+
+# Development and testing (optional)
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+pytest-cov>=4.0.0
+black>=24.0.0
+flake8>=7.0.0
+mypy>=1.11.0
+
+# Documentation (optional)
+mkdocs>=1.6.0
+mkdocs-material>=9.5.0
+
+# Deployment
+gunicorn>=23.0.0

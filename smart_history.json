@@ -1,0 +1,34 @@
+{
+  "mult_(10, 10)x(10, 10)": {
+    "precise_time": 5.078315734863281e-05,
+    "fast_time": 3.5762786865234375e-06,
+    "accuracy": 1.0,
+    "speedup": 14.2,
+    "last_choice": "fast",
+    "samples": 1
+  },
+  "mult_(300, 300)x(300, 300)": {
+    "precise_time": 0.0009961128234863281,
+    "fast_time": 0.0007939338684082031,
+    "accuracy": 1.0,
+    "speedup": 1.2546546546546546,
+    "last_choice": "precise",
+    "samples": 1
+  },
+  "mult_(500, 500)x(500, 500)": {
+    "precise_time": 0.0034551620483398438,
+    "fast_time": 0.003384828567504883,
+    "accuracy": 1.0,
+    "speedup": 1.0207790378248927,
+    "last_choice": "fast",
+    "samples": 2
+  },
+  "mult_(400, 400)x(400, 400)": {
+    "precise_time": 0.0031690597534179688,
+    "fast_time": 0.0016853809356689453,
+    "accuracy": 1.0,
+    "speedup": 1.8803225350120243,
+    "last_choice": "fast",
+    "samples": 1
+  }
+}
