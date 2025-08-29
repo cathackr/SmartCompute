@@ -83,20 +83,47 @@ python main.py --enterprise --api
 **Instalación para redes industriales (Modbus, Profinet, OPC UA):**
 
 ```bash
-# 1. Ir al directorio industrial
+# 1. Clonar el repositorio
+git clone https://github.com/cathackr/SmartCompute.git
+cd SmartCompute
+
+# 2. Ir al directorio industrial
 cd smartcompute_industrial
 
-# 2. Instalar dependencias industriales (requiere privilegios de red)
+# 3. Instalar dependencias industriales (requiere privilegios de red)
 sudo pip install -r requirements_industrial.txt
 
-# 3. Iniciar monitoreo industrial
+# 4. Iniciar monitoreo industrial
 sudo ./start_network_intelligence.sh
 # Dashboard: http://127.0.0.1:8002
+```
+
+### 📱 Instalación en Dispositivos Móviles
+
+**SmartCompute Starter también funciona en móviles con apps de Python:**
+
+#### Android:
+```bash
+# 1. Instalar "Pydroid 3" desde Google Play
+# 2. Abrir Pydroid 3 y en la terminal ejecutar:
+pip install requests numpy pandas
+wget https://raw.githubusercontent.com/cathackr/SmartCompute/main/main.py
+python main.py --starter --mobile
+```
+
+#### iPhone/iPad:
+```bash
+# 1. Instalar "Pythonista 3" desde App Store  
+# 2. En Pythonista, crear nuevo archivo y pegar:
+import requests
+url = "https://raw.githubusercontent.com/cathackr/SmartCompute/main/main.py"
+exec(requests.get(url).text, {'mode': 'starter', 'mobile': True})
 ```
 
 ### 📋 Requisitos del Sistema
 - **Python 3.8+**: Requerido para todas las versiones
 - **Linux/Windows/macOS**: ✅ Todas compatibles
+- **Android/iOS**: ✅ Solo versión Starter
 - **Privilegios de red**: Solo para versión Industrial
 
 ## 📸 Ve SmartCompute en Acción
