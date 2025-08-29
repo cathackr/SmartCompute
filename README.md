@@ -20,11 +20,20 @@
 
 ⚠️ **Development Status:** This project is in active beta development. Features and performance metrics are under testing and validation.
 
-**¿Tu red industrial falla sin avisar?** SmartCompute monitorea protocolos como Modbus, Profinet y OPC UA, detectando conflictos de IP, latencia alta y dispositivos problemáticos. Te avisa qué revisar, pero nunca toca tu configuración automáticamente.
+SmartCompute es una suite completa de monitoreo inteligente con **3 versiones** para diferentes necesidades:
 
-**En 5 minutos sabrás:** qué dispositivos están causando problemas, qué puertos están saturados, y qué acciones tomar para evitar paros de producción.
+### 🏠 **SmartCompute Starter** (GRATIS)
+Monitoreo básico de rendimiento y detección de anomalías para uso personal y pequeñas empresas.
 
-SmartCompute is an AI-powered security and performance monitoring suite designed to provide:
+### 🏢 **SmartCompute Enterprise** ($200-750/año)
+Análisis avanzado con IA, APIs empresariales, dashboard personalizable y soporte técnico.
+
+### 🏭 **SmartCompute Industrial** ($5000/3 años)
+**¿Tu red industrial falla sin avisar?** Versión especializada que monitorea protocolos como Modbus, Profinet y OPC UA, detectando conflictos de IP, latencia alta y dispositivos problemáticos. Te avisa qué revisar, pero nunca toca tu configuración automáticamente.
+
+---
+
+SmartCompute ofrece:
 
 - ⚡ **Real-time Threat Detection** with fast response capabilities
 - 🧠 **AI-Powered Analytics** for pattern recognition  
@@ -35,27 +44,60 @@ SmartCompute is an AI-powered security and performance monitoring suite designed
 
 *Performance metrics and results may vary based on system configuration and use case.*
 
-## 🚀 Quick Start
+## 🚀 Instalación Paso a Paso
 
-### Desktop Installation
+### 🏠 SmartCompute Starter (GRATIS)
+
+**Instalación básica para monitoreo personal:**
 
 ```bash
+# 1. Clonar el repositorio
 git clone https://github.com/cathackr/SmartCompute.git
 cd SmartCompute
-pip install -r requirements.txt
-python main.py
+
+# 2. Instalar dependencias básicas
+pip install -r requirements-core.txt
+
+# 3. Ejecutar versión Starter
+python main.py --starter
 ```
 
-### Requirements
-- **Python 3.8+**: Required for source installation
-- **Git**: To clone the repository  
-- **pip**: For Python dependency management
+### 🏢 SmartCompute Enterprise
 
-### System Compatibility
-- **Linux**: ✅ Tested and working
-- **Windows**: ✅ Should work with Python installed
-- **macOS**: ✅ Should work with Python installed
-- **Mobile**: ❌ Not supported yet
+**Instalación completa con APIs y dashboard:**
+
+```bash
+# 1. Instalar dependencias completas
+pip install -r requirements.txt
+
+# 2. Configurar base de datos
+python -m app.core.database --setup
+
+# 3. Iniciar servidor Enterprise
+python main.py --enterprise --api
+# Dashboard: http://localhost:8000
+```
+
+### 🏭 SmartCompute Industrial
+
+**Instalación para redes industriales (Modbus, Profinet, OPC UA):**
+
+```bash
+# 1. Ir al directorio industrial
+cd smartcompute_industrial
+
+# 2. Instalar dependencias industriales (requiere privilegios de red)
+sudo pip install -r requirements_industrial.txt
+
+# 3. Iniciar monitoreo industrial
+sudo ./start_network_intelligence.sh
+# Dashboard: http://127.0.0.1:8002
+```
+
+### 📋 Requisitos del Sistema
+- **Python 3.8+**: Requerido para todas las versiones
+- **Linux/Windows/macOS**: ✅ Todas compatibles
+- **Privilegios de red**: Solo para versión Industrial
 
 ## 📸 Ve SmartCompute en Acción
 
@@ -71,21 +113,35 @@ python main.py
 ![Security Alerts](smartcompute_industrial/ui/security_alerts_screenshot.png)
 *Conflictos de IP y dispositivos con alta latencia*
 
-## 💰 Beta Pricing
+## 💰 Planes y Precios
 
-⚠️ **Beta Phase:** Current pricing is experimental and subject to change.
+### 🏠 **Starter Plan**
+**GRATUITO** - Para uso personal y pequeñas empresas
+- ✅ Monitoreo básico de rendimiento
+- ✅ Detección de anomalías
+- ✅ Dashboard web básico
+- ❌ APIs limitadas
+- ❌ Sin soporte técnico
 
-- **🔍 STARTER**: $99 setup + $49/month (Beta pricing)
-- **🏢 BUSINESS**: $249 setup + $99/month (Beta pricing)
-- **🏭 ENTERPRISE**: Custom pricing (Contact for beta program)
+### 🏢 **Enterprise Plan**
+**$200-750/año** - Para empresas medianas y grandes
+- ✅ Todo de Starter +
+- ✅ IA avanzada para análisis predictivo
+- ✅ APIs empresariales completas
+- ✅ Dashboard personalizable
+- ✅ Integración con sistemas existentes
+- ✅ Soporte técnico prioritario
+- ✅ Reportes personalizados
 
-**Beta Program Benefits:**
-- 🇦🇷 Argentine Companies: Early access program
-- 🪙 Flexible Payment Options: Multiple currencies accepted
-- 💸 Beta Discount: 50% OFF during testing phase
-- 🎓 Educational Use: Free for qualifying academic projects
-
-*Beta pricing includes development support and feature feedback participation.*
+### 🏭 **Industrial Plan**
+**$5000/3 años** - Para redes industriales críticas
+- ✅ Todo de Enterprise +
+- ✅ Monitoreo de protocolos industriales (Modbus, Profinet, OPC UA)
+- ✅ Detección de conflictos de red en tiempo real
+- ✅ Análisis de dispositivos industriales (PLCs, HMIs)
+- ✅ Alertas de seguridad especializadas
+- ✅ Consultoría de implementación incluida
+- ✅ Certificaciones industriales (ISA/IEC 62443)
 
 ## 🚀 Installation
 

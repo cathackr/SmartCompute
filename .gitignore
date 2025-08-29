@@ -152,6 +152,38 @@ __marimo__/
 # NVIDIA installers
 NVIDIA-Linux-x86_64-*.run
 
+# Development and build directories (hide from main view)
+build/
+dist/
+backup_v1/
+tools/
+examples/
+tests/
+monitoring/
+services/
+security/
+vault/
+temp_env/
+smartcompute_env/
+desktop/
+mobile/
+distribution/
+installers/
+architecture/
+.github/
+nginx/
+alembic/
+
+# Development files
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+.tox/
+.venv/
+venv/
+__pycache__/
+
 # SmartCompute Security - Sensitive Files
 *.db
 *.sqlite*
