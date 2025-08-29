@@ -271,9 +271,9 @@ cd SmartCompute/smartcompute_industrial
 
 | **Period** | **Price** | **Discount** | **Direct Payment** |
 |------------|-----------|--------------|-------------------|
-| **Annual** | $200/year | 65% OFF | [💳 **Pay $200 USD**](smartcompute_industrial/ui/checkout.html?plan=enterprise-annual) |
-| **Biannual** | $400/2 years | 65% OFF | [💳 **Pay $400 USD**](smartcompute_industrial/ui/checkout.html?plan=enterprise-biannual) |
-| **Premium** | $750/year | Extra features | [💳 **Pay $750 USD**](smartcompute_industrial/ui/checkout.html?plan=enterprise-premium) |
+| **Annual** | $200/year | 65% OFF | [💳 **Pay $200 USD**](https://cathackr.github.io/SmartCompute/checkout_redirect.html?plan=enterprise-annual&amount=200){:target="_blank"} |
+| **Biannual** | $400/2 years | 65% OFF | [💳 **Pay $400 USD**](https://cathackr.github.io/SmartCompute/checkout_redirect.html?plan=enterprise-biannual&amount=400){:target="_blank"} |
+| **Premium** | $750/year | Extra features | [💳 **Pay $750 USD**](https://cathackr.github.io/SmartCompute/checkout_redirect.html?plan=enterprise-premium&amount=750){:target="_blank"} |
 
 ### 🏭 **Industrial Plan - $5000/3 years**
 
@@ -281,8 +281,8 @@ cd SmartCompute/smartcompute_industrial
 
 | **Payment Method** | **Total Price** | **Includes** | **Direct Payment** |
 |-------------------|-----------------|--------------|-------------------|
-| **Full Payment** | $5000 USD | Everything + 20% extra discount | [💳 **Pay $4000 USD**](smartcompute_industrial/ui/checkout.html?plan=industrial-full) |
-| **3 Annual Payments** | $1,667 × 3 years | Phased implementation | [💳 **First Payment $1667**](smartcompute_industrial/ui/checkout.html?plan=industrial-installments) |
+| **Full Payment** | $5000 USD | Everything + 20% extra discount | [💳 **Pay $4000 USD**](https://cathackr.github.io/SmartCompute/checkout_redirect.html?plan=industrial-full&amount=4000){:target="_blank"} |
+| **3 Annual Payments** | $1,667 × 3 years | Phased implementation | [💳 **First Payment $1667**](https://cathackr.github.io/SmartCompute/checkout_redirect.html?plan=industrial-installments&amount=1667){:target="_blank"} |
 
 ### 💰 **Subscription System**
 
