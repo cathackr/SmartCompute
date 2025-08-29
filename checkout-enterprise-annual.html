@@ -223,40 +223,273 @@
             document.getElementById('loading').style.display = 'block';
         }
 
-        function payWithMercadoPago() {
+        async function payWithMercadoPago() {
             showLoading();
             
-            setTimeout(() => {
-                const arsAmount = Math.round(200 * 800);
-                alert(`Pago con MercadoPago:\\nMonto: $${arsAmount} ARS\\nPlan: SmartCompute Enterprise Anual\\n\\n✅ Redirigiendo a MercadoPago...\\n\\nContacto: ggwre04p0@mozmail.com\\nReferencia: ENT-ANNUAL-${Date.now()}`);
+            try {
+                // Try to use the payment API if available
+                const response = await fetch('http://localhost:8003/api/payments/mercadopago/create-preference', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        plan: "enterprise-annual",
+                        planName: "SmartCompute Enterprise Anual",
+                        amount: 200 * 800,
+                        currency: "ARS",
+                        customer: {
+                            name: "Cliente SmartCompute",
+                            email: "customer@example.com",
+                            country: "AR"
+                        },
+                        paymentMethod: "mercadopago"
+                    })
+                }).catch(() => null);
                 
+                if (response && response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        window.open(result.checkoutUrl, '_blank');
+                        return;
+                    }
+                }
+                
+                // Fallback: Show professional payment instructions
+                showPaymentModal('mercadopago', {
+                    title: 'Pago con MercadoPago',
+                    amount: 'ARS $160,000',
+                    plan: 'SmartCompute Enterprise Anual',
+                    instructions: [
+                        '1. Serás redirigido a MercadoPago para completar el pago',
+                        '2. Acepta tarjetas de crédito, débito y transferencias',
+                        '3. Podrás elegir hasta 12 cuotas sin interés',
+                        '4. Recibirás confirmación por email al completar el pago'
+                    ]
+                });
+                
+            } catch (error) {
+                console.error('Payment error:', error);
+                showPaymentModal('error', {
+                    title: 'Error en el pago',
+                    message: 'No se pudo procesar el pago. Por favor contacta soporte.'
+                });
+            } finally {
                 document.querySelector('.payment-methods').style.display = 'grid';
                 document.getElementById('loading').style.display = 'none';
-            }, 2000);
+            }
         }
 
-        function payWithCrypto() {
+        async function payWithCrypto() {
             showLoading();
             
-            setTimeout(() => {
-                const btcAmount = (200 / 50000).toFixed(8);
-                alert(`Pago con Criptomonedas:\\nMonto: ${btcAmount} BTC (aprox)\\nPlan: SmartCompute Enterprise Anual\\n\\n₿ Billeteras aceptadas:\\n• Bitcoin\\n• Ethereum\\n• USDC\\n\\nContacto: ggwre04p0@mozmail.com\\nReferencia: CRYPTO-ENT-${Date.now()}`);
+            try {
+                // Try to use the payment API if available
+                const response = await fetch('http://localhost:8003/api/payments/bitso/create-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        plan: "enterprise-annual",
+                        planName: "SmartCompute Enterprise Anual",
+                        amount: 200,
+                        currency: "USD",
+                        customer: {
+                            name: "Cliente SmartCompute",
+                            email: "customer@example.com",
+                            country: "International"
+                        },
+                        paymentMethod: "bitso"
+                    })
+                }).catch(() => null);
                 
+                if (response && response.ok) {
+                    const result = await response.json();
+                    if (result.success && result.paymentData) {
+                        const cryptoData = result.paymentData;
+                        showPaymentModal('crypto', {
+                            title: 'Pago con Criptomonedas',
+                            amount: '0.004 BTC (aprox)',
+                            plan: 'SmartCompute Enterprise Anual',
+                            address: cryptoData.address,
+                            expires: '15 minutos'
+                        });
+                        return;
+                    }
+                }
+                
+                // Fallback: Show professional crypto instructions
+                showPaymentModal('crypto', {
+                    title: 'Pago con Criptomonedas',
+                    amount: '0.004 BTC (aprox) o equivalente',
+                    plan: 'SmartCompute Enterprise Anual',
+                    instructions: [
+                        '• Bitcoin (BTC)',
+                        '• Ethereum (ETH)', 
+                        '• USD Coin (USDC)',
+                        '• Otros tokens principales'
+                    ],
+                    note: 'Se generará una dirección de pago única al confirmar'
+                });
+                
+            } catch (error) {
+                console.error('Crypto payment error:', error);
+                showPaymentModal('error', {
+                    title: 'Error en el pago crypto',
+                    message: 'No se pudo generar la dirección de pago. Contacta soporte.'
+                });
+            } finally {
                 document.querySelector('.payment-methods').style.display = 'grid';
                 document.getElementById('loading').style.display = 'none';
-            }, 2000);
+            }
         }
 
-        function payInternational() {
+        async function payInternational() {
             showLoading();
             
-            setTimeout(() => {
-                const reference = `INT-ENT-${Date.now().toString().slice(-8)}`;
-                alert(`Pago Internacional:\\nMonto: $200 USD\\nPlan: SmartCompute Enterprise Anual\\nReferencia: ${reference}\\n\\n🌍 Métodos disponibles:\\n• PayPal: ggwre04p0@mozmail.com\\n• SWIFT/Transferencia bancaria\\n• Wise Transfer\\n\\nContacto: ggwre04p0@mozmail.com`);
+            try {
+                // Try to use the payment API if available
+                const response = await fetch('http://localhost:8003/api/payments/international/create-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        plan: "enterprise-annual",
+                        planName: "SmartCompute Enterprise Anual",
+                        amount: 200,
+                        currency: "USD",
+                        customer: {
+                            name: "Cliente SmartCompute",
+                            email: "customer@example.com",
+                            country: "International"
+                        },
+                        paymentMethod: "international"
+                    })
+                }).catch(() => null);
                 
+                if (response && response.ok) {
+                    const result = await response.json();
+                    if (result.success && result.paymentInstructions) {
+                        const instructions = result.paymentInstructions;
+                        showPaymentModal('international', {
+                            title: 'Pago Internacional',
+                            amount: '$200 USD',
+                            plan: 'SmartCompute Enterprise Anual',
+                            reference: instructions.reference,
+                            methods: {
+                                swift: instructions.swift,
+                                paypal: instructions.paypal,
+                                wise: instructions.wise
+                            }
+                        });
+                        return;
+                    }
+                }
+                
+                // Fallback: Show professional international payment instructions
+                showPaymentModal('international', {
+                    title: 'Pago Internacional',
+                    amount: '$200 USD',
+                    plan: 'SmartCompute Enterprise Anual',
+                    instructions: [
+                        '🏦 Transferencia SWIFT disponible',
+                        '💳 PayPal Business disponible',
+                        '💸 Wise Transfer disponible',
+                        '🌍 Múltiples divisas aceptadas'
+                    ],
+                    note: 'Contacta ventas para obtener los datos específicos de transferencia'
+                });
+                
+            } catch (error) {
+                console.error('International payment error:', error);
+                showPaymentModal('error', {
+                    title: 'Error en pago internacional',
+                    message: 'No se pudieron generar las instrucciones. Contacta soporte.'
+                });
+            } finally {
                 document.querySelector('.payment-methods').style.display = 'grid';
                 document.getElementById('loading').style.display = 'none';
-            }, 2000);
+            }
+        }
+
+        function showPaymentModal(type, data) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+            
+            const content = document.createElement('div');
+            content.style.cssText = `
+                background: white;
+                padding: 30px;
+                border-radius: 15px;
+                max-width: 500px;
+                width: 90%;
+                text-align: center;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            `;
+            
+            let html = `
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">${data.title}</h3>
+                <p style="color: #3498db; font-size: 18px; font-weight: 600; margin-bottom: 10px;">${data.plan}</p>
+                <p style="color: #27ae60; font-size: 24px; font-weight: 700; margin-bottom: 20px;">${data.amount}</p>
+            `;
+            
+            if (type === 'crypto' && data.address) {
+                html += `
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0; word-break: break-all; font-family: monospace;">
+                        ${data.address}
+                    </div>
+                    <p style="color: #e74c3c; margin-bottom: 20px;">⏰ Expira en ${data.expires}</p>
+                `;
+            } else if (data.instructions) {
+                html += '<div style="text-align: left; margin: 20px 0;">';
+                data.instructions.forEach(instruction => {
+                    html += `<p style="margin: 8px 0; color: #555;">${instruction}</p>`;
+                });
+                html += '</div>';
+            }
+            
+            if (data.note) {
+                html += `<p style="color: #7f8c8d; font-style: italic; margin-top: 15px;">${data.note}</p>`;
+            }
+            
+            html += `
+                <button onclick="this.closest('.modal').remove()" style="
+                    background: #3498db;
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    margin-top: 20px;
+                ">Entendido</button>
+            `;
+            
+            content.innerHTML = html;
+            modal.appendChild(content);
+            modal.className = 'modal';
+            
+            document.body.appendChild(modal);
+            
+            // Close on background click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
         }
 
         // Add entrance animation
