@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCompute Industrial - Pago Completo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+        .checkout-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .plan-info {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .plan-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #e67e22;
+            margin-bottom: 10px;
+        }
+        .plan-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+        .payment-methods {
+            display: grid;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        .payment-btn {
+            background: white;
+            border: 2px solid #e0e6ed;
+            border-radius: 12px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: #2c3e50;
+        }
+        .payment-btn:hover {
+            border-color: #e67e22;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.2);
+        }
+        .payment-btn .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .payment-btn .icon {
+            font-size: 24px;
+        }
+        .payment-btn .right {
+            background: #f8f9fa;
+            padding: 4px 8px;
+            border-radius: 16px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        .security-info {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .security-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            color: #e67e22;
+            margin-top: 20px;
+        }
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #e67e22;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @media (max-width: 600px) {
+            .checkout-container {
+                padding: 30px 20px;
+            }
+            .security-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <div class="logo">🏭</div>
+        <h1>Checkout Seguro</h1>
+        <p class="subtitle">SmartCompute Industrial - Pago Completo</p>
+
+        <div class="plan-info">
+            <div class="plan-name">SmartCompute Industrial</div>
+            <div class="plan-price">$4000 USD/3 años</div>
+            <p>Monitoreo de protocolos industriales (Modbus, Profinet, OPC UA), detección de conflictos de red, consultoría incluida. <strong>20% OFF</strong></p>
+        </div>
+
+        <div class="payment-methods">
+            <a href="#" class="payment-btn" onclick="payWithMercadoPago()">
+                <div class="left">
+                    <span class="icon">🇦🇷</span>
+                    <div>
+                        <strong>MercadoPago</strong><br>
+                        <small>Tarjetas, transferencias en pesos</small>
+                    </div>
+                </div>
+                <div class="right">ARS</div>
+            </a>
+
+            <a href="#" class="payment-btn" onclick="payWithCrypto()">
+                <div class="left">
+                    <span class="icon">₿</span>
+                    <div>
+                        <strong>Criptomonedas</strong><br>
+                        <small>Bitcoin, Ethereum, USDC</small>
+                    </div>
+                </div>
+                <div class="right">CRYPTO</div>
+            </a>
+
+            <a href="#" class="payment-btn" onclick="payInternational()">
+                <div class="left">
+                    <span class="icon">🌍</span>
+                    <div>
+                        <strong>Internacional</strong><br>
+                        <small>PayPal, SWIFT, Wise</small>
+                    </div>
+                </div>
+                <div class="right">USD</div>
+            </a>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Procesando pago seguro...</p>
+        </div>
+
+        <div class="security-info">
+            <div class="security-item">
+                <span>🔒</span>
+                <span>SSL Seguro</span>
+            </div>
+            <div class="security-item">
+                <span>🛡️</span>
+                <span>Datos Encriptados</span>
+            </div>
+            <div class="security-item">
+                <span>🏭</span>
+                <span>Certificado Industrial</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLoading() {
+            document.querySelector('.payment-methods').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function payWithMercadoPago() {
+            showLoading();
+            
+            setTimeout(() => {
+                const arsAmount = Math.round(4000 * 800);
+                alert(`Pago con MercadoPago:\\nMonto: $${arsAmount} ARS\\nPlan: SmartCompute Industrial Completo\\n\\n✅ Redirigiendo a MercadoPago...\\n\\n🏭 INCLUYE:\\n• Consultoría de implementación\\n• Certificaciones industriales\\n• Soporte prioritario\\n\\nContacto: ggwre04p0@mozmail.com\\nReferencia: IND-FULL-${Date.now()}`);
+                
+                document.querySelector('.payment-methods').style.display = 'grid';
+                document.getElementById('loading').style.display = 'none';
+            }, 2000);
+        }
+
+        function payWithCrypto() {
+            showLoading();
+            
+            setTimeout(() => {
+                const btcAmount = (4000 / 50000).toFixed(8);
+                alert(`Pago con Criptomonedas:\\nMonto: ${btcAmount} BTC (aprox)\\nPlan: SmartCompute Industrial Completo\\n\\n₿ Billeteras aceptadas:\\n• Bitcoin\\n• Ethereum\\n• USDC\\n\\n🏭 INCLUYE:\\n• Consultoría de implementación\\n• Certificaciones industriales\\n• Soporte prioritario\\n\\nContacto: ggwre04p0@mozmail.com\\nReferencia: CRYPTO-IND-${Date.now()}`);
+                
+                document.querySelector('.payment-methods').style.display = 'grid';
+                document.getElementById('loading').style.display = 'none';
+            }, 2000);
+        }
+
+        function payInternational() {
+            showLoading();
+            
+            setTimeout(() => {
+                const reference = `INT-IND-FULL-${Date.now().toString().slice(-8)}`;
+                alert(`Pago Internacional:\\nMonto: $4000 USD\\nPlan: SmartCompute Industrial Completo\\nReferencia: ${reference}\\n\\n🌍 Métodos disponibles:\\n• PayPal: ggwre04p0@mozmail.com\\n• SWIFT/Transferencia bancaria\\n• Wise Transfer\\n\\n🏭 INCLUYE:\\n• Consultoría de implementación\\n• Certificaciones industriales\\n• Soporte prioritario\\n\\nContacto: ggwre04p0@mozmail.com`);
+                
+                document.querySelector('.payment-methods').style.display = 'grid';
+                document.getElementById('loading').style.display = 'none';
+            }, 2000);
+        }
+
+        // Add entrance animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.checkout-container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'all 0.5s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
