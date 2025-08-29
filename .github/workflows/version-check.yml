@@ -1,0 +1,356 @@
+name: Version Check
+# Validates semantic versioning compliance and prevents version conflicts
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'main.py'
+      - 'app/**'
+      - 'requirements*.txt'
+      - 'pyproject.toml'
+      - 'setup.py'
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  version-validation:
+    name: Version Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install semver tools
+        run: |
+          pip install semantic-version packaging
+
+      - name: Extract current version
+        id: current_version
+        run: |
+          # Try multiple sources for version
+          VERSION=""
+          
+          # Check main.py for __version__
+          if grep -q "__version__" main.py; then
+            VERSION=$(grep -oP "__version__\s*=\s*['\"](\K[^'\"]*)" main.py)
+          fi
+          
+          # Check pyproject.toml if exists
+          if [[ -f "pyproject.toml" ]] && [[ -z "$VERSION" ]]; then
+            VERSION=$(grep -oP 'version\s*=\s*["\'](\K[^"\']*)" pyproject.toml || echo "")
+          fi
+          
+          # Check setup.py if exists
+          if [[ -f "setup.py" ]] && [[ -z "$VERSION" ]]; then
+            VERSION=$(grep -oP "version\s*=\s*['\"](\K[^'\"]*)" setup.py || echo "")
+          fi
+          
+          # Default version if not found
+          if [[ -z "$VERSION" ]]; then
+            VERSION="0.1.0"
+            echo "Warning: No version found in code, using default: $VERSION"
+          fi
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Current version: $VERSION"
+
+      - name: Get latest release version
+        id: latest_release
+        run: |
+          # Get latest release from GitHub API
+          LATEST_TAG=$(gh api repos/${{ github.repository }}/releases/latest --jq '.tag_name' 2>/dev/null || echo "")
+          
+          if [[ -n "$LATEST_TAG" ]]; then
+            # Remove 'v' prefix if present
+            LATEST_VERSION=${LATEST_TAG#v}
+            echo "latest_version=$LATEST_VERSION" >> $GITHUB_OUTPUT
+            echo "Latest release version: $LATEST_VERSION"
+          else
+            echo "latest_version=" >> $GITHUB_OUTPUT
+            echo "No previous releases found"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate semantic versioning
+        run: |
+          python << 'EOF'
+          import sys
+          from semantic_version import Version
+          
+          current_version = "${{ steps.current_version.outputs.version }}"
+          latest_version = "${{ steps.latest_release.outputs.latest_version }}"
+          
+          print(f"Validating version: {current_version}")
+          
+          # Validate current version format
+          try:
+              current_ver = Version(current_version)
+              print(f"✅ Current version format is valid: {current_ver}")
+          except Exception as e:
+              print(f"❌ Invalid version format: {current_version}")
+              print(f"Error: {e}")
+              sys.exit(1)
+          
+          # Compare with latest if exists
+          if latest_version:
+              try:
+                  latest_ver = Version(latest_version)
+                  print(f"Latest release version: {latest_ver}")
+                  
+                  if current_ver <= latest_ver:
+                      print(f"❌ Current version {current_ver} is not greater than latest {latest_ver}")
+                      print("Please bump the version number appropriately:")
+                      print(f"  - Patch: {latest_ver.next_patch()}")
+                      print(f"  - Minor: {latest_ver.next_minor()}")
+                      print(f"  - Major: {latest_ver.next_major()}")
+                      sys.exit(1)
+                  else:
+                      print(f"✅ Version correctly incremented: {latest_ver} → {current_ver}")
+                      
+                      # Check increment type
+                      if current_ver.major > latest_ver.major:
+                          print("📈 MAJOR version increment detected")
+                      elif current_ver.minor > latest_ver.minor:
+                          print("📈 MINOR version increment detected")
+                      elif current_ver.patch > latest_ver.patch:
+                          print("📈 PATCH version increment detected")
+                      else:
+                          print("📈 Pre-release version increment detected")
+                          
+              except Exception as e:
+                  print(f"❌ Invalid latest version format: {latest_version}")
+                  print(f"Error: {e}")
+                  sys.exit(1)
+          else:
+              print("✅ No previous releases to compare against")
+          
+          print("Version validation completed successfully!")
+          EOF
+
+      - name: Check for breaking changes
+        id: breaking_changes
+        run: |
+          # Look for potential breaking changes in the diff
+          BREAKING_INDICATORS=(
+            "BREAKING CHANGE:"
+            "breaking change:"
+            "remove.*function"
+            "remove.*method"
+            "remove.*class"
+            "delete.*function"
+            "delete.*method"
+            "delete.*class"
+          )
+          
+          BREAKING_FOUND=false
+          
+          # Check commit messages
+          git log --oneline origin/main..HEAD | while read commit; do
+            for indicator in "${BREAKING_INDICATORS[@]}"; do
+              if echo "$commit" | grep -qi "$indicator"; then
+                echo "⚠️ Potential breaking change detected in commit: $commit"
+                BREAKING_FOUND=true
+              fi
+            done
+          done
+          
+          # Check diff for API changes
+          if git diff origin/main..HEAD -- '*.py' | grep -E '^\-\s*(def |class )'; then
+            echo "⚠️ Potential API changes detected in diff"
+            BREAKING_FOUND=true
+          fi
+          
+          echo "breaking_found=$BREAKING_FOUND" >> $GITHUB_OUTPUT
+
+      - name: Version increment suggestion
+        run: |
+          python << 'EOF'
+          from semantic_version import Version
+          
+          current_version = "${{ steps.current_version.outputs.version }}"
+          latest_version = "${{ steps.latest_release.outputs.latest_version }}"
+          breaking_found = "${{ steps.breaking_changes.outputs.breaking_found }}" == "true"
+          
+          if not latest_version:
+              print("ℹ️ This appears to be the first release")
+              exit(0)
+          
+          current_ver = Version(current_version)
+          latest_ver = Version(latest_version)
+          
+          # Suggest appropriate version increment
+          print("\n📊 Version Increment Analysis:")
+          print(f"Current: {current_ver}")
+          print(f"Previous: {latest_ver}")
+          
+          if breaking_found:
+              expected = latest_ver.next_major()
+              if current_ver.major <= latest_ver.major:
+                  print(f"⚠️ Breaking changes detected - consider MAJOR version: {expected}")
+              else:
+                  print("✅ MAJOR version increment appropriate for breaking changes")
+          
+          # Check if files suggest feature additions
+          import subprocess
+          try:
+              diff_output = subprocess.check_output(
+                  ["git", "diff", "--name-only", "origin/main..HEAD"],
+                  text=True
+              )
+              
+              if any(f.endswith(('.py', '.js', '.ts')) for f in diff_output.strip().split('\n')):
+                  if current_ver.minor > latest_ver.minor:
+                      print("✅ Code changes present - MINOR increment appropriate")
+                  elif current_ver.patch > latest_ver.patch and current_ver.minor == latest_ver.minor:
+                      print("✅ Code changes present - PATCH increment may be appropriate")
+          except:
+              pass
+          
+          print("\n📋 Version Guidelines:")
+          print("• MAJOR: Breaking changes, incompatible API changes")
+          print("• MINOR: New features, backwards-compatible additions")  
+          print("• PATCH: Bug fixes, backwards-compatible fixes")
+          EOF
+
+      - name: Create version summary
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << 'EOF'
+          ## Version Validation Results
+          
+          | Check | Status | Details |
+          |-------|--------|---------|
+          | Current Version | ✅ Valid | `${{ steps.current_version.outputs.version }}` |
+          | Semantic Format | ✅ Valid | Follows semver specification |
+          | Version Increment | ✅ Valid | Properly incremented from previous |
+          | Breaking Changes | ${{ steps.breaking_changes.outputs.breaking_found == 'true' && '⚠️ Detected' || '✅ None' }} | See analysis above |
+          
+          ### Next Steps
+          - Ensure CHANGELOG.md is updated with changes
+          - Consider the version increment type based on changes
+          - Breaking changes should trigger MAJOR version increment
+          
+          EOF
+
+  changelog-check:
+    name: Changelog Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check CHANGELOG.md updates
+        run: |
+          if git diff --name-only origin/main..HEAD | grep -q "CHANGELOG.md"; then
+            echo "✅ CHANGELOG.md has been updated"
+            
+            # Check if unreleased section exists
+            if grep -q "## \[Unreleased\]" CHANGELOG.md; then
+              echo "✅ Unreleased section found in CHANGELOG.md"
+            else
+              echo "⚠️ Consider adding an [Unreleased] section to CHANGELOG.md"
+            fi
+            
+          else
+            echo "⚠️ CHANGELOG.md not updated in this PR"
+            echo "Consider documenting your changes in CHANGELOG.md"
+            
+            # Check if there are significant changes that warrant changelog entry
+            if git diff --name-only origin/main..HEAD | grep -E '\.(py|js|ts)$' | head -1; then
+              echo "💡 Code changes detected - consider updating CHANGELOG.md"
+            fi
+          fi
+
+      - name: Validate changelog format
+        run: |
+          if [[ -f "CHANGELOG.md" ]]; then
+            echo "Validating CHANGELOG.md format..."
+            
+            # Check for required headers
+            if grep -q "# Changelog" CHANGELOG.md; then
+              echo "✅ Changelog header present"
+            else
+              echo "⚠️ Missing main 'Changelog' header"
+            fi
+            
+            # Check for version sections
+            if grep -q "## \[.*\]" CHANGELOG.md; then
+              echo "✅ Version sections found"
+              echo "Found versions:"
+              grep "## \[.*\]" CHANGELOG.md | head -5
+            else
+              echo "⚠️ No version sections found"
+            fi
+            
+            # Check for change categories
+            CATEGORIES=("Added" "Changed" "Deprecated" "Removed" "Fixed" "Security")
+            for category in "${CATEGORIES[@]}"; do
+              if grep -q "### $category" CHANGELOG.md; then
+                echo "✅ Found $category section"
+              fi
+            done
+          else
+            echo "❌ CHANGELOG.md not found"
+            exit 1
+          fi
+
+  release-readiness:
+    name: Release Readiness Check
+    runs-on: ubuntu-latest
+    needs: [version-validation, changelog-check]
+    if: always()
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Assess release readiness
+        run: |
+          echo "## Release Readiness Assessment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          READY=true
+          
+          # Check if version validation passed
+          if [[ "${{ needs.version-validation.result }}" == "success" ]]; then
+            echo "| Version Validation | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Version Validation | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+            READY=false
+          fi
+          
+          # Check if changelog validation passed
+          if [[ "${{ needs.changelog-check.result }}" == "success" ]]; then
+            echo "| Changelog Check | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Changelog Check | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+            READY=false
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "$READY" == "true" ]]; then
+            echo "### ✅ Ready for Release" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "This PR appears ready for release. After merging:" >> $GITHUB_STEP_SUMMARY
+            echo "1. Create a git tag with the version number" >> $GITHUB_STEP_SUMMARY
+            echo "2. Push the tag to trigger the release pipeline" >> $GITHUB_STEP_SUMMARY
+            echo "3. Monitor the release workflow for completion" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ❌ Not Ready for Release" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Please address the failing checks before releasing." >> $GITHUB_STEP_SUMMARY
+          fi

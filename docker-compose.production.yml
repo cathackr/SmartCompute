@@ -1,0 +1,283 @@
+# SmartCompute Production Architecture
+# Microservices deployment with proper separation
+
+version: '3.8'
+
+networks:
+  public:
+    driver: bridge
+  api:
+    driver: bridge  
+  internal:
+    driver: bridge
+    internal: true  # No external access
+  isolated:
+    driver: bridge
+    internal: true  # Isolated payment network
+  database:
+    driver: bridge
+    internal: true  # Database network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  vault_data:
+    driver: local
+
+services:
+  # Load Balancer / Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: smartcompute-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/production.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    networks:
+      - public
+      - api
+    depends_on:
+      - api-service
+      - dashboard
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Web Dashboard (Frontend)
+  dashboard:
+    build: ./services/dashboard
+    container_name: smartcompute-dashboard
+    networks:
+      - api
+    environment:
+      - NODE_ENV=production
+      - API_BASE_URL=http://api-service:8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Public API Service
+  api-service:
+    build: 
+      context: .
+      dockerfile: services/api/Dockerfile
+    container_name: smartcompute-api
+    networks:
+      - api
+      - internal
+    environment:
+      - DATABASE_URL=postgresql://smartcompute:${DB_PASSWORD}@postgres:5432/smartcompute
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/0
+      - CORE_SERVICE_URL=http://smartcompute-core:9000
+      - JWT_SECRET=${JWT_SECRET}
+      - RATE_LIMIT_REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      smartcompute-core:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # SmartCompute Core Engine (Internal)
+  smartcompute-core:
+    build:
+      context: .
+      dockerfile: services/core/Dockerfile
+    container_name: smartcompute-core
+    networks:
+      - internal
+      - database
+    environment:
+      - DATABASE_URL=postgresql://smartcompute:${DB_PASSWORD}@postgres:5432/smartcompute
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/2
+      - LOG_LEVEL=INFO
+      - ENABLE_DOCS=false  # Security: disable docs in production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+
+  # Payment Gateway Service (Isolated)
+  payment-service:
+    build:
+      context: .
+      dockerfile: services/payment/Dockerfile
+    container_name: smartcompute-payment
+    networks:
+      - isolated
+    environment:
+      - VAULT_ADDR=${VAULT_ADDR}
+      - VAULT_TOKEN=${VAULT_TOKEN}
+      - WEBHOOK_SECRET=${PAYMENT_WEBHOOK_SECRET}
+      - DATABASE_URL=postgresql://payment_user:${PAYMENT_DB_PASSWORD}@postgres:5432/smartcompute_payments
+    depends_on:
+      vault:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.2'
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: smartcompute-postgres
+    networks:
+      - database
+      - isolated  # For payment service access
+    environment:
+      - POSTGRES_DB=smartcompute
+      - POSTGRES_USER=smartcompute
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_MULTIPLE_DATABASES=smartcompute_payments
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/create-multiple-databases.sh:/docker-entrypoint-initdb.d/create-multiple-databases.sh:ro
+      - ./scripts/init-payment-user.sql:/docker-entrypoint-initdb.d/init-payment-user.sql:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smartcompute -d smartcompute"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+
+  # Redis (Message Queue & Cache)
+  redis:
+    image: redis:7-alpine
+    container_name: smartcompute-redis
+    networks:
+      - internal
+      - api
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD}
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+      --databases 16
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.3'
+
+  # HashiCorp Vault (Secret Management)
+  vault:
+    image: vault:latest
+    container_name: smartcompute-vault
+    networks:
+      - isolated
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=${VAULT_ROOT_TOKEN}
+      - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
+    volumes:
+      - vault_data:/vault/data
+      - ./vault/config.hcl:/vault/config/config.hcl:ro
+    cap_add:
+      - IPC_LOCK
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "vault", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.2'
+
+  # Monitoring - Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: smartcompute-prometheus
+    networks:
+      - internal
+      - api
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "127.0.0.1:9090:9090"  # Only localhost access
+    restart: unless-stopped
+    profiles:
+      - monitoring
+
+  # Monitoring - Grafana
+  grafana:
+    image: grafana/grafana:latest
+    container_name: smartcompute-grafana
+    networks:
+      - internal
+      - api
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_INSTALL_PLUGINS=redis-datasource,postgres-datasource
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "127.0.0.1:3000:3000"  # Only localhost access
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    profiles:
+      - monitoring
+
+volumes:
+  grafana_data:
+    driver: local

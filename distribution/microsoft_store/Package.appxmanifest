@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" 
+         xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" 
+         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" 
+         IgnorableNamespaces="uap mp">
+
+  <Identity Name="SmartCompute.AISecurityMonitor" 
+            Publisher="CN=[YOUR_PUBLISHER_NAME]" 
+            Version="2.0.1.0" />
+
+  <mp:PhoneIdentity PhoneProductId="ar.smartcompute.windows" 
+                    PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+
+  <Properties>
+    <DisplayName>SmartCompute - AI Security Monitor</DisplayName>
+    <PublisherDisplayName>Martín Iribarne (CEH)</PublisherDisplayName>
+    <Logo>assets/icon_256.png</Logo>
+    <Description>Enterprise AI-powered security and performance monitoring suite with real-time threat detection and advanced analytics.</Description>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="SmartCompute.exe"
+      EntryPoint="SmartCompute.App">
+      <uap:VisualElements
+        DisplayName="SmartCompute"
+        Square150x150Logo="assets/icon_256.png"
+        Square44x44Logo="assets/icon_64.png"
+        Description="AI-powered security and performance monitoring"
+        BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="assets/wide_tile.png"/>
+        <uap:SplashScreen Image="assets/splash_screen.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <Capability Name="privateNetworkClientServer" />
+  </Capabilities>
+</Package>

@@ -1,0 +1,5 @@
+kivy>=2.2.0
+kivymd>=1.1.0
+buildozer>=1.5.0
+requests>=2.31.0
+psutil>=5.9.0

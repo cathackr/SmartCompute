@@ -1,0 +1,60 @@
+# Prometheus configuration for SmartCompute monitoring
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'smartcompute'
+    environment: 'quickstart'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - "alert_rules.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    metrics_path: /metrics
+    scrape_interval: 15s
+
+  # SmartCompute application metrics
+  - job_name: 'smartcompute'
+    static_configs:
+      - targets: ['smartcompute:8080']
+    metrics_path: /metrics
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    honor_labels: true
+    params:
+      format: ['prometheus']
+
+  # SmartCompute health endpoint
+  - job_name: 'smartcompute-health'
+    static_configs:
+      - targets: ['smartcompute:8080']
+    metrics_path: /health
+    scrape_interval: 15s
+    scrape_timeout: 5s
+
+  # Grafana metrics
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+    metrics_path: /metrics
+    scrape_interval: 30s
+
+  # AlertManager metrics
+  - job_name: 'alertmanager'
+    static_configs:
+      - targets: ['alertmanager:9093']
+    metrics_path: /metrics
+    scrape_interval: 30s

@@ -1,0 +1,189 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+*.db
+*.sqlite3
+*.log
+*.json
+wget-log
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+.installed.cfg
+*.egg
+MANIFEST
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Build / installers / IDE
+/dist
+/build
+/installers/
+*.exe
+*.dmg
+*.apk
+.idea/
+.vscode/
+
+# Binaries
+*.so
+*.dll
+
+# Testing / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py.cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff
+instance/
+.webassets-cache
+
+# Scrapy stuff
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Environment management
+.env
+.envrc
+
+# Package managers
+#Pipfile.lock
+#uv.lock
+#poetry.lock
+#poetry.toml
+#pdm.lock
+#pdm.toml
+.pdm-python
+.pdm-build/
+.pixi
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# IDE settings
+.spyderproject
+.spyproject
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# Type checkers
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# Other tools
+.abstra/
+.ruff_cache/
+.pypirc
+.cursorignore
+.cursorindexingignore
+
+# Marimo
+marimo/_static/
+marimo/_lsp/
+__marimo__/
+
+# NVIDIA installers
+NVIDIA-Linux-x86_64-*.run
+
+# SmartCompute Security - Sensitive Files
+*.db
+*.sqlite*
+smartcompute.db
+SmartCompute/smartcompute.db
+logs/
+app_logs/
+monitoring_logs/
+smart_history.json
+smartcompute_history.json
+
+# Configuration files with sensitive data
+config.local.json
+.env.local
+secrets.json
+credentials.json
+api_keys.json
+
+# Development files that may contain sensitive info
+debug.log
+trace.log
+
+# Personal files - Prevent accidental commit of personal information
+*CV*.html
+*CV*.md
+*cv*.html
+*cv*.md
+*resume*
+*curriculum*
+*MARTIN_*
+*martin_*
+*linkedin*
+*LINKEDIN*
+*personal*
+*PERSONAL*SmartCompute/

@@ -1,0 +1,104 @@
+# SmartCompute Production Dockerfile
+# Secure, hardened production container based on post-audit recommendations
+
+# Build stage - compile and prepare dependencies
+FROM python:3.11-slim as builder
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc \
+    g++ \
+    libssl-dev \
+    libffi-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+WORKDIR /app
+
+# Copy requirements and install dependencies in virtual environment
+COPY requirements.txt requirements-core.txt ./
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Upgrade pip and install dependencies
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Production stage - minimal runtime image
+FROM python:3.11-slim as production
+
+# Metadata labels
+LABEL maintainer="ggwre04p0@mozmail.com" \
+      org.opencontainers.image.title="SmartCompute Production" \
+      org.opencontainers.image.description="AI-Powered Security & Performance Monitoring Suite" \
+      org.opencontainers.image.source="https://github.com/cathackr/SmartCompute" \
+      org.opencontainers.image.vendor="Martín Iribarne - CEH" \
+      org.opencontainers.image.version="1.0.0-beta" \
+      security.scan="required" \
+      environment="production"
+
+# Install only essential runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    procps \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean \
+    && apt-get autoremove -y
+
+# Security: Create non-root user with minimal privileges
+RUN groupadd --system --gid 1000 appuser && \
+    useradd --system --uid 1000 --gid 1000 --home /app --shell /sbin/nologin appuser
+
+# Copy Python virtual environment from builder
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Set working directory
+WORKDIR /app
+
+# Copy application code with proper ownership
+COPY --chown=appuser:appuser app/ ./app/
+COPY --chown=appuser:appuser main.py ./
+COPY --chown=appuser:appuser alembic/ ./alembic/
+COPY --chown=appuser:appuser alembic.ini ./
+
+# Create required directories with proper permissions
+RUN mkdir -p /app/data /app/logs /app/reports /certs && \
+    chown -R appuser:appuser /app /certs
+
+# Production environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH="/app:$PYTHONPATH" \
+    LOG_LEVEL="INFO" \
+    HOST="0.0.0.0" \
+    PORT="8000" \
+    ENVIRONMENT="production" \
+    DATABASE_URL="postgresql://smartcompute:${DB_PASSWORD}@postgres:5432/smartcompute" \
+    REDIS_URL="redis://:${REDIS_PASSWORD}@redis:6379" \
+    TLS_CERT_PATH="/certs/cert.pem" \
+    TLS_KEY_PATH="/certs/key.pem" \
+    JWT_SECRET_FILE="/run/secrets/jwt_secret" \
+    DB_ENCRYPTION_KEY_FILE="/run/secrets/db_encryption_key"
+
+# Security: Switch to non-root user
+USER appuser
+
+# Health check with proper timeout and error handling
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Expose application port
+EXPOSE 8000
+
+# Production startup command with proper error handling
+CMD ["python", "-m", "app.api.main"]
+
+# Development stage (optional override)
+FROM production as development
+USER root
+RUN pip install --no-cache-dir pytest black flake8 mypy bandit
+USER appuser
+ENV ENVIRONMENT="development"

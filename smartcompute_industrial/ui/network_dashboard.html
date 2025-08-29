@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCompute Network Intelligence Dashboard</title>
+    <link rel="stylesheet" href="css/network_dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1 class="dashboard-title">Network Intelligence Dashboard</h1>
+                <div class="header-actions">
+                    <div class="scan-status" id="scanStatus">
+                        <span class="status-dot active" id="statusDot"></span>
+                        <span class="status-text">Escaneando red...</span>
+                    </div>
+                    <button class="refresh-btn" id="refreshBtn" title="Actualizar">🔄</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Network Overview Cards -->
+        <section class="overview-section">
+            <div class="overview-card">
+                <div class="card-icon">🌐</div>
+                <div class="card-content">
+                    <div class="card-title">Dispositivos Descubiertos</div>
+                    <div class="card-value" id="totalDevices">0</div>
+                    <div class="card-subtitle">En toda la red</div>
+                </div>
+            </div>
+
+            <div class="overview-card">
+                <div class="card-icon">🏭</div>
+                <div class="card-content">
+                    <div class="card-title">Dispositivos Industriales</div>
+                    <div class="card-value" id="industrialDevices">0</div>
+                    <div class="card-subtitle">PLCs, HMIs, Servidores</div>
+                </div>
+            </div>
+
+            <div class="overview-card">
+                <div class="card-icon">🔐</div>
+                <div class="card-content">
+                    <div class="card-title">Protocolos Detectados</div>
+                    <div class="card-value" id="protocolCount">0</div>
+                    <div class="card-subtitle">Modbus, Profinet, OPC UA</div>
+                </div>
+            </div>
+
+            <div class="overview-card alert-card">
+                <div class="card-icon">⚠️</div>
+                <div class="card-content">
+                    <div class="card-title">Alertas Activas</div>
+                    <div class="card-value" id="activeAlerts">0</div>
+                    <div class="card-subtitle">Conflictos y problemas</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Network Topology and Device List -->
+        <section class="main-content">
+            
+            <!-- Network Topology Visualization -->
+            <div class="topology-panel">
+                <div class="panel-header">
+                    <h3>🗺️ Topología de Red</h3>
+                    <div class="topology-controls">
+                        <button class="control-btn" id="autoLayoutBtn">Auto Layout</button>
+                        <select class="subnet-filter" id="subnetFilter">
+                            <option value="">Todas las subredes</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="topology-container" id="topologyContainer">
+                    <div class="topology-legend">
+                        <div class="legend-item">
+                            <div class="legend-icon plc"></div>
+                            <span>PLC</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-icon switch"></div>
+                            <span>Switch</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-icon server"></div>
+                            <span>Servidor</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-icon unknown"></div>
+                            <span>Desconocido</span>
+                        </div>
+                    </div>
+                    <div class="topology-canvas" id="topologyCanvas">
+                        <!-- Network topology will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Device Details Panel -->
+            <div class="device-panel">
+                <div class="panel-header">
+                    <h3>📱 Dispositivos de Red</h3>
+                    <div class="device-controls">
+                        <input type="text" class="search-input" id="deviceSearch" placeholder="Buscar dispositivo...">
+                        <select class="device-type-filter" id="deviceTypeFilter">
+                            <option value="">Todos los tipos</option>
+                            <option value="plc">PLCs</option>
+                            <option value="hmi">HMIs</option>
+                            <option value="switch">Switches</option>
+                            <option value="server">Servidores</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="device-list" id="deviceList">
+                    <!-- Device list will be populated here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Protocol Analysis and Performance -->
+        <section class="analysis-section">
+            
+            <!-- Protocol Distribution Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>📊 Distribución de Protocolos</h3>
+                    <div class="chart-info" id="protocolInfo">
+                        <span class="info-badge industrial">Protocolos Industriales: <span id="industrialProtocolCount">0</span></span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="protocolChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Network Performance Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>⚡ Rendimiento de Red</h3>
+                    <div class="performance-controls">
+                        <select class="time-range" id="performanceTimeRange">
+                            <option value="1">Última hora</option>
+                            <option value="6">Últimas 6 horas</option>
+                            <option value="24">Últimas 24 horas</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security and Alerts Section -->
+        <section class="security-section">
+            
+            <!-- Security Status -->
+            <div class="security-card">
+                <div class="security-header">
+                    <h3>🛡️ Estado de Seguridad</h3>
+                    <div class="security-status good" id="securityStatus">
+                        <span class="status-indicator"></span>
+                        <span class="status-text">Seguro</span>
+                    </div>
+                </div>
+                
+                <div class="security-metrics">
+                    <div class="metric-row">
+                        <div class="metric-label">Dispositivos con puertos abiertos industriales:</div>
+                        <div class="metric-value" id="industrialPortDevices">0</div>
+                    </div>
+                    <div class="metric-row">
+                        <div class="metric-label">Conflictos de IP detectados:</div>
+                        <div class="metric-value" id="ipConflicts">0</div>
+                    </div>
+                    <div class="metric-row">
+                        <div class="metric-label">Dispositivos con alta latencia:</div>
+                        <div class="metric-value" id="highLatencyDevices">0</div>
+                    </div>
+                </div>
+
+                <!-- Cisco Integration Status -->
+                <div class="integration-status" id="ciscoIntegration">
+                    <div class="integration-header">
+                        <h4>🔗 Integraciones de Seguridad</h4>
+                    </div>
+                    <div class="integration-list">
+                        <div class="integration-item">
+                            <span class="integration-name">Cisco XDR</span>
+                            <span class="integration-status-badge disconnected" id="xdrStatus">Desconectado</span>
+                        </div>
+                        <div class="integration-item">
+                            <span class="integration-name">Cisco Umbrella</span>
+                            <span class="integration-status-badge disconnected" id="umbrellaStatus">Desconectado</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Alerts -->
+            <div class="alerts-card">
+                <div class="alerts-header">
+                    <h3>🚨 Alertas Recientes</h3>
+                    <div class="alerts-controls">
+                        <select class="severity-filter" id="severityFilter">
+                            <option value="">Todas</option>
+                            <option value="critical">Críticas</option>
+                            <option value="high">Altas</option>
+                            <option value="medium">Medias</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="alerts-list" id="alertsList">
+                    <!-- Alerts will be populated here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Device Details Modal -->
+        <div class="modal-overlay" id="deviceModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📱 Detalles del Dispositivo</h3>
+                    <button class="modal-close" id="modalClose">×</button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Device details will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuration Panel -->
+        <div class="config-panel" id="configPanel">
+            <div class="config-header">
+                <h3>⚙️ Configuración de Red</h3>
+                <button class="config-close" id="configClose">×</button>
+            </div>
+            <div class="config-content">
+                
+                <!-- Network Scanning Configuration -->
+                <div class="config-section">
+                    <h4>🔍 Configuración de Escaneo</h4>
+                    <div class="config-form">
+                        <label>Subredes a escanear:</label>
+                        <textarea class="config-textarea" id="subnetsConfig" placeholder="192.168.1.0/24&#10;192.168.100.0/24"></textarea>
+                        
+                        <label>Puertos a escanear:</label>
+                        <input type="text" class="config-input" id="portsConfig" value="22,23,80,443,502,44818,4840,161" placeholder="22,80,443,502">
+                        
+                        <button class="config-btn primary" id="startScanBtn">Iniciar Escaneo Manual</button>
+                    </div>
+                </div>
+
+                <!-- Security Device Integration -->
+                <div class="config-section">
+                    <h4>🛡️ Dispositivos de Seguridad</h4>
+                    <div class="config-form">
+                        <select class="config-select" id="securityVendor">
+                            <option value="cisco">Cisco</option>
+                            <option value="fortinet">Fortinet</option>
+                            <option value="paloalto">Palo Alto</option>
+                            <option value="checkpoint">Check Point</option>
+                        </select>
+                        
+                        <input type="text" class="config-input" id="securityDeviceIP" placeholder="IP del dispositivo">
+                        <input type="text" class="config-input" id="securityUsername" placeholder="Usuario">
+                        <input type="password" class="config-input" id="securityPassword" placeholder="Contraseña">
+                        
+                        <button class="config-btn secondary" id="addSecurityDeviceBtn">Agregar Dispositivo</button>
+                    </div>
+                </div>
+
+                <!-- Cisco Integration -->
+                <div class="config-section">
+                    <h4>🔗 Integración Cisco</h4>
+                    <div class="config-form">
+                        <input type="text" class="config-input" id="xdrApiKey" placeholder="Cisco XDR API Key">
+                        <input type="text" class="config-input" id="umbrellaClientId" placeholder="Umbrella Client ID">
+                        <input type="password" class="config-input" id="umbrellaClientSecret" placeholder="Umbrella Client Secret">
+                        
+                        <button class="config-btn primary" id="configureCiscoBtn">Configurar Cisco</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Action Button -->
+        <button class="fab" id="configFab" title="Configuración">⚙️</button>
+    </div>
+
+    <!-- Notifications Container -->
+    <div class="notifications-container" id="notifications"></div>
+
+    <script src="js/network_dashboard.js"></script>
+</body>
+</html>

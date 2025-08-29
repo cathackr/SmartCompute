@@ -1,0 +1,43 @@
+name: "SmartCompute CodeQL Config"
+
+# Disable the default CodeQL query suites
+disable-default-queries: false
+
+# Run additional query suites
+queries:
+  - uses: security-and-quality
+  - uses: security-extended
+
+# Paths to exclude from analysis
+paths-ignore:
+  - "**/*.md"
+  - "**/*.txt"
+  - "**/*.json"
+  - "**/test_*"
+  - "**/tests/**"
+  - "**/venv/**"
+  - "**/smartcompute_env/**"
+  - "**/temp_env/**"
+  - "**/node_modules/**"
+  - "**/.git/**"
+  - "**/build/**"
+  - "**/dist/**"
+  - "**/__pycache__/**"
+  - "**/*.pyc"
+
+# Paths to include (override excludes if needed)
+paths:
+  - "smartcompute/"
+  - "security/"
+  - "services/"
+  - "app/"
+  - "scripts/"
+  - "*.py"
+
+# Custom query filters
+query-filters:
+  # Exclude specific queries that may have false positives
+  - exclude:
+      id: py/unused-import
+  - exclude:
+      id: py/similar-function
