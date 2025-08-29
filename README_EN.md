@@ -229,4 +229,51 @@ cd SmartCompute/smartcompute_industrial
 
 [**⭐ Give it a star if you find it useful**](https://github.com/cathackr/SmartCompute) • [**Live Demo**](http://127.0.0.1:8002) • [**Questions?**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20-%20Question)
 
+---
+
+## 💳 Direct Subscriptions and Payments
+
+### 🏢 **Enterprise Plan - $200-750/year**
+
+**Choose your preferred payment method:**
+
+| **Period** | **Price** | **Discount** | **Direct Payment** |
+|------------|-----------|--------------|-------------------|
+| **Annual** | $200/year | 65% OFF | [💳 **Pay $200 USD**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Enterprise%20-%20Annual%20Payment%20$200&body=Hello,%0D%0A%0D%0AI%20want%20to%20subscribe%20to%20the%20Enterprise%20annual%20plan%20for%20$200%20USD.%0D%0A%0D%0AName/Company:%0D%0AEmail:%0D%0APhone:%0D%0A%0D%0APlease%20confirm%20available%20payment%20methods.%0D%0A%0D%0AThank%20you.) |
+| **Biannual** | $400/2 years | 65% OFF | [💳 **Pay $400 USD**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Enterprise%20-%20Biannual%20Payment%20$400&body=Hello,%0D%0A%0D%0AI%20want%20to%20subscribe%20to%20the%20Enterprise%20biannual%20plan%20for%20$400%20USD.%0D%0A%0D%0AName/Company:%0D%0AEmail:%0D%0APhone:%0D%0A%0D%0APlease%20confirm%20available%20payment%20methods.%0D%0A%0D%0AThank%20you.) |
+| **Premium** | $750/year | Extra features | [💳 **Pay $750 USD**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Enterprise%20Premium%20-%20Payment%20$750&body=Hello,%0D%0A%0D%0AI%20want%20to%20subscribe%20to%20the%20Enterprise%20Premium%20plan%20for%20$750%20USD.%0D%0A%0D%0AName/Company:%0D%0AEmail:%0D%0APhone:%0D%0A%0D%0APlease%20confirm%20available%20payment%20methods.%0D%0A%0D%0AThank%20you.) |
+
+### 🏭 **Industrial Plan - $5000/3 years**
+
+**Includes implementation and consulting:**
+
+| **Payment Method** | **Total Price** | **Includes** | **Direct Payment** |
+|-------------------|-----------------|--------------|-------------------|
+| **Full Payment** | $5000 USD | Everything + 20% extra discount | [💳 **Pay $4000 USD**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Industrial%20-%20Full%20Payment%20$4000&body=Hello,%0D%0A%0D%0AI%20want%20to%20subscribe%20to%20the%20Industrial%20full%20plan%20for%20$4000%20USD%20(discounted%20price).%0D%0A%0D%0AName/Company:%0D%0AEmail:%0D%0APhone:%0D%0APlant/Network%20Location:%0D%0A%0D%0APlease%20confirm%20available%20payment%20methods.%0D%0A%0D%0AThank%20you.) |
+| **3 Annual Payments** | $1,667 × 3 years | Phased implementation | [💳 **First Payment $1667**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Industrial%20-%20First%20Payment%20$1667&body=Hello,%0D%0A%0D%0AI%20want%20to%20subscribe%20to%20the%20Industrial%20plan%20with%20annual%20payments%20(first%20payment%20$1667).%0D%0A%0D%0AName/Company:%0D%0AEmail:%0D%0APhone:%0D%0APlant/Network%20Location:%0D%0A%0D%0APlease%20confirm%20available%20payment%20methods.%0D%0A%0D%0AThank%20you.) |
+
+### 💰 **Subscription System**
+
+**Monthly recurring subscription with maximum flexibility:**
+
+- 🔄 **Auto-renewal**: Renews monthly on the same day
+- ❌ **Free cancellation**: Cancel anytime from your dashboard
+- 💸 **No penalties**: No cancellation fees
+- ⏰ **Grace period**: 15 days to change your mind with full refund
+- 📅 **Service until month-end**: If you cancel, keep access until paid period ends
+
+### 💳 **Integrated Payment Methods**
+
+- 🇦🇷 **MercadoPago**: Cards, automatic debit, transfers in Argentine pesos
+- ₿ **Bitso**: Bitcoin, Ethereum, USDC and other cryptocurrencies
+- 🔒 **Security**: All transactions are hashed and encrypted
+- 🏪 **Secure API**: Complete integration with certified banking systems
+
+### 📞 **Subscription Support**
+- **Dashboard**: Manage your subscription at http://localhost:8000/subscription
+- **Email**: ggwre04p0@mozmail.com (billing questions)
+- **LinkedIn**: [Direct professional consultation](https://www.linkedin.com/in/mart%C3%ADn-iribarne-swtf/)
+
+**🔒 15-day money-back guarantee • Cancel anytime • No commitment required**
+
 </div>
