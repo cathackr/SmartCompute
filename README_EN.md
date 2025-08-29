@@ -3,10 +3,10 @@
   
   # 🧠 SmartCompute v1.0.0-beta
   
-  ### Detecta problemas en redes industriales antes de que fallen los equipos
+  ### Detect industrial network problems before equipment fails
   
-  **Idiomas/Languages:** 
-  🇪🇸 [Español (este documento)](#) | 🇺🇸 [English](README_EN.md)
+  **Languages/Idiomas:** 
+  🇺🇸 [English (this document)](#) | 🇪🇸 [Español](README.md)
   
   [![Enterprise Ready](https://img.shields.io/badge/Enterprise-Ready-blue.svg)](https://github.com/cathackr/SmartCompute)
   [![Multi Platform](https://img.shields.io/badge/Platform-Multi--Platform-green.svg)](https://github.com/cathackr/SmartCompute)
@@ -23,20 +23,20 @@
 
 ⚠️ **Development Status:** This project is in active beta development. Features and performance metrics are under testing and validation.
 
-SmartCompute es una suite completa de monitoreo inteligente con **3 versiones** para diferentes necesidades:
+SmartCompute is a complete intelligent monitoring suite with **3 versions** for different needs:
 
-### 🏠 **SmartCompute Starter** (GRATIS)
-Monitoreo básico de rendimiento y detección de anomalías para uso personal y pequeñas empresas.
+### 🏠 **SmartCompute Starter** (FREE)
+Basic performance monitoring and anomaly detection for personal use and small businesses.
 
-### 🏢 **SmartCompute Enterprise** ($200-750/año)
-Análisis avanzado con IA, APIs empresariales, dashboard personalizable y soporte técnico.
+### 🏢 **SmartCompute Enterprise** ($200-750/year)
+Advanced AI analysis, enterprise APIs, customizable dashboard and technical support.
 
-### 🏭 **SmartCompute Industrial** ($5000/3 años)
-**¿Tu red industrial falla sin avisar?** Versión especializada que monitorea protocolos como Modbus, Profinet y OPC UA, detectando conflictos de IP, latencia alta y dispositivos problemáticos. Te avisa qué revisar, pero nunca toca tu configuración automáticamente.
+### 🏭 **SmartCompute Industrial** ($5000/3 years)
+**Does your industrial network fail without warning?** Specialized version that monitors protocols like Modbus, Profinet and OPC UA, detecting IP conflicts, high latency and problematic devices. It tells you what to check, but never touches your configuration automatically.
 
 ---
 
-SmartCompute ofrece:
+SmartCompute offers:
 
 - ⚡ **Real-time Threat Detection** with fast response capabilities
 - 🧠 **AI-Powered Analytics** for pattern recognition  
@@ -47,68 +47,68 @@ SmartCompute ofrece:
 
 *Performance metrics and results may vary based on system configuration and use case.*
 
-## 🚀 Instalación Paso a Paso
+## 🚀 Step-by-Step Installation
 
-### 🏠 SmartCompute Starter (GRATIS)
+### 🏠 SmartCompute Starter (FREE)
 
-**Instalación básica para monitoreo personal:**
+**Basic installation for personal monitoring:**
 
 ```bash
-# 1. Clonar el repositorio
+# 1. Clone the repository
 git clone https://github.com/cathackr/SmartCompute.git
 cd SmartCompute
 
-# 2. Instalar dependencias básicas
+# 2. Install basic dependencies
 pip install -r requirements-core.txt
 
-# 3. Ejecutar versión Starter
+# 3. Run Starter version
 python main.py --starter
 ```
 
 ### 🏢 SmartCompute Enterprise
 
-**Instalación completa con APIs y dashboard:**
+**Complete installation with APIs and dashboard:**
 
 ```bash
-# 1. Instalar dependencias completas
+# 1. Install complete dependencies
 pip install -r requirements.txt
 
-# 2. Configurar base de datos
+# 2. Setup database
 python -m app.core.database --setup
 
-# 3. Iniciar servidor Enterprise
+# 3. Start Enterprise server
 python main.py --enterprise --api
 # Dashboard: http://localhost:8000
 ```
 
 ### 🏭 SmartCompute Industrial
 
-**Instalación para redes industriales (Modbus, Profinet, OPC UA):**
+**Installation for industrial networks (Modbus, Profinet, OPC UA):**
 
 ```bash
-# 1. Clonar el repositorio
+# 1. Clone the repository
 git clone https://github.com/cathackr/SmartCompute.git
 cd SmartCompute
 
-# 2. Ir al directorio industrial
+# 2. Go to industrial directory
 cd smartcompute_industrial
 
-# 3. Instalar dependencias industriales (requiere privilegios de red)
+# 3. Install industrial dependencies (requires network privileges)
 sudo pip install -r requirements_industrial.txt
 
-# 4. Iniciar monitoreo industrial
+# 4. Start industrial monitoring
 sudo ./start_network_intelligence.sh
 # Dashboard: http://127.0.0.1:8002
 ```
 
-### 📱 Instalación en Dispositivos Móviles
+### 📱 Mobile Device Installation
 
-**SmartCompute Starter también funciona en móviles con apps de Python:**
+**SmartCompute Starter also works on mobile with Python apps:**
 
 #### Android:
 ```bash
-# 1. Instalar "Pydroid 3" desde Google Play
-# 2. Abrir Pydroid 3 y en la terminal ejecutar:
+# 1. Install "Pydroid 3" from Google Play
+# 2. Open Pydroid 3 and in terminal execute:
 pip install requests numpy pandas
 wget https://raw.githubusercontent.com/cathackr/SmartCompute/main/main.py
 python main.py --starter --mobile
@@ -116,77 +116,62 @@ python main.py --starter --mobile
 
 #### iPhone/iPad:
 ```bash
-# 1. Instalar "Pythonista 3" desde App Store  
-# 2. En Pythonista, crear nuevo archivo y pegar:
+# 1. Install "Pythonista 3" from App Store  
+# 2. In Pythonista, create new file and paste:
 import requests
 url = "https://raw.githubusercontent.com/cathackr/SmartCompute/main/main.py"
 exec(requests.get(url).text, {'mode': 'starter', 'mobile': True})
 ```
 
-### 📋 Requisitos del Sistema
-- **Python 3.8+**: Requerido para todas las versiones
-- **Linux/Windows/macOS**: ✅ Todas compatibles
-- **Android/iOS**: ✅ Solo versión Starter
-- **Privilegios de red**: Solo para versión Industrial
+### 📋 System Requirements
+- **Python 3.8+**: Required for all versions
+- **Linux/Windows/macOS**: ✅ All compatible
+- **Android/iOS**: ✅ Starter version only
+- **Network privileges**: Industrial version only
 
-## 📸 Ve SmartCompute en Acción
+## 📸 See SmartCompute in Action
 
-### Dashboard de Red Industrial
+### Industrial Network Dashboard
 ![Network Dashboard](smartcompute_industrial/ui/network_dashboard_screenshot.png)
-*Topología de red en tiempo real con alertas de conflictos*
+*Real-time network topology with conflict alerts*
 
-### Análisis de Protocolos
+### Protocol Analysis
 ![Protocol Analysis](smartcompute_industrial/ui/protocol_analysis_screenshot.png)  
-*Detección automática de Modbus, Profinet, OPC UA*
+*Automatic detection of Modbus, Profinet, OPC UA*
 
-### Alertas de Seguridad
+### Security Alerts
 ![Security Alerts](smartcompute_industrial/ui/security_alerts_screenshot.png)
-*Conflictos de IP y dispositivos con alta latencia*
+*IP conflicts and high latency devices*
 
-## 💰 Planes y Precios
+## 💰 Plans and Pricing
 
 ### 🏠 **Starter Plan**
-**GRATUITO** - Para uso personal y pequeñas empresas
-- ✅ Monitoreo básico de rendimiento
-- ✅ Detección de anomalías
-- ✅ Dashboard web básico
-- ❌ APIs limitadas
-- ❌ Sin soporte técnico
+**FREE** - For personal use and small businesses
+- ✅ Basic performance monitoring
+- ✅ Anomaly detection
+- ✅ Basic web dashboard
+- ❌ Limited APIs
+- ❌ No technical support
 
 ### 🏢 **Enterprise Plan**
-**$200-750/año** - Para empresas medianas y grandes
-- ✅ Todo de Starter +
-- ✅ IA avanzada para análisis predictivo
-- ✅ APIs empresariales completas
-- ✅ Dashboard personalizable
-- ✅ Integración con sistemas existentes
-- ✅ Soporte técnico prioritario
-- ✅ Reportes personalizados
+**$200-750/year** - For medium and large enterprises
+- ✅ Everything in Starter +
+- ✅ Advanced AI for predictive analysis
+- ✅ Complete enterprise APIs
+- ✅ Customizable dashboard
+- ✅ Integration with existing systems
+- ✅ Priority technical support
+- ✅ Custom reports
 
 ### 🏭 **Industrial Plan**
-**$5000/3 años** - Para redes industriales críticas
-- ✅ Todo de Enterprise +
-- ✅ Monitoreo de protocolos industriales (Modbus, Profinet, OPC UA)
-- ✅ Detección de conflictos de red en tiempo real
-- ✅ Análisis de dispositivos industriales (PLCs, HMIs)
-- ✅ Alertas de seguridad especializadas
-- ✅ Consultoría de implementación incluida
-- ✅ Certificaciones industriales (ISA/IEC 62443)
-
-## 🚀 Installation
-
-### Source Installation
-```bash
-# Clone the repository
-git clone https://github.com/cathackr/SmartCompute.git
-cd SmartCompute
-
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Test with the demo
-python3 examples/synthetic_demo.py
-```
+**$5000/3 years** - For critical industrial networks
+- ✅ Everything in Enterprise +
+- ✅ Industrial protocol monitoring (Modbus, Profinet, OPC UA)
+- ✅ Real-time network conflict detection
+- ✅ Industrial device analysis (PLCs, HMIs)
+- ✅ Specialized security alerts
+- ✅ Implementation consulting included
+- ✅ Industrial certifications (ISA/IEC 62443)
 
 ## 📚 Documentation
 
@@ -233,15 +218,15 @@ python3 examples/synthetic_demo.py
 
 <div align="center">
   
-### 🚀 **¿Listo para evitar el próximo paro de producción?**
+### 🚀 **Ready to prevent the next production shutdown?**
 
-**Prueba gratis en 5 minutos:**
+**Try free in 5 minutes:**
 ```bash
 git clone https://github.com/cathackr/SmartCompute.git
 cd SmartCompute/smartcompute_industrial  
 ./start_network_intelligence.sh
 ```
 
-[**⭐ Dale una estrella si te parece útil**](https://github.com/cathackr/SmartCompute) • [**Demo en vivo**](http://127.0.0.1:8002) • [**¿Dudas?**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20-%20Consulta)
+[**⭐ Give it a star if you find it useful**](https://github.com/cathackr/SmartCompute) • [**Live Demo**](http://127.0.0.1:8002) • [**Questions?**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20-%20Question)
 
 </div>
