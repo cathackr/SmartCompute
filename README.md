@@ -286,9 +286,9 @@ cd SmartCompute/smartcompute_industrial
 
 | **Período** | **Precio** | **Descuento** | **Pago Directo** |
 |-------------|------------|---------------|------------------|
-| **Anual** | $200/año | 65% OFF | [💳 **Pagar $200 USD**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Enterprise%20-%20Pago%20Anual%20$200&body=Hola,%0D%0A%0D%0AQuiero%20suscribirme%20al%20plan%20Enterprise%20anual%20por%20$200%20USD.%0D%0A%0D%0ANombre/Empresa:%0D%0ACorreo:%0D%0ATeléfono:%0D%0A%0D%0AConfirmar%20métodos%20de%20pago%20disponibles.%0D%0A%0D%0AGracias.) |
-| **Bianual** | $400/2 años | 65% OFF | [💳 **Pagar $400 USD**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Enterprise%20-%20Pago%20Bianual%20$400&body=Hola,%0D%0A%0D%0AQuiero%20suscribirme%20al%20plan%20Enterprise%20bianual%20por%20$400%20USD.%0D%0A%0D%0ANombre/Empresa:%0D%0ACorreo:%0D%0ATeléfono:%0D%0A%0D%0AConfirmar%20métodos%20de%20pago%20disponibles.%0D%0A%0D%0AGracias.) |
-| **Premium** | $750/año | Características extra | [💳 **Pagar $750 USD**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Enterprise%20Premium%20-%20Pago%20$750&body=Hola,%0D%0A%0D%0AQuiero%20suscribirme%20al%20plan%20Enterprise%20Premium%20por%20$750%20USD.%0D%0A%0D%0ANombre/Empresa:%0D%0ACorreo:%0D%0ATeléfono:%0D%0A%0D%0AConfirmar%20métodos%20de%20pago%20disponibles.%0D%0A%0D%0AGracias.) |
+| **Anual** | $200/año | 65% OFF | [💳 **Pagar $200 USD**](smartcompute_industrial/ui/checkout.html?plan=enterprise-annual) |
+| **Bianual** | $400/2 años | 65% OFF | [💳 **Pagar $400 USD**](smartcompute_industrial/ui/checkout.html?plan=enterprise-biannual) |
+| **Premium** | $750/año | Características extra | [💳 **Pagar $750 USD**](smartcompute_industrial/ui/checkout.html?plan=enterprise-premium) |
 
 ### 🏭 **Industrial Plan - $5000/3 años**
 
@@ -296,8 +296,8 @@ cd SmartCompute/smartcompute_industrial
 
 | **Modalidad** | **Precio Total** | **Incluye** | **Pago Directo** |
 |---------------|------------------|-------------|------------------|
-| **Pago Completo** | $5000 USD | Todo + 20% descuento adicional | [💳 **Pagar $4000 USD**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Industrial%20-%20Pago%20Completo%20$4000&body=Hola,%0D%0A%0D%0AQuiero%20suscribirme%20al%20plan%20Industrial%20completo%20por%20$4000%20USD%20(precio%20con%20descuento).%0D%0A%0D%0ANombre/Empresa:%0D%0ACorreo:%0D%0ATeléfono:%0D%0AUbicación%20de%20planta/red:%0D%0A%0D%0AConfirmar%20métodos%20de%20pago%20disponibles.%0D%0A%0D%0AGracias.) |
-| **3 Cuotas Anuales** | $1,667 × 3 años | Implementación escalonada | [💳 **Primera Cuota $1667**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Industrial%20-%20Primera%20Cuota%20$1667&body=Hola,%0D%0A%0D%0AQuiero%20suscribirme%20al%20plan%20Industrial%20con%20cuotas%20anuales%20(primera%20cuota%20$1667).%0D%0A%0D%0ANombre/Empresa:%0D%0ACorreo:%0D%0ATeléfono:%0D%0AUbicación%20de%20planta/red:%0D%0A%0D%0AConfirmar%20métodos%20de%20pago%20disponibles.%0D%0A%0D%0AGracias.) |
+| **Pago Completo** | $5000 USD | Todo + 20% descuento adicional | [💳 **Pagar $4000 USD**](smartcompute_industrial/ui/checkout.html?plan=industrial-full) |
+| **3 Cuotas Anuales** | $1,667 × 3 años | Implementación escalonada | [💳 **Primera Cuota $1667**](smartcompute_industrial/ui/checkout.html?plan=industrial-installments) |
 
 ### 💰 **Sistema de Suscripción**
 

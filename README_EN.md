@@ -271,9 +271,9 @@ cd SmartCompute/smartcompute_industrial
 
 | **Period** | **Price** | **Discount** | **Direct Payment** |
 |------------|-----------|--------------|-------------------|
-| **Annual** | $200/year | 65% OFF | [💳 **Pay $200 USD**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Enterprise%20-%20Annual%20Payment%20$200&body=Hello,%0D%0A%0D%0AI%20want%20to%20subscribe%20to%20the%20Enterprise%20annual%20plan%20for%20$200%20USD.%0D%0A%0D%0AName/Company:%0D%0AEmail:%0D%0APhone:%0D%0A%0D%0APlease%20confirm%20available%20payment%20methods.%0D%0A%0D%0AThank%20you.) |
-| **Biannual** | $400/2 years | 65% OFF | [💳 **Pay $400 USD**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Enterprise%20-%20Biannual%20Payment%20$400&body=Hello,%0D%0A%0D%0AI%20want%20to%20subscribe%20to%20the%20Enterprise%20biannual%20plan%20for%20$400%20USD.%0D%0A%0D%0AName/Company:%0D%0AEmail:%0D%0APhone:%0D%0A%0D%0APlease%20confirm%20available%20payment%20methods.%0D%0A%0D%0AThank%20you.) |
-| **Premium** | $750/year | Extra features | [💳 **Pay $750 USD**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Enterprise%20Premium%20-%20Payment%20$750&body=Hello,%0D%0A%0D%0AI%20want%20to%20subscribe%20to%20the%20Enterprise%20Premium%20plan%20for%20$750%20USD.%0D%0A%0D%0AName/Company:%0D%0AEmail:%0D%0APhone:%0D%0A%0D%0APlease%20confirm%20available%20payment%20methods.%0D%0A%0D%0AThank%20you.) |
+| **Annual** | $200/year | 65% OFF | [💳 **Pay $200 USD**](smartcompute_industrial/ui/checkout.html?plan=enterprise-annual) |
+| **Biannual** | $400/2 years | 65% OFF | [💳 **Pay $400 USD**](smartcompute_industrial/ui/checkout.html?plan=enterprise-biannual) |
+| **Premium** | $750/year | Extra features | [💳 **Pay $750 USD**](smartcompute_industrial/ui/checkout.html?plan=enterprise-premium) |
 
 ### 🏭 **Industrial Plan - $5000/3 years**
 
@@ -281,8 +281,8 @@ cd SmartCompute/smartcompute_industrial
 
 | **Payment Method** | **Total Price** | **Includes** | **Direct Payment** |
 |-------------------|-----------------|--------------|-------------------|
-| **Full Payment** | $5000 USD | Everything + 20% extra discount | [💳 **Pay $4000 USD**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Industrial%20-%20Full%20Payment%20$4000&body=Hello,%0D%0A%0D%0AI%20want%20to%20subscribe%20to%20the%20Industrial%20full%20plan%20for%20$4000%20USD%20(discounted%20price).%0D%0A%0D%0AName/Company:%0D%0AEmail:%0D%0APhone:%0D%0APlant/Network%20Location:%0D%0A%0D%0APlease%20confirm%20available%20payment%20methods.%0D%0A%0D%0AThank%20you.) |
-| **3 Annual Payments** | $1,667 × 3 years | Phased implementation | [💳 **First Payment $1667**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20Industrial%20-%20First%20Payment%20$1667&body=Hello,%0D%0A%0D%0AI%20want%20to%20subscribe%20to%20the%20Industrial%20plan%20with%20annual%20payments%20(first%20payment%20$1667).%0D%0A%0D%0AName/Company:%0D%0AEmail:%0D%0APhone:%0D%0APlant/Network%20Location:%0D%0A%0D%0APlease%20confirm%20available%20payment%20methods.%0D%0A%0D%0AThank%20you.) |
+| **Full Payment** | $5000 USD | Everything + 20% extra discount | [💳 **Pay $4000 USD**](smartcompute_industrial/ui/checkout.html?plan=industrial-full) |
+| **3 Annual Payments** | $1,667 × 3 years | Phased implementation | [💳 **First Payment $1667**](smartcompute_industrial/ui/checkout.html?plan=industrial-installments) |
 
 ### 💰 **Subscription System**
 

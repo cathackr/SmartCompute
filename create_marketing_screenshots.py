@@ -46,21 +46,38 @@ def create_grafana_dashboard():
     draw.rectangle(panel2, fill='#1E1E1E', outline='#3C3C3C')
     draw.text((310, 90), "CPU Usage (%)", fill='#FFFFFF', font=font_normal)
     
-    # Simple line chart
+    # Simple line chart with background
     chart_area = [320, 115, 560, 180]
-    draw.rectangle(chart_area, outline='#3C3C3C')
+    draw.rectangle(chart_area, fill='#2A2A2A', outline='#3C3C3C')
     
-    # CPU usage line (simulated)
+    # Grid lines for better visualization
+    for i in range(1, 5):
+        y_grid = 115 + (i * 13)
+        draw.line([(325, y_grid), (555, y_grid)], fill='#404040', width=1)
+    
+    # CPU usage line (more realistic data)
     points = []
-    for i in range(20):
-        x = 320 + (i * 12)
-        y = 180 - (30 + i*2 + (i%3)*10)  # Simulated CPU data
+    cpu_values = [15, 18, 22, 25, 30, 28, 24, 27, 32, 35, 38, 42, 40, 36, 33, 29, 26, 23, 20, 18]
+    for i, cpu_val in enumerate(cpu_values):
+        x = 325 + (i * 11)
+        y = 175 - (cpu_val - 10) * 2  # Scale to fit chart
         points.append((x, y))
     
+    # Draw the line with multiple segments for better visibility
     for i in range(len(points)-1):
-        draw.line([points[i], points[i+1]], fill='#00D924', width=2)
+        draw.line([points[i], points[i+1]], fill='#00D924', width=3)
+        # Add small circles at data points
+        x, y = points[i]
+        draw.ellipse([x-2, y-2, x+2, y+2], fill='#00D924')
     
-    draw.text((565, 160), "23%", fill='#00D924', font=font_normal)
+    # Last point
+    if points:
+        x, y = points[-1]
+        draw.ellipse([x-2, y-2, x+2, y+2], fill='#00D924')
+    
+    draw.text((525, 160), "42%", fill='#00D924', font=font_normal)
+    draw.text((325, 105), "50%", fill='#666666', font=font_small)
+    draw.text((325, 165), "10%", fill='#666666', font=font_small)
     
     # Panel 3: Network Traffic
     panel3 = [600, 80, 880, 200]
@@ -240,7 +257,8 @@ def create_benchmark_results():
     draw.text((50, 60), "Real-world industrial network testing results", fill='#7F8C8D', font=font_subtitle)
     
     # Test environment info
-    draw.rectangle([50, 90, width-50, 180], outline='#BDC3C7', fill='#ECF0F1')
+    env_box = [50, 90, width-50, 180]
+    draw.rectangle(env_box, outline='#BDC3C7', fill='#ECF0F1')
     draw.text((70, 105), "Test Environment:", fill='#2C3E50', font=font_subtitle)
     
     env_info = [
@@ -252,7 +270,10 @@ def create_benchmark_results():
     ]
     
     for i, info in enumerate(env_info):
-        draw.text((80, 125 + i*12), info, fill='#34495E', font=font_normal)
+        # Make sure text stays within the box
+        y_pos = 125 + i*11
+        if y_pos < 175:  # Keep within box boundaries
+            draw.text((80, y_pos), info, fill='#34495E', font=font_normal)
     
     # Performance metrics charts
     chart_y = 200
