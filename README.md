@@ -286,9 +286,9 @@ cd SmartCompute/smartcompute_industrial
 
 | **Período** | **Precio** | **Descuento** | **Pago Directo** |
 |-------------|------------|---------------|------------------|
-| **Anual** | $200/año | 65% OFF | [💳 **Pagar $200 USD**](https://cathackr.github.io/SmartCompute/checkout_redirect.html?plan=enterprise-annual&amount=200){:target="_blank"} |
-| **Bianual** | $400/2 años | 65% OFF | [💳 **Pagar $400 USD**](https://cathackr.github.io/SmartCompute/checkout_redirect.html?plan=enterprise-biannual&amount=400){:target="_blank"} |
-| **Premium** | $750/año | Características extra | [💳 **Pagar $750 USD**](https://cathackr.github.io/SmartCompute/checkout_redirect.html?plan=enterprise-premium&amount=750){:target="_blank"} |
+| **Anual** | $200/año | 65% OFF | [💳 **Pagar $200 USD**](https://cathackr.github.io/SmartCompute/docs/checkout_redirect.html?plan=enterprise-annual&amount=200){:target="_blank"} |
+| **Bianual** | $400/2 años | 65% OFF | [💳 **Pagar $400 USD**](https://cathackr.github.io/SmartCompute/docs/checkout_redirect.html?plan=enterprise-biannual&amount=400){:target="_blank"} |
+| **Premium** | $750/año | Características extra | [💳 **Pagar $750 USD**](https://cathackr.github.io/SmartCompute/docs/checkout_redirect.html?plan=enterprise-premium&amount=750){:target="_blank"} |
 
 ### 🏭 **Industrial Plan - $5000/3 años**
 
@@ -296,8 +296,8 @@ cd SmartCompute/smartcompute_industrial
 
 | **Modalidad** | **Precio Total** | **Incluye** | **Pago Directo** |
 |---------------|------------------|-------------|------------------|
-| **Pago Completo** | $5000 USD | Todo + 20% descuento adicional | [💳 **Pagar $4000 USD**](https://cathackr.github.io/SmartCompute/checkout_redirect.html?plan=industrial-full&amount=4000){:target="_blank"} |
-| **3 Cuotas Anuales** | $1,667 × 3 años | Implementación escalonada | [💳 **Primera Cuota $1667**](https://cathackr.github.io/SmartCompute/checkout_redirect.html?plan=industrial-installments&amount=1667){:target="_blank"} |
+| **Pago Completo** | $5000 USD | Todo + 20% descuento adicional | [💳 **Pagar $4000 USD**](https://cathackr.github.io/SmartCompute/docs/checkout_redirect.html?plan=industrial-full&amount=4000){:target="_blank"} |
+| **3 Cuotas Anuales** | $1,667 × 3 años | Implementación escalonada | [💳 **Primera Cuota $1667**](https://cathackr.github.io/SmartCompute/docs/checkout_redirect.html?plan=industrial-installments&amount=1667){:target="_blank"} |
 
 ### 💰 **Sistema de Suscripción**
 
