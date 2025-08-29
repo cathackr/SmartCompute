@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/cat_icon_large.png?v=2024" alt="SmartCompute HMI Logo" width="256" height="192">
+  <img src="assets/smartcompute_hmi_logo.png" alt="SmartCompute HMI Logo" width="256" height="192">
   
   # 🧠 SmartCompute v1.0.0-beta
   
