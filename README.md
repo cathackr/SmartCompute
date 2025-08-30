@@ -326,9 +326,9 @@ SmartCompute/
 
 ## 📚 Documentation
 
-- 📖 [Technical Documentation](TECHNICAL_ENTERPRISE_DOCUMENTATION.md)
-- 🚀 [Quick Start Guide](https://smartcompute.ar/quickstart)
-- 💼 [Enterprise Guide](https://smartcompute.ar/enterprise)
+- 📖 [Technical Documentation](docs/TECHNICAL_DOCUMENTATION.md)
+- 🚀 [Quick Start Guide](docs/GUIA_INICIO_RAPIDO.md)
+- 💼 [Enterprise Guide](docs/GUIA_EMPRESARIAL.md)
 
 ## 👨‍💻 Creator
 

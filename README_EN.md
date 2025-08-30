@@ -207,9 +207,9 @@ exec(requests.get(url).text, {'mode': 'starter', 'mobile': True})
 
 ## 📚 Documentation
 
-- 📖 [Technical Documentation](TECHNICAL_ENTERPRISE_DOCUMENTATION.md)
-- 🚀 [Quick Start Guide](https://smartcompute.ar/quickstart)
-- 💼 [Enterprise Guide](https://smartcompute.ar/enterprise)
+- 📖 [Technical Documentation](docs/TECHNICAL_DOCUMENTATION.md)
+- 🚀 [Quick Start Guide](docs/QUICK_START_GUIDE.md)
+- 💼 [Enterprise Guide](docs/ENTERPRISE_GUIDE.md)
 
 ## 👨‍💻 Creator
 
