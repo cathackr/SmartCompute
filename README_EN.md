@@ -302,9 +302,9 @@ cd SmartCompute/smartcompute_industrial
 - 🏪 **Secure API**: Complete integration with certified banking systems
 
 ### 📞 **Subscription Support**
-- **Dashboard**: Manage your subscription at http://localhost:8000/subscription
 - **Email**: ggwre04p0@mozmail.com (billing questions)
 - **LinkedIn**: [Direct professional consultation](https://www.linkedin.com/in/mart%C3%ADn-iribarne-swtf/)
+- **Response**: All inquiries are handled via email
 
 **🔒 15-day money-back guarantee • Cancel anytime • No commitment required**
 

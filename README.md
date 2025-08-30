@@ -2,19 +2,26 @@
 
 <table>
 <tr>
-<td width="70%">
+<td width="20%">
+
+[![Enterprise Ready](https://img.shields.io/badge/Enterprise-Ready-blue.svg)](https://github.com/cathackr/SmartCompute)
+
+[![Multi Platform](https://img.shields.io/badge/Platform-Multi--Platform-green.svg)](https://github.com/cathackr/SmartCompute)
+
+[![License](https://img.shields.io/badge/License-Commercial-red.svg)](https://github.com/cathackr/SmartCompute)
+
+![Profile Views](https://komarev.com/ghpvc/?username=cathackr&repo=SmartCompute&color=blue)
+
+![GitHub stars](https://img.shields.io/github/stars/cathackr/SmartCompute?style=social)
+
+![GitHub forks](https://img.shields.io/github/forks/cathackr/SmartCompute?style=social)
+
+</td>
+<td width="50%">
 
 ### Detecta problemas en redes industriales antes de que fallen los equipos
 
 **Idiomas/Languages:** 🇪🇸 [Español (este documento)](#) | 🇺🇸 [English](README_EN.md)
-
-[![Enterprise Ready](https://img.shields.io/badge/Enterprise-Ready-blue.svg)](https://github.com/cathackr/SmartCompute)
-[![Multi Platform](https://img.shields.io/badge/Platform-Multi--Platform-green.svg)](https://github.com/cathackr/SmartCompute)
-[![License](https://img.shields.io/badge/License-Commercial-red.svg)](https://github.com/cathackr/SmartCompute)
-
-![Profile Views](https://komarev.com/ghpvc/?username=cathackr&repo=SmartCompute&color=blue)
-![GitHub stars](https://img.shields.io/github/stars/cathackr/SmartCompute?style=social)
-![GitHub forks](https://img.shields.io/github/forks/cathackr/SmartCompute?style=social)
 
 </td>
 <td width="30%">
@@ -354,9 +361,9 @@ cd SmartCompute/smartcompute_industrial
 - 🏪 **API segura**: Integración completa con sistemas bancarios certificados
 
 ### 📞 **Soporte de Suscripciones**
-- **Dashboard**: Gestiona tu suscripción desde http://localhost:8000/subscription
 - **Email**: ggwre04p0@mozmail.com (dudas sobre facturación)
 - **LinkedIn**: [Consulta profesional directa](https://www.linkedin.com/in/mart%C3%ADn-iribarne-swtf/)
+- **Respuesta**: Todas las consultas se gestionan por correo electrónico
 
 **🔒 Garantía de reembolso de 15 días • Cancela cuando quieras • Sin compromiso de permanencia**
 
