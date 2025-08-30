@@ -160,7 +160,7 @@ python main.py --starter --mobile
 !pip install -r requirements-core.txt
 
 # 4. Ejecutar SmartCompute Starter en tercera celda:
-!python main.py --starter --demo
+  !python main.py --starter --mobile --demo
 # El dashboard se abrirá automáticamente en Colab
 ```
 
