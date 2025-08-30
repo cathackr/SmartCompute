@@ -264,6 +264,52 @@ pip install -r requirements.txt
 python3 examples/synthetic_demo.py
 ```
 
+## 📁 Estructura del Proyecto
+
+<table>
+<tr>
+<td width="30%" valign="top">
+
+### 📂 Directorio Principal
+```
+SmartCompute/
+├── 📱 app/                    # Backend FastAPI
+├── 🏭 smartcompute_industrial/ # Versión Industrial
+├── 🎨 assets/                 # Imágenes y recursos
+├── 🗃️ alembic/                # Migraciones DB
+├── 🐳 docker-compose.yml     # Contenedores
+├── ⚙️ main.py                # Servidor principal
+└── 📋 README.md              # Este archivo
+```
+
+**Archivos clave:**
+- [`main.py`](main.py) - Punto de entrada
+- [`requirements.txt`](requirements.txt) - Dependencias
+- [`.env.example`](.env.example) - Configuración
+
+</td>
+<td width="70%" valign="top">
+
+### 🗂️ Navegación Rápida por Carpetas
+
+| **🏭 Industrial** | **📱 Backend** | **🎨 Assets** |
+|------------------|---------------|---------------|
+| [`smartcompute_industrial/`](smartcompute_industrial/) | [`app/api/`](app/api/) | [`assets/`](assets/) |
+| [Network API](smartcompute_industrial/network_api.py) | [Health Endpoints](app/api/health_endpoints.py) | [Logo HMI](assets/smartcompute_hmi_logo.png) |
+| [Token API](smartcompute_industrial/token_api.py) | [Main API](app/api/main.py) | [Dashboard Grafana](assets/grafana_smartcompute_overview.png) |
+| [Security](smartcompute_industrial/security.py) | [Models](app/models/) | [Screenshots](assets/) |
+
+| **📋 Docs** | **⚙️ Config** | **🧪 Scripts** |
+|-------------|---------------|---------------|
+| [`docs/`](docs/) | [`docker-compose*.yml`](.) | [`scripts/`](scripts/) |
+| [Network Guide](docs/NETWORK_INTELLIGENCE_GUIDE.md) | [Production](docker-compose.production.yml) | [Deploy](scripts/deploy.sh) |
+| [Token Guide](docs/TOKEN_INTELLIGENCE_GUIDE.md) | [Development](.env.example) | [Monitoring](scripts/setup-monitoring.sh) |
+| [Observability](docs/OBSERVABILITY.md) | [Security](security/) | [Migration](scripts/migrate_to_postgresql.py) |
+
+</td>
+</tr>
+</table>
+
 ## 📚 Documentation
 
 - 📖 [Technical Documentation](TECHNICAL_ENTERPRISE_DOCUMENTATION.md)
