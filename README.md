@@ -159,9 +159,17 @@ python main.py --starter --mobile
 # 3. Instalar dependencias en segunda celda:
 !pip install -r requirements-core.txt
 
-# 4. Ejecutar SmartCompute Starter en tercera celda:
-!python main.py --starter --mobile --demo
-# El dashboard se abrirá automáticamente en Colab
+# 4. Ejecutar DEMO INTERACTIVO en tercera celda (RECOMENDADO):
+!python examples/colab_interactive_demo.py
+# 📱 Alertas en tiempo real + gráficos animados + optimizado móviles
+
+# 5. ALTERNATIVA - Demo básico en texto:
+!python examples/synthetic_demo.py  
+# Análisis completo solo en texto (más rápido)
+
+# 6. OPCIONAL - Servidor web completo:
+!python main.py --starter &
+# Dashboard web profesional con APIs
 ```
 
 **✅ Ventajas de Google Colab:**
