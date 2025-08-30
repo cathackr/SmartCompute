@@ -149,25 +149,31 @@ wget https://raw.githubusercontent.com/cathackr/SmartCompute/main/main.py
 python main.py --starter --mobile
 ```
 
-#### iPhone/iPad:
-```bash
-# OPCIÓN 1 - Carnets - Jupyter (100% GRATIS):
-# 1. Instalar "Carnets - Jupyter" desde App Store (GRATIS)
-# 2. Crear nuevo notebook y ejecutar:
-!pip install requests numpy pandas
-import requests
-url = "https://raw.githubusercontent.com/cathackr/SmartCompute/main/main.py"
-exec(requests.get(url).text, {'mode': 'starter', 'mobile': True})
+#### Google Colab (📱 iOS, Android, PC):
+```python
+# 1. Abrir https://colab.research.google.com desde cualquier dispositivo
+# 2. Crear nuevo notebook y ejecutar en la primera celda:
+!git clone https://github.com/cathackr/SmartCompute.git
+%cd SmartCompute
 
-# OPCIÓN 2 - Pyto (14 días gratis):
-# 1. Instalar "Pyto" desde App Store (prueba gratuita)
-# 2. En Pyto, crear nuevo archivo y pegar el código anterior
+# 3. Instalar dependencias en segunda celda:
+!pip install -r requirements-core.txt
+
+# 4. Ejecutar SmartCompute Starter en tercera celda:
+!python main.py --starter --demo
+# El dashboard se abrirá automáticamente en Colab
 ```
 
+**✅ Ventajas de Google Colab:**
+- 🌐 **Universal**: Funciona en iPhone, Android, tablet, PC
+- ⚡ **Sin instalación**: Solo necesitas navegador web  
+- 🚀 **GPU gratis**: Aceleración para análisis complejos
+- 💾 **Persistente**: Guarda tu configuración en Google Drive
+
 ### 📋 Requisitos del Sistema
-- **Python 3.8+**: Requerido para todas las versiones
-- **Linux/Windows/macOS**: ✅ Todas compatibles
-- **Android/iOS**: ✅ Solo versión Starter
+- **Instalación local**: Python 3.8+ (Linux/Windows/macOS/Android)
+- **Google Colab**: Solo navegador web (iOS, Android, PC, tablet)
+- **Móviles**: ✅ Android (apps locales) + iOS/Android (Colab web)
 - **Privilegios de red**: Solo para versión Industrial
 
 ## 📸 Ve SmartCompute en Acción
@@ -193,15 +199,15 @@ exec(requests.get(url).text, {'mode': 'starter', 'mobile': True})
 *Monitoreo básico desde Android/iOS - perfecto para freelancers y PyMEs*
 
 **Funciona en tu móvil:**
-- 📱 **Android**: Pydroid 3 (GRATIS) + QPython 3L (GRATIS) + notificaciones push nativas
-- 🍎 **iPhone/iPad**: Pyto (14 días GRATIS) + Carnets - Jupyter (GRATIS) + widgets de pantalla principal  
-- 🔋 **Bajo consumo**: <2% batería por hora de monitoreo
-- 🌐 **Sin conexión**: Funciona offline, sincroniza cuando hay WiFi
-- 📈 **Gráficos táctiles**: Zoom, deslizar, métricas interactivas
+- 🌐 **Google Colab**: Acceso universal desde cualquier navegador (iOS, Android, PC)
+- 📱 **Android**: Pydroid 3 (GRATIS) + QPython 3L (GRATIS) para instalación local
+- 🔋 **Bajo consumo web**: Sin impacto en batería (corre en la nube)
+- 🚀 **GPU gratuita**: Procesa análisis complejos más rápido que tu PC
+- 📱 **Interface táctil**: Optimizado para pantallas móviles
 
-**Apps alternativas 100% gratuitas:**
+**Opciones de instalación local:**
 - 🤖 **Android**: QPython 3L, Termux (terminal completo)
-- 🍎 **iOS**: Carnets - Jupyter Notebooks (completamente gratis), a-Shell mini
+- 🌐 **Navegador**: Google Colab (recomendado para iOS y uso casual)
 
 ### 📈 Análisis de Protocolos Industriales
 ![Protocol Analysis](smartcompute_industrial/ui/protocol_analysis_screenshot.png)  
