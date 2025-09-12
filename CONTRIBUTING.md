@@ -41,7 +41,7 @@ We especially welcome:
 
 #### 1. Fork and Clone
 ```bash
-git clone https://github.com/your-username/SmartCompute.git
+git clone https://github.com/cathackr/SmartCompute.git
 cd SmartCompute
 ```
 
