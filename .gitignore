@@ -96,9 +96,18 @@ target/
 profile_default/
 ipython_config.py
 
-# Environment management
+# Environment management - CRÍTICO: NUNCA SUBIR CREDENCIALES
 .env
+.env.*
 .envrc
+.env.production
+.env.staging
+.env.development
+.env.local
+.env.secrets
+*secrets*
+*Secrets*
+*SECRETS*
 
 # Package managers
 #Pipfile.lock
@@ -161,7 +170,6 @@ examples/
 tests/
 monitoring/
 services/
-security/
 vault/
 temp_env/
 smartcompute_env/
@@ -171,7 +179,8 @@ distribution/
 installers/
 architecture/
 .github/
-nginx/
+# security/ - TEMPORAL: permitir para actualización enterprise
+# nginx/ - TEMPORAL: permitir configuración TLS
 alembic/
 
 # Development files
@@ -195,12 +204,25 @@ monitoring_logs/
 smart_history.json
 smartcompute_history.json
 
-# Configuration files with sensitive data
+# Configuration files with sensitive data - PROTECCIÓN EXTRA
 config.local.json
 .env.local
 secrets.json
 credentials.json
 api_keys.json
+*password*
+*PASSWORD*
+*token*
+*TOKEN*
+secret.key
+*.key
+*.pem
+*.crt
+*.p12
+*.jks
+*mercadopago*
+*MercadoPago*
+*MERCADOPAGO*
 
 # Development files that may contain sensitive info
 debug.log

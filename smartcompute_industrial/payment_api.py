@@ -364,4 +364,5 @@ def verify_webhook_signature(payload: str, signature: str) -> bool:
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8003)
+    # 🔒 SEGURIDAD: Solo localhost - usar nginx como proxy para acceso externo
+    uvicorn.run(app, host="127.0.0.1", port=8003)
