@@ -14,6 +14,15 @@
   ![Profile Views](https://komarev.com/ghpvc/?username=cathackr&repo=SmartCompute&color=blue)
   ![GitHub stars](https://img.shields.io/github/stars/cathackr/SmartCompute?style=social)
   ![GitHub forks](https://img.shields.io/github/forks/cathackr/SmartCompute?style=social)
+
+  **📱 Repository QR Codes:**
+  
+  <img src="assets/qr_codes/smartcompute_main_qr.png" alt="Main QR" width="80">
+  
+  **🔗 Quick access:**
+  - [🏠 Main (Public)](https://github.com/cathackr/SmartCompute)
+  - [🏢 Enterprise (Private)](https://github.com/cathackr/SmartCompute-Enterprise)
+  - [🏭 Industrial (Private)](https://github.com/cathackr/SmartCompute-Industrial)
   
 </div>
 

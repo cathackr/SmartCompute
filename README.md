@@ -16,12 +16,21 @@
 
 ![GitHub forks](https://img.shields.io/github/forks/cathackr/SmartCompute?style=social)
 
+**📱 Repositorios QR:**
+
+<img src="assets/qr_codes/smartcompute_main_qr.png" alt="Main QR" width="80">
+
 </td>
 <td width="50%">
 
 ### Detecta problemas en redes industriales antes de que fallen los equipos
 
 **Idiomas/Languages:** 🇪🇸 [Español (este documento)](#) | 🇺🇸 [English](README_EN.md)
+
+**🔗 Acceso rápido a repositorios:**
+- [🏠 Principal (Público)](https://github.com/cathackr/SmartCompute)
+- [🏢 Enterprise (Privado)](https://github.com/cathackr/SmartCompute-Enterprise)
+- [🏭 Industrial (Privado)](https://github.com/cathackr/SmartCompute-Industrial)
 
 </td>
 <td width="30%">
@@ -293,6 +302,11 @@ python main.py --starter --mobile
 
 ### 🏢 **Enterprise Plan**
 **$200-750/año** - Para empresas medianas y grandes
+
+<table>
+<tr>
+<td width="70%">
+
 - ✅ Todo de Starter +
 - ✅ IA avanzada para análisis predictivo
 - ✅ APIs empresariales completas
@@ -301,8 +315,26 @@ python main.py --starter --mobile
 - ✅ Soporte técnico prioritario
 - ✅ Reportes personalizados
 
+</td>
+<td width="30%" align="center">
+
+**📱 Acceso Rápido**
+
+<img src="assets/qr_codes/smartcompute_enterprise_qr.png" alt="SmartCompute Enterprise QR" width="120">
+
+[🔗 Repositorio Enterprise](https://github.com/cathackr/SmartCompute-Enterprise)
+
+</td>
+</tr>
+</table>
+
 ### 🏭 **Industrial Plan**
 **$5000/3 años** - Para redes industriales críticas
+
+<table>
+<tr>
+<td width="70%">
+
 - ✅ Todo de Enterprise +
 - ✅ Monitoreo de protocolos industriales (Modbus, Profinet, OPC UA)
 - ✅ Detección de conflictos de red en tiempo real
@@ -310,6 +342,19 @@ python main.py --starter --mobile
 - ✅ Alertas de seguridad especializadas
 - ✅ Consultoría de implementación incluida
 - ✅ Certificaciones industriales (ISA/IEC 62443)
+
+</td>
+<td width="30%" align="center">
+
+**📱 Acceso Rápido**
+
+<img src="assets/qr_codes/smartcompute_industrial_qr.png" alt="SmartCompute Industrial QR" width="120">
+
+[🔗 Repositorio Industrial](https://github.com/cathackr/SmartCompute-Industrial)
+
+</td>
+</tr>
+</table>
 
 ## 🚀 Installation
 
