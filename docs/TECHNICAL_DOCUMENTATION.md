@@ -3,9 +3,9 @@
 <div align="center">
   <img src="../assets/smartcompute_hmi_logo.png" alt="SmartCompute Logo" width="200">
   
-  **Version 1.0.0-beta** | **Enterprise-Ready Cybersecurity Platform**
+  **Version 1.0.0** | **Cybersecurity Monitoring Platform**
   
-  [🇪🇸 Español](DOCUMENTACION_TECNICA.md) | [🇺🇸 English](#) | [🚀 Quick Start](QUICK_START_GUIDE.md) | [💼 Enterprise](ENTERPRISE_GUIDE.md)
+  [🇪🇸 Español](DOCUMENTACION_TECNICA.md) | [🇺🇸 English](#) | [🚀 Quick Start](QUICK_START_GUIDE.md)
 </div>
 
 ---
@@ -13,12 +13,10 @@
 ## 📋 Table of Contents
 
 - [🎯 Platform Overview](#-platform-overview)
-- [🏠 SmartCompute Starter](#-smartcompute-starter)
+- [🏠 SmartCompute](#-smartcompute)
 - [📱 Mobile & Google Colab](#-mobile--google-colab)  
 - [💻 Desktop Installation](#-desktop-installation)
-- [🏢 Enterprise Edition](#-enterprise-edition)
-- [🏭 Industrial Edition](#-industrial-edition)
-- [🔧 API Reference](#-api-reference)
+- [🔧 Basic API Reference](#-basic-api-reference)
 - [🚀 Deployment Options](#-deployment-options)
 - [🛠️ Troubleshooting](#️-troubleshooting)
 
@@ -26,18 +24,15 @@
 
 ## 🎯 Platform Overview
 
-SmartCompute is a comprehensive cybersecurity monitoring platform with **AI-powered threat detection** and **performance optimization** capabilities.
+SmartCompute is a cybersecurity monitoring platform with **AI-powered threat detection** and **performance optimization** capabilities.
 
 ### 🌟 Core Features
 
-| Feature | Starter | Enterprise | Industrial |
-|---------|---------|------------|------------|
-| **Real-time Monitoring** | ✅ Basic | ✅ Advanced | ✅ Industrial Protocols |
-| **AI Threat Detection** | ✅ Limited | ✅ Full AI Suite | ✅ Industrial-specific |
-| **Performance Analytics** | ✅ Basic | ✅ Advanced | ✅ OT/IT Convergence |
-| **API Access** | ❌ | ✅ RESTful APIs | ✅ Industrial APIs |
-| **Dashboard** | ✅ Web | ✅ Customizable | ✅ HMI Integration |
-| **Support Level** | Community | Professional | Premium + Consulting |
+- **🔍 Real-time Monitoring**: CPU, Memory, Network usage
+- **🤖 AI Threat Detection**: Common threat patterns  
+- **📊 Performance Analytics**: System metrics and optimization
+- **📱 Multi-platform Support**: Web, mobile, and Google Colab
+- **💾 Local Storage**: SQLite database
 
 ### 🏗️ Architecture
 
@@ -62,9 +57,9 @@ graph TB
 
 ---
 
-## 🏠 SmartCompute Starter
+## 🏠 SmartCompute
 
-**Free version for personal use and small businesses**
+**Cybersecurity monitoring for personal use and small businesses**
 
 ### ✨ Features Included
 
@@ -80,8 +75,8 @@ graph TB
 ```bash
 git clone https://github.com/cathackr/SmartCompute.git
 cd SmartCompute
-pip install -r requirements-core.txt
-python main.py --starter
+pip install -r requirements.txt
+python main.py
 ```
 
 #### Option 2: Google Colab (Recommended for Mobile)
@@ -89,7 +84,7 @@ python main.py --starter
 # Open: https://colab.research.google.com
 !git clone https://github.com/cathackr/SmartCompute.git
 %cd SmartCompute
-!pip install -r requirements-core.txt
+!pip install -r requirements.txt
 !python examples/colab_interactive_demo.py
 ```
 
@@ -226,7 +221,7 @@ python3 main.py
 
 ```bash
 # Quick start with Docker
-docker run -p 8000:8000 smartcompute/starter:latest
+docker run -p 8000:8000 smartcompute/core:latest
 
 # Or build from source
 git clone https://github.com/cathackr/SmartCompute.git
@@ -239,7 +234,7 @@ docker-compose up -d
 ```yaml
 # config.yaml
 smartcompute:
-  version: "starter"
+  version: "core"
   database: "sqlite:///smartcompute.db"
   monitoring:
     interval: 5
@@ -252,170 +247,10 @@ smartcompute:
     theme: "dark"
 ```
 
----
-
-## 🏢 Enterprise Edition
-
-**Advanced features for medium to large businesses**
-
-### 🌟 Enterprise Features
-
-| Feature Category | Capabilities |
-|------------------|--------------|
-| **🤖 AI Engine** | Advanced ML models, behavioral analysis, zero-day detection |
-| **📊 Analytics** | Custom dashboards, advanced reporting, trend analysis |
-| **🔗 Integrations** | SIEM, SOAR, ticketing systems, cloud platforms |
-| **🛡️ Security** | Multi-tenant, SSO, role-based access, audit logs |
-| **📈 Scalability** | Multi-node deployment, load balancing, auto-scaling |
-
-### 🚀 Installation
-
-```bash
-# Enterprise installation
-git clone https://github.com/cathackr/SmartCompute.git
-cd SmartCompute
-
-# Install enterprise dependencies
-pip install -r requirements.txt
-pip install -r requirements-enterprise.txt
-
-# Setup enterprise database
-python -m app.core.database --setup --enterprise
-
-# Start enterprise services
-python main.py --enterprise --api
-```
-
-### 🔧 API Configuration
-
-```python
-# Enterprise API setup
-from app.api.main import create_enterprise_app
-
-app = create_enterprise_app(
-    authentication=True,
-    rate_limiting=True,
-    monitoring=True,
-    cors_origins=["https://your-domain.com"]
-)
-
-# Custom integrations
-from app.integrations import SIEMConnector, CloudProvider
-
-siem = SIEMConnector("splunk", api_key="your-key")
-cloud = CloudProvider("azure", subscription_id="your-id")
-```
-
-### 📊 Advanced Monitoring
-
-```python
-# Enterprise monitoring features
-monitor = EnterpriseMonitor(
-    ai_models=["threat_detection", "anomaly_detection", "behavior_analysis"],
-    data_sources=["network", "endpoints", "cloud", "applications"],
-    alerting=["email", "slack", "webhook", "sms"],
-    reporting=["daily", "weekly", "monthly", "custom"]
-)
-```
-
-### 🎯 Use Cases
-
-- **Corporate Security**: 100-10,000 endpoint monitoring
-- **Compliance**: SOC 2, ISO 27001, HIPAA requirements  
-- **Multi-location**: Centralized monitoring across offices
-- **Integration**: Connect with existing security stack
 
 ---
 
-## 🏭 Industrial Edition
-
-**Specialized for Industrial Control Systems and Critical Infrastructure**
-
-### 🏗️ Industrial Features
-
-| Protocol Support | Use Case | Monitoring Capabilities |
-|------------------|----------|-------------------------|
-| **Modbus TCP/RTU** | SCADA Systems | Real-time communication monitoring |
-| **Profinet** | Industrial Ethernet | Device health and performance |
-| **OPC UA** | Industry 4.0 | Secure data exchange monitoring |
-| **EtherNet/IP** | Allen-Bradley PLCs | Network topology analysis |
-| **DNP3** | Electric utilities | Critical infrastructure protection |
-
-### 🚀 Industrial Installation
-
-```bash
-# Industrial edition requires network privileges
-git clone https://github.com/cathackr/SmartCompute.git
-cd SmartCompute/smartcompute_industrial
-
-# Install industrial dependencies
-sudo pip install -r requirements_industrial.txt
-
-# Start industrial monitoring
-sudo ./start_network_intelligence.sh
-# Access: http://127.0.0.1:8002
-```
-
-### 🛠️ Industrial Configuration
-
-```yaml
-# industrial_config.yaml
-industrial_monitoring:
-  protocols:
-    modbus:
-      enabled: true
-      ports: [502]
-      timeout: 5
-    profinet:
-      enabled: true
-      ports: [34962, 34963, 34964]
-    opc_ua:
-      enabled: true
-      ports: [4840]
-      security_policy: "Basic256Sha256"
-  
-  network_discovery:
-    auto_scan: true
-    scan_interval: 300
-    target_networks:
-      - "192.168.1.0/24"
-      - "10.0.0.0/16"
-  
-  alerting:
-    ip_conflicts: true
-    high_latency_threshold: 100ms
-    device_offline_threshold: 30s
-```
-
-### 🎯 Industrial Use Cases
-
-- **Manufacturing Plants**: Production line monitoring
-- **Power Generation**: Critical infrastructure protection
-- **Water Treatment**: SCADA system security
-- **Oil & Gas**: Pipeline and refinery monitoring
-- **Smart Buildings**: Building automation systems
-
-### 📊 Industrial Analytics
-
-```python
-# Industrial-specific analytics
-from smartcompute_industrial.analytics import IndustrialAnalytics
-
-analytics = IndustrialAnalytics()
-
-# Protocol-specific monitoring
-modbus_health = analytics.monitor_modbus_communications()
-profinet_topology = analytics.analyze_profinet_network()
-opc_security = analytics.validate_opc_ua_security()
-
-# Critical infrastructure insights
-uptime_analysis = analytics.calculate_system_availability()
-performance_baseline = analytics.establish_performance_baseline()
-```
-
----
-
-## 🔧 API Reference
+## 🔧 Basic API Reference
 
 ### 🌐 RESTful API Endpoints
 
@@ -447,9 +282,6 @@ GET /api/v1/security/alerts?severity=high&limit=50
 
 # Get performance metrics
 GET /api/v1/metrics/performance?timeframe=1h
-
-# Industrial network topology
-GET /api/v1/industrial/topology
 ```
 
 #### Configuration
@@ -490,11 +322,10 @@ alerts = client.security.get_alerts(
 for alert in alerts:
     print(f"Threat: {alert['type']} - Score: {alert['score']}")
 
-# Industrial network scan
-if client.edition == "industrial":
-    devices = client.industrial.scan_network("192.168.1.0/24")
-    for device in devices:
-        print(f"Device: {device['ip']} - Protocol: {device['protocol']}")
+# Get device information
+devices = client.monitoring.get_devices()
+for device in devices:
+    print(f"Device: {device['ip']} - Status: {device['status']}")
 ```
 
 ---
@@ -523,7 +354,7 @@ az group create --name smartcompute-rg --location eastus
 az container create \
     --resource-group smartcompute-rg \
     --name smartcompute \
-    --image smartcompute/enterprise:latest \
+    --image smartcompute/core:latest \
     --ports 8000
 ```
 
@@ -556,7 +387,7 @@ spec:
     spec:
       containers:
       - name: smartcompute
-        image: smartcompute/enterprise:latest
+        image: smartcompute/core:latest
         ports:
         - containerPort: 8000
         env:
@@ -582,14 +413,11 @@ spec:
 ### 🏢 On-Premises Deployment
 
 ```bash
-# High-availability setup
-./scripts/deploy-ha.sh --nodes 3 --database postgresql --storage nfs
-
 # Single node deployment
 ./scripts/deploy-single.sh --database sqlite --storage local
 
-# Industrial deployment with network isolation
-./scripts/deploy-industrial.sh --network-isolation --air-gapped
+# Multi-node deployment
+./scripts/deploy-ha.sh --nodes 2 --database sqlite --storage local
 ```
 
 ---
@@ -639,10 +467,9 @@ cp smartcompute.db smartcompute_backup_$(date +%Y%m%d).db
 
 | Issue Type | Support Channel | Response Time |
 |------------|-----------------|---------------|
-| **Starter** | GitHub Issues | Community-driven |
-| **Enterprise** | Professional Support | 24-48 hours |
-| **Industrial** | Premium Support + Consulting | 4-8 hours |
-| **Critical** | Emergency Hotline | 1 hour |
+| **General** | GitHub Issues | Community-driven |
+| **Bug Reports** | GitHub Issues | Community-driven |
+| **Feature Requests** | GitHub Discussions | Community-driven |
 
 ### 📋 Debug Mode
 
@@ -661,18 +488,18 @@ python -m smartcompute.diagnostics --collect-all
 
 ## 📝 Changelog & Updates
 
-### Version 1.0.0-beta (Current)
+### Version 1.0.0 (Current)
 - ✅ Google Colab integration
 - ✅ Mobile-optimized interface
-- ✅ Industrial protocol support
-- ✅ Enterprise APIs
+- ✅ Basic threat detection
+- ✅ Performance monitoring
 - ✅ Multi-platform deployment
 
 ### Upcoming Features
 - 🔄 Real-time dashboard streaming
-- 🔄 Advanced ML model training
+- 🔄 Enhanced ML models
 - 🔄 Mobile app (native iOS/Android)
-- 🔄 Enterprise SSO integration
+- 🔄 Additional integrations
 
 ---
 
@@ -680,10 +507,10 @@ python -m smartcompute.diagnostics --collect-all
 
 **🎯 Ready to secure your infrastructure?**
 
-[🚀 Quick Start](QUICK_START_GUIDE.md) | [💼 Enterprise Guide](ENTERPRISE_GUIDE.md) | [📧 Contact Support](mailto:ggwre04p0@mozmail.com)
+[🚀 Quick Start](QUICK_START_GUIDE.md) | [📧 Contact Support](mailto:ggwre04p0@mozmail.com)
 
 ---
 
-© 2024 SmartCompute. Professional cybersecurity monitoring for the modern enterprise.
+© 2024 SmartCompute. Cybersecurity monitoring platform.
 
 </div>
