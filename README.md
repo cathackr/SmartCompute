@@ -43,25 +43,11 @@
 
 ---
 
-## 🎯 Overview
+## 🎯 SmartCompute (Versión Gratuita)
 
-SmartCompute es una suite completa de monitoreo inteligente con **3 versiones** para diferentes necesidades:
+**Monitoreo inteligente** de rendimiento y detección de anomalías para uso personal y pequeñas empresas.
 
-### 🏠 **SmartCompute Starter** (GRATIS)
-Monitoreo básico de rendimiento y detección de anomalías para uso personal y pequeñas empresas.
-
-### 🏢 **SmartCompute Enterprise** ($200-750/año)
-Análisis avanzado con IA, APIs empresariales, dashboard personalizable y soporte técnico. 
-**📋 Documentación completa disponible tras la compra.**
-
-### 🏭 **SmartCompute Industrial** ($5000/3 años)
-**¿Tu red industrial falla sin avisar?** Versión especializada que monitorea protocolos como Modbus, Profinet y OPC UA, detectando conflictos de IP, latencia alta y dispositivos problemáticos. Te avisa qué revisar, pero nunca toca tu configuración automáticamente.
-**📋 Documentación técnica completa disponible tras la compra.**
-
----
-
-SmartCompute Starter ofrece:
-
+**Características incluidas:**
 - ⚡ **Real-time Threat Detection** with fast response capabilities
 - 🧠 **AI-Powered Analytics** for pattern recognition  
 - 🔒 **Security Monitoring** with configurable protection mechanisms
@@ -69,7 +55,9 @@ SmartCompute Starter ofrece:
 - 🛡️ **Alert Management** with machine learning enhancement
 - 🌍 **Multi-Platform Support** for Windows, macOS, Linux, Android, iOS
 
-## 🚀 Instalación SmartCompute Starter (GRATIS)
+---
+
+## 🚀 Instalación
 
 ### Instalación Básica
 
@@ -81,15 +69,13 @@ cd SmartCompute
 # 2. Instalar dependencias
 pip install -r requirements.txt
 
-# 3. Ejecutar versión gratuita
-python main.py --starter
+# 3. Ejecutar SmartCompute
+python main.py
 
 # Dashboard: http://localhost:8000
 ```
 
 ### 📱 Instalación en Dispositivos Móviles
-
-**SmartCompute Starter también funciona en móviles con apps de Python:**
 
 #### Android:
 ```bash
@@ -97,26 +83,17 @@ python main.py --starter
 # 2. Abrir Pydroid 3 y en la terminal ejecutar:
 pip install requests numpy pandas
 wget https://raw.githubusercontent.com/cathackr/SmartCompute/main/main.py
-python main.py --starter --mobile
+python main.py --mobile
 ```
 
 #### Google Colab (📱 iOS, Android, PC):
 ```python
 # 1. Abrir https://colab.research.google.com desde cualquier dispositivo
-# 2. Crear nuevo notebook y ejecutar en la primera celda:
+# 2. Crear nuevo notebook y ejecutar:
 !git clone https://github.com/cathackr/SmartCompute.git
 %cd SmartCompute
-
-# 3. Instalar dependencias en segunda celda:
 !pip install -r requirements.txt
-
-# 4. Ejecutar DEMO INTERACTIVO en tercera celda (RECOMENDADO):
 !python examples/synthetic_demo.py
-# 📱 Alertas en tiempo real + gráficos animados + optimizado móviles
-
-# 5. OPCIONAL - Servidor web completo:
-!python main.py --starter &
-# Dashboard web profesional con APIs
 ```
 
 **✅ Ventajas de Google Colab:**
@@ -130,45 +107,25 @@ python main.py --starter --mobile
 - **Google Colab**: Solo navegador web (iOS, Android, PC, tablet)
 - **Móviles**: ✅ Android (apps locales) + iOS/Android (Colab web)
 
-## 📸 Ve SmartCompute Starter en Acción
+## 📸 SmartCompute en Acción
 
-### 📱 SmartCompute Starter en Smartphones
+### 📱 Monitoreo desde Smartphones
 ![Smartphone Monitor](assets/smartphone_monitoring.png)
 *Monitoreo básico desde Android/iOS - perfecto para freelancers y PyMEs*
 
 **Funciona en tu móvil:**
-- 🌐 **Google Colab**: Acceso universal desde cualquier navegador (iOS, Android, PC)
+- 🌐 **Google Colab**: Acceso universal desde cualquier navegador
 - 📱 **Android**: Pydroid 3 (GRATIS) + QPython 3L (GRATIS) para instalación local
-- 🔋 **Bajo consumo web**: Sin impacto en batería (corre en la nube)
-- 🚀 **GPU gratuita**: Procesa análisis complejos más rápido que tu PC
+- 🔋 **Bajo consumo**: Sin impacto en batería (corre en la nube)
 - 📱 **Interface táctil**: Optimizado para pantallas móviles
 
-**Opciones de instalación local:**
-- 🤖 **Android**: QPython 3L, Termux (terminal completo)
-- 🌐 **Navegador**: Google Colab (recomendado para iOS y uso casual)
+## 💰 Versiones Comerciales
 
-### 🐳 Docker & Kubernetes Ready
-![Docker Compose](assets/docker_deployment_screenshot.png)
-*Instalación completa con un comando - desarrollo y producción*
+### 🏢 SmartCompute Enterprise ($15,000 USD/año)
 
-## 💰 Planes y Precios
+**Para empresas medianas y grandes**
 
-### 🏠 **Starter Plan**
-**GRATUITO** - Para uso personal y pequeñas empresas
-- ✅ Monitoreo básico de rendimiento
-- ✅ Detección de anomalías
-- ✅ Dashboard web básico
-- ❌ APIs limitadas
-- ❌ Sin soporte técnico
-
-### 🏢 **Enterprise Plan**
-**$200-750/año** - Para empresas medianas y grandes
-
-<table>
-<tr>
-<td width="70%">
-
-- ✅ Todo de Starter +
+- ✅ Todo de la versión gratuita +
 - ✅ IA avanzada para análisis predictivo
 - ✅ APIs empresariales completas
 - ✅ Dashboard personalizable
@@ -176,25 +133,21 @@ python main.py --starter --mobile
 - ✅ Soporte técnico prioritario
 - ✅ Reportes personalizados
 
-</td>
-<td width="30%" align="center">
+<div align="center">
 
-**📱 Acceso Rápido**
+<img src="assets/qr_codes/smartcompute_enterprise_qr.png" alt="SmartCompute Enterprise QR" width="150">
 
-<img src="assets/qr_codes/smartcompute_enterprise_qr.png" alt="SmartCompute Enterprise QR" width="120">
+**[🔗 Acceder a SmartCompute Enterprise](https://github.com/cathackr/SmartCompute-Enterprise)**
 
-[🔗 Repositorio Enterprise](https://github.com/cathackr/SmartCompute-Enterprise)
+*Escanea el QR para solicitar licencia Enterprise*
 
-</td>
-</tr>
-</table>
+</div>
 
-### 🏭 **Industrial Plan**
-**$5000/3 años** - Para redes industriales críticas
+---
 
-<table>
-<tr>
-<td width="70%">
+### 🏭 SmartCompute Industrial ($25,000 USD/año)
+
+**Para redes industriales críticas**
 
 - ✅ Todo de Enterprise +
 - ✅ Monitoreo de protocolos industriales (Modbus, Profinet, OPC UA)
@@ -204,41 +157,20 @@ python main.py --starter --mobile
 - ✅ Consultoría de implementación incluida
 - ✅ Certificaciones industriales (ISA/IEC 62443)
 
-</td>
-<td width="30%" align="center">
+<div align="center">
 
-**📱 Acceso Rápido**
+<img src="assets/qr_codes/smartcompute_industrial_qr.png" alt="SmartCompute Industrial QR" width="150">
 
-<img src="assets/qr_codes/smartcompute_industrial_qr.png" alt="SmartCompute Industrial QR" width="120">
+**[🔗 Acceder a SmartCompute Industrial](https://github.com/cathackr/SmartCompute-Industrial)**
 
-[🔗 Repositorio Industrial](https://github.com/cathackr/SmartCompute-Industrial)
+*Escanea el QR para solicitar licencia Industrial*
 
-</td>
-</tr>
-</table>
+</div>
 
-## 🚀 Installation
-
-### Source Installation
-```bash
-# Clone the repository
-git clone https://github.com/cathackr/SmartCompute.git
-cd SmartCompute
-
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Test with the demo
-python3 examples/synthetic_demo.py
-```
+---
 
 ## 📁 Estructura del Proyecto
 
-<table>
-<tr>
-<td width="30%" valign="top">
-
-### 📂 Directorio Principal
 ```
 SmartCompute/
 ├── 📱 app/                    # Backend FastAPI
@@ -252,29 +184,7 @@ SmartCompute/
 - [`main.py`](main.py) - Punto de entrada
 - [`requirements.txt`](requirements.txt) - Dependencias
 
-</td>
-<td width="70%" valign="top">
-
-### 🗂️ Navegación Rápida por Carpetas
-
-| **📱 Backend** | **🎨 Assets** | **🧪 Scripts** |
-|---------------|---------------|---------------|
-| [`app/api/`](app/api/) | [`assets/`](assets/) | [`scripts/`](scripts/) |
-| [Health Endpoints](app/api/health_endpoints.py) | [Logo HMI](assets/smartcompute_hmi_logo.png) | [Deploy](scripts/deploy.sh) |
-| [Main API](app/api/main.py) | [Dashboard Grafana](assets/grafana_smartcompute_overview.png) | [Monitoring](scripts/setup-monitoring.sh) |
-| [Models](app/models/) | [Screenshots](assets/) | [Migration](scripts/migrate_to_postgresql.py) |
-
-| **📋 Docs** | **⚙️ Config** | **🏢 Enterprise** |
-|-------------|---------------|-------------------|
-| [`docs/`](docs/) | [`docker-compose*.yml`](.) | 🔒 **Acceso Privado** |
-| [Technical Documentation](docs/TECHNICAL_DOCUMENTATION.md) | [Production](docker-compose.production.yml) | Disponible tras compra |
-| [Quick Start Guide](docs/GUIA_INICIO_RAPIDO.md) | [Development](.env.example) | [🔗 Comprar Enterprise](https://github.com/cathackr/SmartCompute-Enterprise) |
-
-</td>
-</tr>
-</table>
-
-## 📚 Documentation
+## 📚 Documentación
 
 - 📖 [Technical Documentation](docs/TECHNICAL_DOCUMENTATION.md)
 - 🚀 [Quick Start Guide](docs/GUIA_INICIO_RAPIDO.md)
@@ -290,8 +200,6 @@ SmartCompute/
 - 📊 **SIEM Implementation & Security Monitoring**
 - ☁️ **Cloud Security** (Azure AZ-900, AWS Cloud Practitioner)
 - 🌐 **Network Infrastructure** (CCNA certified)
-
-📍 **Experience**: HCLTech Industrial Network Auditing, Independent Cybersecurity Consulting, Critical Infrastructure Protection
 
 **Professional Certifications:**
 - 🏆 CEH (Certified Ethical Hacker)
@@ -325,48 +233,27 @@ SmartCompute/
 ```bash
 git clone https://github.com/cathackr/SmartCompute.git
 cd SmartCompute
-python main.py --starter
+python main.py
 ```
 
 [**⭐ Dale una estrella si te parece útil**](https://github.com/cathackr/SmartCompute) • [**Demo en vivo**](http://127.0.0.1:8000) • [**¿Dudas?**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20-%20Consulta)
 
 ---
 
-## 💳 Suscripciones y Pagos Directos
+## 💳 Métodos de Pago
 
-### 🏢 **Enterprise Plan - $200-750/año**
+### 💰 **Proceso de Suscripción**
 
-**Elige tu modalidad de pago preferida:**
+**🚀 Proceso Automatizado:**
+1. **Escanear QR Code** → Acceso a plataforma de pago
+2. **Seleccionar plan** → Enterprise ($15,000/año) o Industrial ($25,000/año)
+3. **Pago seguro** → MercadoPago o Bitso
+4. **Acceso inmediato** → Invitación automática al repositorio privado
 
-| **Período** | **Precio** | **Descuento** | **Pago Directo** |
-|-------------|------------|---------------|------------------|
-| **Anual** | $200/año | 65% OFF | [💳 **Pagar $200 USD**](https://cathackr.github.io/SmartCompute/checkout-enterprise-annual.html) |
-| **Bianual** | $400/2 años | 65% OFF | [💳 **Pagar $400 USD**](https://cathackr.github.io/SmartCompute/checkout-enterprise-biannual.html) |
-| **Premium** | $750/año | Características extra | [💳 **Pagar $750 USD**](https://cathackr.github.io/SmartCompute/checkout-enterprise-premium.html) |
+### 💳 **Plataformas de Pago Disponibles**
 
-### 🏭 **Industrial Plan - $5000/3 años**
-
-**Incluye implementación y consultoría:**
-
-| **Modalidad** | **Precio Total** | **Incluye** | **Pago Directo** |
-|---------------|------------------|-------------|------------------|
-| **Pago Completo** | $5000 USD | Todo + 20% descuento adicional | [💳 **Pagar $4000 USD**](https://cathackr.github.io/SmartCompute/checkout-industrial-full.html) |
-| **3 Cuotas Anuales** | $1,667 × 3 años | Implementación escalonada | [💳 **Primera Cuota $1667**](https://cathackr.github.io/SmartCompute/checkout-industrial-installments.html) |
-
-### 💰 **Sistema de Suscripción**
-
-**Suscripción mensual recurrente con máxima flexibilidad:**
-
-- 🔄 **Renovación automática**: Se renueva cada mes el mismo día
-- ❌ **Cancelación libre**: Puedes cancelar cuando quieras desde el dashboard
-- 💸 **Sin penalizaciones**: No hay cargos por cancelación
-- ⏰ **Período de gracia**: 15 días para arrepentirse con reembolso completo
-- 📅 **Servicio hasta fin de mes**: Si cancelas, mantienes acceso hasta que termine el período pagado
-
-### 💳 **Métodos de Pago Integrados**
-
-- 🇦🇷 **MercadoPago**: Tarjetas, débito automático, transferencias en pesos argentinos
-- ₿ **Bitso**: Bitcoin, Ethereum, USDC y otras criptomonedas
+- 🇦🇷 **MercadoPago**: Tarjetas, transferencias bancarias, efectivo
+- ₿ **Criptomonedas**: Bitcoin, Ethereum (via Bitso)
 - 🔒 **Seguridad**: Todas las transacciones están hasheadas y cifradas
 - 🏪 **API segura**: Integración completa con sistemas bancarios certificados
 
@@ -375,6 +262,6 @@ python main.py --starter
 - **LinkedIn**: [Consulta profesional directa](https://www.linkedin.com/in/mart%C3%ADn-iribarne-swtf/)
 - **Respuesta**: Todas las consultas se gestionan por correo electrónico
 
-**🔒 Garantía de reembolso de 15 días • Cancela cuando quieras • Sin compromiso de permanencia**
+**🔒 Contratos empresariales anuales • SLA garantizado**
 
 </div>
