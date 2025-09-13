@@ -1,8 +1,0 @@
-📈 PROTOCOL ANALYSIS SCREENSHOT
-🔍 Análisis de Protocolos Industriales Detectados:
-- Modbus TCP: 5 dispositivos (Puerto 502)
-- Profinet: 3 dispositivos 
-- EtherNet/IP: 2 dispositivos
-- OPC UA: 1 servidor (Puerto 4840)
-📊 Tráfico total: 1.2MB/s
-⚡ Latencia promedio: 15ms
