@@ -203,6 +203,10 @@ app_logs/
 monitoring_logs/
 smart_history.json
 smartcompute_history.json
+*_history.json
+*.log
+security/logs/
+smartcompute_industrial/logs/
 
 # Configuration files with sensitive data - PROTECCIÓN EXTRA
 config.local.json
@@ -223,6 +227,17 @@ secret.key
 *mercadopago*
 *MercadoPago*
 *MERCADOPAGO*
+
+# Additional security patterns
+*secret*
+*Secret*
+*SECRET*
+backup_v1/
+security/logs/
+smartcompute_industrial/logs/
+temp/
+tmp/
+.cache/
 
 # Development files that may contain sensitive info
 debug.log
