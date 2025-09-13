@@ -27,10 +27,8 @@
 
 **Idiomas/Languages:** 🇪🇸 [Español (este documento)](#) | 🇺🇸 [English](README_EN.md)
 
-**🔗 Acceso rápido a repositorios:**
-- [🏠 Principal (Público)](https://github.com/cathackr/SmartCompute)
-- [🏢 Enterprise (Privado)](https://github.com/cathackr/SmartCompute-Enterprise)
-- [🏭 Industrial (Privado)](https://github.com/cathackr/SmartCompute-Industrial)
+**🔗 Repositorio:**
+- [🏠 SmartCompute (Público)](https://github.com/cathackr/SmartCompute)
 
 </td>
 <td width="30%">
@@ -134,11 +132,11 @@ python main.py --mobile
 
 <div align="center">
 
-<img src="assets/qr_codes/smartcompute_enterprise_qr.png" alt="SmartCompute Enterprise QR" width="150">
+<img src="assets/qr_codes/smartcompute_access_info_qr.png" alt="SmartCompute Access Info QR" width="150">
 
-**[🔗 Acceder a SmartCompute Enterprise](https://github.com/cathackr/SmartCompute-Enterprise)**
+**[📧 Solicitar Acceso Enterprise](mailto:ggwre04p0@mozmail.com)**
 
-*Escanea el QR para solicitar licencia Enterprise*
+*Escanea el QR o envía email para información sobre licencia Enterprise*
 
 </div>
 
@@ -158,11 +156,11 @@ python main.py --mobile
 
 <div align="center">
 
-<img src="assets/qr_codes/smartcompute_industrial_qr.png" alt="SmartCompute Industrial QR" width="150">
+<img src="assets/qr_codes/smartcompute_access_info_qr.png" alt="SmartCompute Access Info QR" width="150">
 
-**[🔗 Acceder a SmartCompute Industrial](https://github.com/cathackr/SmartCompute-Industrial)**
+**[📧 Solicitar Acceso Industrial](mailto:ggwre04p0@mozmail.com)**
 
-*Escanea el QR para solicitar licencia Industrial*
+*Escanea el QR o envía email para información sobre licencia Industrial*
 
 </div>
 
