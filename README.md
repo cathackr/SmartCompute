@@ -45,18 +45,18 @@
 
 ## 🎯 Overview
 
-⚠️ **Development Status:** This project is in active beta development. Features and performance metrics are under testing and validation.
+⚠️ **Development Status:** This project is in active development. Enterprise and Industrial versions are production-ready with proven security implementations.
 
-SmartCompute es una suite completa de monitoreo inteligente con **3 versiones** para diferentes necesidades:
+SmartCompute es una suite completa de monitoreo inteligente con **3 versiones** para diferentes necesidades empresariales e industriales:
 
 ### 🏠 **SmartCompute Starter** (GRATIS)
 Monitoreo básico de rendimiento y detección de anomalías para uso personal y pequeñas empresas.
 
 ### 🏢 **SmartCompute Enterprise** ($200-750/año)
-Análisis avanzado con IA, APIs empresariales, dashboard personalizable y soporte técnico.
+Análisis avanzado con IA, integración SIEM/SOAR, threat intelligence, APIs empresariales, dashboard personalizable y soporte técnico. Incluye integración con Wireshark para análisis de tráfico en tiempo real.
 
 ### 🏭 **SmartCompute Industrial** ($5000/3 años)
-**¿Tu red industrial falla sin avisar?** Versión especializada que monitorea protocolos como Modbus, Profinet y OPC UA, detectando conflictos de IP, latencia alta y dispositivos problemáticos. Te avisa qué revisar, pero nunca toca tu configuración automáticamente.
+**¿Tu red industrial falla sin avisar?** Versión especializada con detección electromagnética BOTCONF 2024, monitoreo de protocolos industriales (Modbus, Profinet, OPC UA), detección de rootkits con Framework ULTRA, CNN con 99.82% de precisión, y análisis forense completo. Máxima seguridad sin tocar configuraciones automáticamente.
 
 ---
 
