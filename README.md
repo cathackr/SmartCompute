@@ -110,7 +110,6 @@ python main.py --mobile
 ## 📸 SmartCompute en Acción
 
 ### 📱 Monitoreo desde Smartphones
-![Smartphone Monitor](assets/smartphone_monitoring.png)
 *Monitoreo básico desde Android/iOS - perfecto para freelancers y PyMEs*
 
 **Funciona en tu móvil:**
@@ -180,15 +179,9 @@ SmartCompute/
 └── 📋 README.md              # Este archivo
 ```
 
-**Archivos clave:**
-- [`main.py`](main.py) - Punto de entrada
-- [`requirements.txt`](requirements.txt) - Dependencias
-
 ## 📚 Documentación
 
 - 📖 [Technical Documentation](docs/TECHNICAL_DOCUMENTATION.md)
-- 🚀 [Quick Start Guide](docs/GUIA_INICIO_RAPIDO.md)
-- 💼 [Enterprise Guide](docs/GUIA_EMPRESARIAL.md)
 
 ## 👨‍💻 Creator
 
@@ -236,7 +229,7 @@ cd SmartCompute
 python main.py
 ```
 
-[**⭐ Dale una estrella si te parece útil**](https://github.com/cathackr/SmartCompute) • [**Demo en vivo**](http://127.0.0.1:8000) • [**¿Dudas?**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20-%20Consulta)
+[**⭐ Dale una estrella si te parece útil**](https://github.com/cathackr/SmartCompute) 
 
 ---
 
