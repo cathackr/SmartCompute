@@ -1,4 +1,4 @@
-# 🧠 SmartCompute v1.0.0-beta
+# 🧠 SmartCompute v1.0.0
 
 <table>
 <tr>
@@ -45,22 +45,22 @@
 
 ## 🎯 Overview
 
-⚠️ **Development Status:** This project is in active development. Enterprise and Industrial versions are production-ready with proven security implementations.
-
 SmartCompute es una suite completa de monitoreo inteligente con **3 versiones** para diferentes necesidades:
 
 ### 🏠 **SmartCompute Starter** (GRATIS)
 Monitoreo básico de rendimiento y detección de anomalías para uso personal y pequeñas empresas.
 
 ### 🏢 **SmartCompute Enterprise** ($200-750/año)
-Análisis avanzado con IA, integración SIEM/SOAR, threat intelligence, APIs empresariales, dashboard personalizable y soporte técnico. Incluye integración con Wireshark para análisis de tráfico en tiempo real.
+Análisis avanzado con IA, APIs empresariales, dashboard personalizable y soporte técnico. 
+**📋 Documentación completa disponible tras la compra.**
 
 ### 🏭 **SmartCompute Industrial** ($5000/3 años)
-**¿Tu red industrial falla sin avisar?** Versión especializada con detección electromagnética BOTCONF 2024, monitoreo de protocolos industriales (Modbus, Profinet, OPC UA), detección de rootkits con Framework ULTRA, CNN con 99.82% de precisión, y análisis forense completo. Máxima seguridad sin tocar configuraciones automáticamente.
+**¿Tu red industrial falla sin avisar?** Versión especializada que monitorea protocolos como Modbus, Profinet y OPC UA, detectando conflictos de IP, latencia alta y dispositivos problemáticos. Te avisa qué revisar, pero nunca toca tu configuración automáticamente.
+**📋 Documentación técnica completa disponible tras la compra.**
 
 ---
 
-SmartCompute ofrece:
+SmartCompute Starter ofrece:
 
 - ⚡ **Real-time Threat Detection** with fast response capabilities
 - 🧠 **AI-Powered Analytics** for pattern recognition  
@@ -69,128 +69,22 @@ SmartCompute ofrece:
 - 🛡️ **Alert Management** with machine learning enhancement
 - 🌍 **Multi-Platform Support** for Windows, macOS, Linux, Android, iOS
 
-## 🔒 **SEGURIDAD EMPRESARIAL INCLUIDA (NOVEDAD v1.0.0-beta)**
+## 🚀 Instalación SmartCompute Starter (GRATIS)
 
-### 🛡️ **Protección Avanzada Implementada**
-- ✅ **Nginx Proxy Reverso**: TLS/HTTPS obligatorio + rate limiting
-- ✅ **Variables de Entorno Seguras**: Credenciales NUNCA en código
-- ✅ **Rotación Automática de Claves**: Cada 30 días con backup
-- ✅ **Monitoreo 24/7**: Integridad de archivos + procesos sospechosos
-- ✅ **Firewall Automático**: Puertos internos bloqueados desde externa
-- ✅ **Alertas de Seguridad**: Webhook/Slack para eventos críticos
-
-### 🎯 **Puntuación de Seguridad: 8.6/10 (Nivel Enterprise)**
-- 🟢 **Exposición de Red**: 9/10 - Solo localhost, proxy HTTPS
-- 🟢 **Gestión de Credenciales**: 9/10 - Variables entorno + validación
-- 🟢 **Monitoreo**: 8/10 - Detección tiempo real + logs auditoría
-- 🟢 **Cifrado/TLS**: 9/10 - HTTPS obligatorio + certificados
-- 🟢 **Rate Limiting**: 8/10 - APIs protegidas contra ataques
-
-## 🚀 Funcionalidades Avanzadas Incluidas
-
-### 📊 **Integración Completa de Monitoreo**
-- ✅ **Grafana Dashboards**: Visualización profesional pre-configurada
-- ✅ **Prometheus Metrics**: Métricas exportadas automáticamente
-- ✅ **Docker Compose**: Despliegue completo con un comando
-- ✅ **Kubernetes Ready**: Manifests para producción incluidos
-- ✅ **Security Monitor**: Monitoreo de seguridad en tiempo real
-
-### 🔧 **Instalación Empresarial**
-- ✅ **Scripts automáticos**: Instalación sin intervención manual
-- ✅ **Multi-ambiente**: Desarrollo, staging, producción
-- ✅ **Monitoring stack completo**: Grafana + Prometheus + AlertManager
-- ✅ **Alta disponibilidad**: Configuración para clusters
-- ✅ **Certificados TLS**: Generación automática para desarrollo
-
-### 📈 **Benchmarks Reales**
-- ✅ **Redes industriales probadas**: PLCs Siemens, Allen-Bradley, Schneider
-- ✅ **Métricas verificadas**: Latencia < 15ms, Throughput > 1GB/s
-- ✅ **Casos de éxito**: Plantas automotrices, químicas, alimentarias
-- ✅ **Certificaciones**: ISA/IEC 62443, NIST Cybersecurity Framework
-- ✅ **Auditorías de seguridad**: Nivel enterprise con correcciones implementadas
-
-*Performance metrics and results may vary based on system configuration and use case.*
-
-## 🚀 Instalación Paso a Paso
-
-### 🔒 **IMPORTANTE: Configuración de Seguridad (REQUERIDO)**
-
-**⚠️ DESDE LA VERSIÓN v1.0.0-beta, SmartCompute incluye seguridad empresarial por defecto.**
+### Instalación Básica
 
 ```bash
 # 1. Clonar el repositorio
 git clone https://github.com/cathackr/SmartCompute.git
 cd SmartCompute
 
-# 2. Configurar credenciales seguras
-cp .env.example .env
-# ⚠️ EDITAR .env con tus credenciales reales (NUNCA subirlo a GitHub)
+# 2. Instalar dependencias
+pip install -r requirements.txt
 
-# 3. Instalar dependencias
-pip install -r requirements.txt psutil requests
-
-# 4. OPCIÓN A: Instalación segura con nginx (RECOMENDADO para producción)
-sudo scripts/setup-nginx-security.sh
-
-# 5. OPCIÓN B: Instalación rápida (solo desarrollo)
-scripts/start-security-monitoring.sh
-```
-
-### 🏠 **SmartCompute Starter (GRATIS)**
-
-**Instalación básica con seguridad habilitada:**
-
-```bash
-# Configuración mínima requerida en .env:
-echo "POSTGRES_PASSWORD=$(openssl rand -base64 32)" >> .env
-echo "REDIS_PASSWORD=$(openssl rand -base64 32)" >> .env
-
-# Iniciar con monitoreo básico
+# 3. Ejecutar versión gratuita
 python main.py --starter
 
-# 📊 Dashboard: https://localhost/enterprise (con nginx)
-# 📊 Desarrollo: http://127.0.0.1:8000 (directo)
-```
-
-### 🏢 **SmartCompute Enterprise**
-
-**Instalación completa con APIs empresariales:**
-
-```bash
-# 1. Configurar variables de entorno adicionales
-echo "JWT_SECRET_KEY=$(openssl rand -base64 64)" >> .env
-echo "WEBHOOK_SECRET=$(openssl rand -base64 64)" >> .env
-
-# 2. Configurar base de datos
-python -m app.core.database --setup
-
-# 3. Iniciar con monitoreo de seguridad
-scripts/start-security-monitoring.sh
-
-# 📊 Dashboard Enterprise: https://localhost/enterprise
-# 📋 API de métricas: https://localhost/api/metrics
-# 🔒 Monitor de seguridad: logs en tiempo real
-```
-
-### 🏭 **SmartCompute Industrial**
-
-**Instalación para redes industriales con máxima seguridad:**
-
-```bash
-# 1. Configurar credenciales de pago (solo si usas pagos)
-echo "MP_ACCESS_TOKEN=tu-token-mercadopago" >> .env
-echo "PAYMENT_HASH_SECRET=$(openssl rand -base64 64)" >> .env
-
-# 2. Configurar nginx con TLS (OBLIGATORIO para producción)
-sudo scripts/setup-nginx-security.sh
-
-# 3. Iniciar monitoreo industrial seguro
-scripts/start-security-monitoring.sh
-
-# 📊 Dashboard Industrial: https://localhost/unified
-# 📡 Network Intelligence: https://localhost/api/network  
-# 💳 Payment API: https://localhost/api/payments (rate limited)
-# 🔒 Monitoreo 24/7: integridad de archivos + procesos sospechosos
+# Dashboard: http://localhost:8000
 ```
 
 ### 📱 Instalación en Dispositivos Móviles
@@ -214,17 +108,13 @@ python main.py --starter --mobile
 %cd SmartCompute
 
 # 3. Instalar dependencias en segunda celda:
-!pip install -r requirements-core.txt
+!pip install -r requirements.txt
 
 # 4. Ejecutar DEMO INTERACTIVO en tercera celda (RECOMENDADO):
-!python examples/colab_interactive_demo.py
+!python examples/synthetic_demo.py
 # 📱 Alertas en tiempo real + gráficos animados + optimizado móviles
 
-# 5. ALTERNATIVA - Demo básico en texto:
-!python examples/synthetic_demo.py  
-# Análisis completo solo en texto (más rápido)
-
-# 6. OPCIONAL - Servidor web completo:
+# 5. OPCIONAL - Servidor web completo:
 !python main.py --starter &
 # Dashboard web profesional con APIs
 ```
@@ -239,25 +129,8 @@ python main.py --starter --mobile
 - **Instalación local**: Python 3.8+ (Linux/Windows/macOS/Android)
 - **Google Colab**: Solo navegador web (iOS, Android, PC, tablet)
 - **Móviles**: ✅ Android (apps locales) + iOS/Android (Colab web)
-- **Privilegios de red**: Solo para versión Industrial
 
-## 📸 Ve SmartCompute en Acción
-
-### 🎛️ Dashboard de Red Industrial
-![Network Dashboard](smartcompute_industrial/ui/network_dashboard_screenshot.png)
-*Topología de red en tiempo real con alertas de conflictos*
-
-### 📊 Integración Grafana - Métricas Empresariales
-![Grafana Dashboard](assets/grafana_smartcompute_overview.png)
-*Dashboard profesional con métricas de rendimiento y alertas empresariales en tiempo real*
-
-**Características avanzadas del dashboard:**
-- 🔥 **Alertas inteligentes**: Predicción de fallos con 95% de precisión
-- ⚡ **Tiempo real**: Actualización cada 5 segundos con cero lag
-- 📊 **+50 métricas**: CPU, RAM, red, disco, temperatura, procesos críticos
-- 🎯 **ROI Tracking**: Calcula automáticamente el retorno de inversión
-- 🚨 **Escalado automático**: Alertas por email, Slack, Teams, SMS
-- 🌍 **Multi-sede**: Monitoreo centralizado de múltiples ubicaciones
+## 📸 Ve SmartCompute Starter en Acción
 
 ### 📱 SmartCompute Starter en Smartphones
 ![Smartphone Monitor](assets/smartphone_monitoring.png)
@@ -274,21 +147,9 @@ python main.py --starter --mobile
 - 🤖 **Android**: QPython 3L, Termux (terminal completo)
 - 🌐 **Navegador**: Google Colab (recomendado para iOS y uso casual)
 
-### 📈 Análisis de Protocolos Industriales
-![Protocol Analysis](smartcompute_industrial/ui/protocol_analysis_screenshot.png)  
-*Detección automática de Modbus, Profinet, OPC UA con métricas detalladas*
-
-### ⚠️ Sistema de Alertas y Monitoreo
-![Security Alerts](smartcompute_industrial/ui/security_alerts_screenshot.png)
-*Conflictos de IP, dispositivos con alta latencia y alertas Prometheus*
-
 ### 🐳 Docker & Kubernetes Ready
 ![Docker Compose](assets/docker_deployment_screenshot.png)
 *Instalación completa con un comando - desarrollo y producción*
-
-### 🔬 Benchmarks y Resultados Reales
-![Performance Benchmarks](assets/benchmark_results.png)
-*Resultados de pruebas en redes industriales reales - latencia y throughput*
 
 ## 💰 Planes y Precios
 
@@ -381,9 +242,7 @@ python3 examples/synthetic_demo.py
 ```
 SmartCompute/
 ├── 📱 app/                    # Backend FastAPI
-├── 🏭 smartcompute_industrial/ # Versión Industrial
 ├── 🎨 assets/                 # Imágenes y recursos
-├── 🗃️ alembic/                # Migraciones DB
 ├── 🐳 docker-compose.yml     # Contenedores
 ├── ⚙️ main.py                # Servidor principal
 └── 📋 README.md              # Este archivo
@@ -392,26 +251,24 @@ SmartCompute/
 **Archivos clave:**
 - [`main.py`](main.py) - Punto de entrada
 - [`requirements.txt`](requirements.txt) - Dependencias
-- [`.env.example`](.env.example) - Configuración
 
 </td>
 <td width="70%" valign="top">
 
 ### 🗂️ Navegación Rápida por Carpetas
 
-| **🏭 Industrial** | **📱 Backend** | **🎨 Assets** |
-|------------------|---------------|---------------|
-| [`smartcompute_industrial/`](smartcompute_industrial/) | [`app/api/`](app/api/) | [`assets/`](assets/) |
-| [Network API](smartcompute_industrial/network_api.py) | [Health Endpoints](app/api/health_endpoints.py) | [Logo HMI](assets/smartcompute_hmi_logo.png) |
-| [Token API](smartcompute_industrial/token_api.py) | [Main API](app/api/main.py) | [Dashboard Grafana](assets/grafana_smartcompute_overview.png) |
-| [Security](smartcompute_industrial/security.py) | [Models](app/models/) | [Screenshots](assets/) |
+| **📱 Backend** | **🎨 Assets** | **🧪 Scripts** |
+|---------------|---------------|---------------|
+| [`app/api/`](app/api/) | [`assets/`](assets/) | [`scripts/`](scripts/) |
+| [Health Endpoints](app/api/health_endpoints.py) | [Logo HMI](assets/smartcompute_hmi_logo.png) | [Deploy](scripts/deploy.sh) |
+| [Main API](app/api/main.py) | [Dashboard Grafana](assets/grafana_smartcompute_overview.png) | [Monitoring](scripts/setup-monitoring.sh) |
+| [Models](app/models/) | [Screenshots](assets/) | [Migration](scripts/migrate_to_postgresql.py) |
 
-| **📋 Docs** | **⚙️ Config** | **🧪 Scripts** |
-|-------------|---------------|---------------|
-| [`docs/`](docs/) | [`docker-compose*.yml`](.) | [`scripts/`](scripts/) |
-| [Network Guide](docs/NETWORK_INTELLIGENCE_GUIDE.md) | [Production](docker-compose.production.yml) | [Deploy](scripts/deploy.sh) |
-| [Token Guide](docs/TOKEN_INTELLIGENCE_GUIDE.md) | [Development](.env.example) | [Monitoring](scripts/setup-monitoring.sh) |
-| [Observability](docs/OBSERVABILITY.md) | [Security](security/) | [Migration](scripts/migrate_to_postgresql.py) |
+| **📋 Docs** | **⚙️ Config** | **🏢 Enterprise** |
+|-------------|---------------|-------------------|
+| [`docs/`](docs/) | [`docker-compose*.yml`](.) | 🔒 **Acceso Privado** |
+| [Technical Documentation](docs/TECHNICAL_DOCUMENTATION.md) | [Production](docker-compose.production.yml) | Disponible tras compra |
+| [Quick Start Guide](docs/GUIA_INICIO_RAPIDO.md) | [Development](.env.example) | [🔗 Comprar Enterprise](https://github.com/cathackr/SmartCompute-Enterprise) |
 
 </td>
 </tr>
@@ -467,11 +324,11 @@ SmartCompute/
 **Prueba gratis en 5 minutos:**
 ```bash
 git clone https://github.com/cathackr/SmartCompute.git
-cd SmartCompute/smartcompute_industrial  
-./start_network_intelligence.sh
+cd SmartCompute
+python main.py --starter
 ```
 
-[**⭐ Dale una estrella si te parece útil**](https://github.com/cathackr/SmartCompute) • [**Demo en vivo**](http://127.0.0.1:8002) • [**¿Dudas?**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20-%20Consulta)
+[**⭐ Dale una estrella si te parece útil**](https://github.com/cathackr/SmartCompute) • [**Demo en vivo**](http://127.0.0.1:8000) • [**¿Dudas?**](mailto:ggwre04p0@mozmail.com?subject=SmartCompute%20-%20Consulta)
 
 ---
 
