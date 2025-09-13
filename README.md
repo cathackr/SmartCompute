@@ -47,7 +47,7 @@
 
 ⚠️ **Development Status:** This project is in active development. Enterprise and Industrial versions are production-ready with proven security implementations.
 
-SmartCompute es una suite completa de monitoreo inteligente con **3 versiones** para diferentes necesidades empresariales e industriales:
+SmartCompute es una suite completa de monitoreo inteligente con **3 versiones** para diferentes necesidades:
 
 ### 🏠 **SmartCompute Starter** (GRATIS)
 Monitoreo básico de rendimiento y detección de anomalías para uso personal y pequeñas empresas.
