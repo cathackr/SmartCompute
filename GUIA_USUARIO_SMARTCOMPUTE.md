@@ -37,7 +37,7 @@
    - ⚠️ **IMPORTANTE**: Marcar "Add Python to PATH"
 2. **Descargar SmartCompute**:
    ```
-   git clone https://github.com/your-repo/smartcompute.git
+   git clone https://github.com/cathackr/SmartCompute.git
    cd smartcompute
    ```
 3. **Ejecutar**: Doble clic en `EJECUTAR_ANALISIS.bat`
@@ -48,7 +48,7 @@
 sudo apt update && sudo apt install python3 python3-pip git
 
 # Paso 2: Descargar SmartCompute
-git clone https://github.com/your-repo/smartcompute.git
+git clone https://github.com/cathackr/SmartCompute.git
 cd smartcompute
 
 # Paso 3: Ejecutar
@@ -64,7 +64,7 @@ cd smartcompute
 brew install python3 git
 
 # Paso 3: Descargar y ejecutar
-git clone https://github.com/your-repo/smartcompute.git
+git clone https://github.com/cathackr/SmartCompute.git
 cd smartcompute
 ./ejecutar_analisis.sh
 ```
@@ -310,7 +310,7 @@ smartcompute_express_dashboard.html
 
 ### 1. **Prueba la Versión Gratuita**
 ```bash
-git clone https://github.com/your-repo/smartcompute.git
+git clone https://github.com/cathackr/SmartCompute.git
 cd smartcompute
 ./ejecutar_analisis.sh  # Linux/Mac
 # o doble clic en EJECUTAR_ANALISIS.bat  # Windows

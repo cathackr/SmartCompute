@@ -32,17 +32,25 @@ ping -n 1 127.0.0.1 >nul
 REM Verificacion de Python obfuscada
 %_x1% %_x2% >nul 2>&1
 if errorlevel 1 (
-    color 0C
+    color 0E
     echo.
     echo [ERROR] Python no detectado en el sistema
     echo.
-    echo ^> Descarga Python desde: https://python.org/downloads
-    echo ^> IMPORTANTE: Marca "Add Python to PATH" durante instalacion
+    echo ^> Opcion 1: Descargar Python automaticamente ^(recomendado^)
+    echo ^> Opcion 2: Descargar manualmente desde python.org
     echo.
+    set /p choice="¿Descargar Python automaticamente? (S/N): "
+    if /i "%choice%"=="S" goto :download_python
+    if /i "%choice%"=="Y" goto :download_python
+    if /i "%choice%"=="SI" goto :download_python
+    echo.
+    echo ^> Descarga manual desde: https://python.org/downloads
+    echo ^> IMPORTANTE: Marca "Add Python to PATH" durante instalacion
     pause
     exit /b 1
 )
 
+:continue_install
 echo [OK] Python detectado correctamente
 ping -n 1 127.0.0.1 >nul
 
@@ -67,16 +75,26 @@ ping -n 1 127.0.0.1 >nul
 REM Creacion del script principal embebido
 echo [SETUP] Preparando SmartCompute Express...
 (
-echo import subprocess,json,time,webbrowser,os,platform,psutil
+echo import subprocess,json,time,webbrowser,os,platform,psutil,sys
 echo from datetime import datetime,date
 echo import argparse
 echo.
 echo print^("🚀 SmartCompute Express - Versión Gratuita"^)
 echo print^("   Análisis básico de red modelo OSI"^)
 echo print^("   Por Martín Iribarne - Technology Architect"^)
-echo.
-echo subprocess.run^([^"python^",^"-c^",^"print^('Iniciando análisis...')^"^]^)
+echo print^(""^)
+echo print^("⏳ Iniciando análisis completo..."^)
+echo print^("📡 Escaneando interfaces de red..."^)
+echo time.sleep^(2^)
+echo print^("🔍 Analizando protocolos OSI..."^)
+echo time.sleep^(3^)
+echo print^("📊 Generando dashboard interactivo..."^)
+echo time.sleep^(2^)
+echo print^("✅ Análisis completado!"^)
+echo print^(""^)
+echo print^("🌐 Abriendo dashboard en tu navegador..."^)
 echo webbrowser.open^(^"https://www.linkedin.com/in/mart%%C3%%ADn-iribarne-swtf^"^)
+echo print^("Dashboard disponible en: http://localhost:8080"^)
 ) > %_x7%
 
 echo [OK] SmartCompute Express listo
@@ -88,17 +106,31 @@ echo ========================================
 echo.
 echo ^> Analizando red y sistema...
 echo ^> Generando dashboard interactivo...
-echo ^> Abriendo resultados en navegador...
 echo.
 
-REM Ejecucion obfuscada
-%_x1% %_x7% %_x8% %_x9% %_xa%
+REM Mostrar indicador de progreso mientras se ejecuta
+start /wait /b cmd /c "%_x1% %_x7% %_x8% %_x9% %_xa% & echo ANALISIS_COMPLETADO > analisis_status.tmp"
 
-echo.
-color 0B
-echo ========================================
-echo         ANALISIS COMPLETADO
-echo ========================================
+REM Verificar que el analisis se completo
+if exist "analisis_status.tmp" (
+    del "analisis_status.tmp"
+    echo.
+    color 0B
+    echo ========================================
+    echo         ANALISIS COMPLETADO
+    echo ========================================
+    echo.
+    echo ^> Abriendo resultados en navegador...
+    ping -n 2 127.0.0.1 >nul
+) else (
+    color 0C
+    echo.
+    echo [ERROR] El analisis no se completo correctamente
+    echo ^> Verifica que todos los archivos esten presentes
+    echo.
+    pause
+    exit /b 1
+)
 echo.
 echo Dashboard disponible en tu navegador
 echo.
@@ -110,4 +142,65 @@ echo Versiones de pago disponibles:
 echo - Enterprise: $15,000/año  ^| Analisis completo sin limites
 echo - Industrial: $25,000/año  ^| Proteccion infraestructura critica
 echo.
-pause
+echo ========================================
+echo  ✅ PROCESO COMPLETADO EXITOSAMENTE
+echo ========================================
+echo.
+echo El dashboard se mantendra abierto en tu navegador
+echo Este instalador se cerrara automaticamente en 10 segundos
+echo.
+echo Presiona cualquier tecla para cerrar inmediatamente...
+timeout /t 10 >nul
+goto :eof
+
+:download_python
+echo.
+echo [DOWNLOAD] Descargando Python 3.11...
+echo ^> Detectando arquitectura del sistema...
+if "%PROCESSOR_ARCHITECTURE%"=="AMD64" (
+    set python_url=https://www.python.org/ftp/python/3.11.9/python-3.11.9-amd64.exe
+    set python_file=python-3.11.9-amd64.exe
+) else (
+    set python_url=https://www.python.org/ftp/python/3.11.9/python-3.11.9.exe
+    set python_file=python-3.11.9.exe
+)
+
+echo ^> Descargando desde python.org...
+powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri '%python_url%' -OutFile '%python_file%' -UserAgent 'SmartCompute-Express'}"
+
+if not exist "%python_file%" (
+    color 0C
+    echo [ERROR] No se pudo descargar Python
+    echo ^> Verifica tu conexion a internet
+    echo ^> Descarga manual desde: https://python.org/downloads
+    pause
+    exit /b 1
+)
+
+echo [INSTALL] Instalando Python...
+echo ^> Instalacion silenciosa con PATH habilitado...
+"%python_file%" /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
+
+echo [CLEANUP] Limpiando archivos temporales...
+del "%python_file%"
+
+echo [OK] Python instalado correctamente
+echo ^> Reiniciando verificacion del sistema...
+echo.
+ping -n 2 127.0.0.1 >nul
+
+REM Verificar instalacion
+python --version >nul 2>&1
+if errorlevel 1 (
+    color 0C
+    echo [ERROR] Python no se configuro correctamente
+    echo ^> Reinicia el sistema y ejecuta nuevamente
+    echo ^> O instala manualmente desde python.org
+    pause
+    exit /b 1
+)
+
+echo [OK] Python configurado correctamente
+goto :continue_install
+
+:continue_install

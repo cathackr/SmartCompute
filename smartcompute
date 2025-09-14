@@ -1,0 +1,138 @@
+#!/usr/bin/env python3
+"""
+SmartCompute - Unified Command Line Interface
+Interfaz unificada para todos los análisis SmartCompute
+
+Examples:
+  smartcompute scan infrastructure
+  smartcompute scan docker
+  smartcompute scan network --layers 3,4
+  smartcompute scan iot --sensors temp,humidity
+  smartcompute scan apis --port 443
+  smartcompute --output cli
+  smartcompute --output html
+  smartcompute --format hmi
+"""
+
+import sys
+import argparse
+import subprocess
+from pathlib import Path
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='SmartCompute - Complete System Analysis Tool',
+        epilog="""
+Examples:
+  %(prog)s scan infrastructure           # Scan Docker, AD, Proxmox, services
+  %(prog)s scan network --osi-all        # Complete OSI 7-layer analysis
+  %(prog)s scan network --layers 3,4     # Network + Transport layers only
+  %(prog)s scan apis --layer 7           # Application layer APIs
+  %(prog)s scan iot --sensors all        # IoT sensor monitoring
+  %(prog)s scan docker --containers      # Docker-specific analysis
+  %(prog)s --output cli                  # CLI output only
+  %(prog)s --output html                 # HTML dashboard only
+  %(prog)s --output both                 # Both CLI and HTML
+        """,
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+
+    # Main command
+    parser.add_argument('command', choices=['scan'], help='Main command')
+
+    # Scan targets
+    parser.add_argument('target', choices=[
+        'infrastructure', 'network', 'apis', 'iot', 'docker', 'security', 'performance'
+    ], help='What to analyze')
+
+    # Output options
+    parser.add_argument('--output', choices=['cli', 'html', 'both'],
+                       default='both', help='Output format')
+
+    # Specific options
+    parser.add_argument('--layers', help='OSI layers to analyze (e.g., 1,2,3 or 3,4 or 7)')
+    parser.add_argument('--osi-all', action='store_true', help='Analyze all 7 OSI layers')
+    parser.add_argument('--sensors', help='Sensor types (temp,humidity,pressure,all)')
+    parser.add_argument('--containers', action='store_true', help='Focus on container analysis')
+    parser.add_argument('--duration', type=int, default=30, help='Analysis duration in seconds')
+    parser.add_argument('--port', type=int, help='Specific port analysis')
+    parser.add_argument('--format', choices=['standard', 'hmi'], default='hmi', help='Dashboard format')
+
+    args = parser.parse_args()
+
+    if len(sys.argv) == 1:
+        parser.print_help()
+        return
+
+    # Get script directory
+    script_dir = Path(__file__).parent
+
+    print("🚀 SmartCompute Analysis Suite")
+    print("=" * 50)
+
+    # Route to appropriate analyzer
+    if args.target == 'infrastructure':
+        print("📊 Starting Infrastructure Analysis...")
+        script_path = script_dir / 'smartcompute_infrastructure.py'
+        cmd = [sys.executable, str(script_path), '--scan', 'all', '--output', args.output]
+
+    elif args.target == 'network':
+        if args.osi_all:
+            print("🌐 Starting Complete OSI Analysis...")
+            script_path = script_dir / 'smartcompute_express.py'
+            cmd = [sys.executable, str(script_path), '--auto-open', '--duration', str(args.duration)]
+        elif args.layers:
+            layers = args.layers.split(',')
+            if '3' in layers and '4' in layers:
+                print("🔗 Starting Network-Transport Layer Analysis...")
+                script_path = script_dir / 'examples' / 'layer3_4_analysis.py'
+                cmd = [sys.executable, str(script_path)]
+            else:
+                print("⚠️  Custom layer analysis not yet implemented")
+                return
+        else:
+            print("🌐 Starting Complete OSI Analysis (default)...")
+            script_path = script_dir / 'smartcompute_express.py'
+            cmd = [sys.executable, str(script_path), '--auto-open', '--duration', str(args.duration)]
+
+    elif args.target == 'apis':
+        print("🔌 Starting API & Application Analysis...")
+        script_path = script_dir / 'examples' / 'layer7_apis.py'
+        cmd = [sys.executable, str(script_path)]
+
+    elif args.target == 'iot':
+        print("📡 Starting IoT Sensor Analysis...")
+        script_path = script_dir / 'examples' / 'iot_sensors.py'
+        cmd = [sys.executable, str(script_path)]
+
+    elif args.target == 'docker':
+        print("🐳 Starting Docker Analysis...")
+        script_path = script_dir / 'smartcompute_infrastructure.py'
+        cmd = [sys.executable, str(script_path), '--scan', 'docker', '--output', args.output]
+
+    else:
+        print(f"❌ Analysis target '{args.target}' not yet implemented")
+        return
+
+    # Execute the analysis
+    try:
+        result = subprocess.run(cmd, check=True, capture_output=False)
+        print("\n✅ Analysis completed successfully")
+
+        if args.output in ['html', 'both']:
+            print("📊 HTML dashboard generated - check your browser")
+
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Analysis failed with error code {e.returncode}")
+        return 1
+    except FileNotFoundError:
+        print(f"❌ Analysis script not found: {script_path}")
+        return 1
+    except Exception as e:
+        print(f"❌ Unexpected error: {e}")
+        return 1
+
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())
