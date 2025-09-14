@@ -62,7 +62,7 @@ SmartCompute representa la integración perfecta entre investigación académica
 </td>
 <td width="40%">
 
-![SmartCompute Dashboard](https://via.placeholder.com/300x200/1e3c72/ffffff?text=SmartCompute+Dashboard)
+![SmartCompute Dashboard](./smartcompute_express_dashboard.html)
 
 </td>
 </tr>
