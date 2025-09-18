@@ -61,3 +61,65 @@ Thumbs.db
 # Datos sensibles de testing
 test_data_real/
 real_network_data/
+
+# ============================================
+# SmartCompute Enterprise - Local Security & Testing Files
+# IMPORTANTE: Estos archivos NO deben subirse a GitHub por seguridad
+# ============================================
+
+# Archivos de análisis y monitoreo local
+system_health_check.sh
+apply_improvements.sh
+apply_user_improvements.sh
+smartcompute_live_analysis.py
+launch_smartcompute_analysis.sh
+comprehensive_integration_test.py
+generate_pdf_report.py
+
+# Reportes y logs de análisis (pueden contener info real del sistema)
+*_analysis_report.json
+*_test_results.json
+informe_evaluacion_completa.html
+INSTRUCCIONES_PDF.txt
+ver_informe.sh
+quick_start_guide.md
+
+# Scripts de monitoreo personal
+smartcompute_monitor.sh
+smartcompute_cleanup.sh
+
+# Logs y archivos temporales con datos reales
+/tmp/smartcompute_*
+/tmp/health_check*
+/var/log/smartcompute/
+health_check*.log
+
+# Enterprise security files (sensibles)
+enterprise/system_health_check.sh
+enterprise/apply_improvements.sh
+enterprise/apply_user_improvements.sh
+enterprise/smartcompute_live_analysis.py
+enterprise/launch_smartcompute_analysis.sh
+enterprise/comprehensive_integration_test.py
+enterprise/generate_pdf_report.py
+enterprise/informe_evaluacion_completa.html
+enterprise/INSTRUCCIONES_PDF.txt
+enterprise/ver_informe.sh
+enterprise/quick_start_guide.md
+
+# Configuraciones locales sensibles
+*_config.yml
+*_credentials.json
+response_config.yml
+local_config.*
+production_config.*
+
+# Claude Code - Estados de sesión local (NO subir a git)
+claude_inc
+
+# Archivos de testing con datos reales del sistema
+local_analysis/
+test_reports/
+security_scans/
+performance_tests/
+real_system_data/

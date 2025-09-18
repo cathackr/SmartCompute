@@ -1,0 +1,25 @@
+{
+  "server_url": "https://localhost:8443",
+  "api_key": "smartcompute-enterprise-key-2025",
+  "ssl_verify": false,
+  "reconnect_attempts": 5,
+  "reconnect_delay": 10,
+  "heartbeat_interval": 30,
+  "client_settings": {
+    "auto_submit": true,
+    "analysis_interval": 300,
+    "severity_threshold": "medium",
+    "enable_notifications": true
+  },
+  "backup": {
+    "local_backup": true,
+    "backup_path": "./backups",
+    "backup_retention_days": 7
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "smartcompute_client.log",
+    "max_size": "10MB",
+    "backup_count": 5
+  }
+}

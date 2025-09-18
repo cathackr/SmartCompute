@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCompute - Guía Completa de Usuario</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+            z-index: 1000;
+        }
+
+        nav h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        nav ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0.5rem;
+        }
+
+        nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        nav a {
+            color: #495057;
+            text-decoration: none;
+            padding: 0.3rem 0.5rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        nav a:hover {
+            background-color: #e9ecef;
+            color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #667eea;
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+            padding-left: 1rem;
+            border-left: 4px solid #667eea;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #495057;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h4 {
+            font-size: 1.2rem;
+            color: #6c757d;
+            margin-top: 1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        code {
+            background-color: #f8f9fa;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            color: #e83e8c;
+            font-size: 0.9rem;
+        }
+
+        pre {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-left: 4px solid #667eea;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            font-size: 0.9rem;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .warning {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .architecture-diagram {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            font-family: monospace;
+            line-height: 1.8;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(145deg, #ffffff, #f1f3f4);
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .feature-card h4 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .stats-table th,
+        .stats-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .stats-table th {
+            background-color: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .stats-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .command-block {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-family: 'Consolas', monospace;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .command-block::before {
+            content: "$ ";
+            color: #4fd1c7;
+            font-weight: bold;
+        }
+
+        .contact-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .contact-info h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info a {
+            color: #90cdf4;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-info a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.2rem;
+        }
+
+        .badge-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .badge-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .badge-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .badge-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: none;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .scroll-to-top:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            nav ul {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 1.5rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SmartCompute</h1>
+            <p>Guía Completa de Usuario - Protegiendo su infraestructura con inteligencia avanzada</p>
+        </header>
+
+        <nav>
+            <h3>📚 Tabla de Contenidos</h3>
+            <ul>
+                <li><a href="#introduccion">1. Introducción</a></li>
+                <li><a href="#instalacion">2. Instalación</a></li>
+                <li><a href="#configuracion">3. Configuración Inicial</a></li>
+                <li><a href="#uso-basico">4. Uso Básico</a></li>
+                <li><a href="#ejemplos">5. Ejemplos Prácticos</a></li>
+                <li><a href="#avanzadas">6. Características Avanzadas</a></li>
+                <li><a href="#integracion">7. Integración con Sistemas</a></li>
+                <li><a href="#monitoreo">8. Monitoreo y Alertas</a></li>
+                <li><a href="#problemas">9. Resolución de Problemas</a></li>
+                <li><a href="#practicas">10. Mejores Prácticas</a></li>
+                <li><a href="#api">11. API y Automatización</a></li>
+                <li><a href="#soporte">12. Soporte y Recursos</a></li>
+            </ul>
+        </nav>
+
+        <div class="content">
+            <section id="introduccion">
+                <h1><span class="emoji">🚀</span>Introducción</h1>
+
+                <p>SmartCompute es una solución integral de monitoreo y análisis de seguridad que ofrece dos versiones especializadas:</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><span class="emoji">🏢</span>SmartCompute Enterprise</h4>
+                        <ul>
+                            <li><strong>Propósito:</strong> Monitoreo de infraestructura empresarial</li>
+                            <li><strong>Características:</strong> Análisis de procesos, conexiones de red, vulnerabilidades</li>
+                            <li><strong>Casos de uso:</strong> Centros de datos, oficinas corporativas, cloud computing</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4><span class="emoji">🏭</span>SmartCompute Industrial</h4>
+                        <ul>
+                            <li><strong>Propósito:</strong> Monitoreo de sistemas industriales y OT</li>
+                            <li><strong>Características:</strong> Detección de protocolos industriales, monitoreo de PLCs, sensores IoT</li>
+                            <li><strong>Casos de uso:</strong> Plantas manufactureras, sistemas SCADA, infraestructura crítica</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3><span class="emoji">🏗️</span>Arquitectura del Sistema</h3>
+                <div class="architecture-diagram">
+                    <pre>
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Cliente 1     │    │   Cliente 2     │    │   Cliente N     │
+│  (Enterprise)   │    │  (Industrial)   │    │  (Enterprise)   │
+└─────────┬───────┘    └─────────┬───────┘    └─────────┬───────┘
+          │                      │                      │
+          └──────────────────────┼──────────────────────┘
+                                 │
+                    ┌─────────────┴───────────┐
+                    │   Servidor Central      │
+                    │   - MCP Protocol        │
+                    │   - Base de Datos       │
+                    │   - Dashboard Web       │
+                    │   - Gestión Incidentes │
+                    └─────────────────────────┘
+                    </pre>
+                </div>
+            </section>
+
+            <section id="instalacion">
+                <h1><span class="emoji">⚙️</span>Instalación</h1>
+
+                <h2>Requisitos del Sistema</h2>
+
+                <h3>Requisitos Mínimos</h3>
+                <ul>
+                    <li><strong>Sistema Operativo:</strong> Windows 10/11, Linux (Ubuntu 18.04+, CentOS 7+, RHEL 7+)</li>
+                    <li><strong>RAM:</strong> 2 GB mínimo, 4 GB recomendado</li>
+                    <li><strong>Almacenamiento:</strong> 10 GB espacio libre</li>
+                    <li><strong>Red:</strong> Conexión a Internet para validación de licencia</li>
+                    <li><strong>Privilegios:</strong> Administrador/Root para instalación</li>
+                </ul>
+
+                <h3>Requisitos Recomendados para Servidor</h3>
+                <ul>
+                    <li><strong>CPU:</strong> 4 cores o más</li>
+                    <li><strong>RAM:</strong> 8 GB o más</li>
+                    <li><strong>Almacenamiento:</strong> 100 GB SSD</li>
+                    <li><strong>Red:</strong> Ancho de banda dedicado para múltiples clientes</li>
+                </ul>
+
+                <h2>Instalación en Windows</h2>
+
+                <div class="info">
+                    <h4>1. Descarga del Instalador</h4>
+                    <code>smartcompute_installer.bat</code>
+                </div>
+
+                <div class="command-block">
+                    # Ejecutar como Administrador
+                    smartcompute_installer.bat
+                </div>
+
+                <h3>Proceso de Instalación</h3>
+                <pre>
+╔══════════════════════════════════════════════════════════╗
+║              SMARTCOMPUTE INSTALLER v2.0                ║
+║              Instalador Empresarial Unificado           ║
+╚══════════════════════════════════════════════════════════╝
+
+Seleccione el producto a instalar:
+[1] SmartCompute Enterprise
+[2] SmartCompute Industrial
+
+Seleccione el modo de instalación:
+[1] Servidor Central (gestiona múltiples clientes)
+[2] Cliente (conecta a servidor central)
+                </pre>
+
+                <h3>Configuración de Licencia</h3>
+                <pre>
+Ingrese su clave de licencia: ENTERPRISE-2024-XXXXXXXX
+Ingrese su email de licencia: admin@empresa.com
+
+✓ Validando licencia de red...
+✓ Licencia válida: Enterprise Network hasta 2025-12-31
+✓ Hosts ilimitados permitidos en esta red
+                </pre>
+
+                <h2>Instalación en Linux</h2>
+
+                <div class="command-block">
+                    wget https://downloads.smartcompute.com/smartcompute_installer.sh
+                    chmod +x smartcompute_installer.sh
+                    sudo ./smartcompute_installer.sh
+                </div>
+
+                <h3>Configuración Post-Instalación</h3>
+                <div class="command-block">
+                    # Verificar servicios
+                    systemctl status smartcompute-server  # Para modo servidor
+                    systemctl status smartcompute-client  # Para modo cliente
+
+                    # Verificar logs
+                    journalctl -u smartcompute-server -f
+                </div>
+
+                <h3>Validación de Instalación</h3>
+                <div class="success">
+                    <div class="command-block">
+                        # Verificar instalación
+                        smartcompute --version
+                        SmartCompute Enterprise v2.0.0
+
+                        # Test de conectividad (cliente)
+                        smartcompute test-connection
+                        ✓ Conectado al servidor central: 192.168.1.100:8443
+                        ✓ Certificados SSL válidos
+                        ✓ Autenticación exitosa
+                    </div>
+                </div>
+            </section>
+
+            <section id="configuracion">
+                <h1><span class="emoji">🔧</span>Configuración Inicial</h1>
+
+                <h2>Configuración del Servidor Central</h2>
+
+                <h3>1. Configuración de Red y Seguridad</h3>
+                <pre><code># /opt/smartcompute/server/server_config.yaml
+server:
+  host: "0.0.0.0"
+  port: 8443
+  ssl_enabled: true
+  cert_file: "/etc/smartcompute/certs/server.crt"
+  key_file: "/etc/smartcompute/certs/server.key"
+
+database:
+  type: "sqlite"  # sqlite, postgresql, mysql
+  path: "/var/lib/smartcompute/central.db"
+  backup_enabled: true
+  backup_interval: 3600  # segundos
+
+security:
+  jwt_secret: "auto-generated-secret"
+  session_timeout: 86400  # 24 horas
+  max_clients: 1000
+  rate_limiting: true</code></pre>
+
+                <h3>2. Configuración de Backups RAID</h3>
+                <pre><code># Configuración RAID en server_config.yaml
+backup:
+  raid_configuration: "raid1"  # raid0, raid1, raid5, raid10
+  primary_storage: "/var/lib/smartcompute"
+  backup_storage: "/backup/smartcompute"
+  cloud_backup:
+    enabled: true
+    provider: "gcp"  # gcp, aws, azure
+    bucket: "smartcompute-backups"
+    retention_days: 90</code></pre>
+
+                <h3>3. Inicio del Servidor</h3>
+                <div class="command-block">
+                    # Iniciar servicios
+                    sudo systemctl start smartcompute-server
+                    sudo systemctl enable smartcompute-server
+
+                    # Verificar estado
+                    curl -k https://localhost:8443/health
+                </div>
+
+                <div class="success">
+                    <pre><code>{
+  "status": "healthy",
+  "version": "2.0.0",
+  "uptime": "00:05:23",
+  "connected_clients": 0,
+  "database_status": "connected"
+}</code></pre>
+                </div>
+
+                <h2>Configuración del Cliente</h2>
+
+                <h3>1. Configuración de Conexión</h3>
+                <pre><code>// /opt/smartcompute/client/client_config.json
+{
+  "client_id": "empresa-workstation-001",
+  "client_name": "Workstation Principal",
+  "client_type": "enterprise",
+  "server": {
+    "host": "192.168.1.100",
+    "port": 8443,
+    "use_ssl": true,
+    "verify_ssl": true
+  },
+  "analysis": {
+    "interval": 300,
+    "auto_submit": true,
+    "include_network": true,
+    "include_processes": true,
+    "include_services": true
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "/var/log/smartcompute/client.log"
+  }
+}</code></pre>
+
+                <h3>2. Registro del Cliente</h3>
+                <div class="command-block">
+                    # El cliente se registra automáticamente al iniciarse
+                    sudo systemctl start smartcompute-client
+
+                    # Verificar registro
+                    tail -f /var/log/smartcompute/client.log
+                </div>
+
+                <div class="info">
+                    <pre>
+[INFO] Cliente registrado exitosamente con el servidor
+[INFO] ID de cliente: empresa-workstation-001
+[INFO] Comenzando análisis periódico cada 300 segundos
+                    </pre>
+                </div>
+            </section>
+
+            <section id="uso-basico">
+                <h1><span class="emoji">📊</span>Uso Básico</h1>
+
+                <h2>Dashboard Web</h2>
+
+                <h3>Acceso al Dashboard</h3>
+                <div class="highlight">
+                    <ul>
+                        <li><strong>URL:</strong> http://servidor-central:8081</li>
+                        <li><strong>Usuario:</strong> admin (generado automáticamente)</li>
+                        <li><strong>Contraseña:</strong> Ver /var/log/smartcompute/server.log</li>
+                    </ul>
+                </div>
+
+                <h3>Características del Dashboard</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>🌐 Vista General</h4>
+                        <ul>
+                            <li>Clientes conectados en tiempo real</li>
+                            <li>Estadísticas de incidentes</li>
+                            <li>Estado de la red</li>
+                            <li>Alertas activas</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>👥 Gestión de Clientes</h4>
+                        <ul>
+                            <li>Lista de clientes registrados</li>
+                            <li>Estado de conexión</li>
+                            <li>Última actividad</li>
+                            <li>Tipo de análisis</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🚨 Gestión de Incidentes</h4>
+                        <ul>
+                            <li>Creación manual de incidentes</li>
+                            <li>Asignación y seguimiento</li>
+                            <li>Historial de resoluciones</li>
+                            <li>Reportes automáticos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h2>Interfaz de Línea de Comandos</h2>
+
+                <h3>Comandos Básicos Enterprise</h3>
+                <div class="command-block">
+                    # Análisis completo del sistema
+                    smartcompute analyze --full
+                </div>
+
+                <div class="success">
+                    <pre>
+Iniciando análisis completo...
+✓ Escaneando procesos (156 encontrados)
+✓ Analizando conexiones de red (23 activas)
+✓ Verificando servicios del sistema (45 activos)
+✓ Evaluando configuración de seguridad
+✓ Generando reporte HTML
+
+Reporte guardado: /var/log/smartcompute/analysis_20241201_143022.html
+                    </pre>
+                </div>
+
+                <div class="command-block">
+                    # Análisis específico
+                    smartcompute analyze --network-only
+                    smartcompute analyze --processes-only
+                    smartcompute analyze --security-only
+
+                    # Envío manual al servidor
+                    smartcompute submit-analysis
+                </div>
+
+                <h3>Comandos Básicos Industrial</h3>
+                <div class="command-block">
+                    # Escaneo de protocolos industriales
+                    smartcompute-industrial scan-protocols
+                </div>
+
+                <div class="success">
+                    <pre>
+Escaneando protocolos industriales...
+✓ Modbus TCP detectado: 3 dispositivos
+✓ PROFINET detectado: 2 dispositivos
+✓ EtherNet/IP detectado: 1 dispositivo
+✓ OPC UA detectado: 1 servidor
+                    </pre>
+                </div>
+
+                <div class="command-block">
+                    # Monitoreo de PLCs
+                    smartcompute-industrial monitor-plcs
+
+                    # Monitoreo de sensores
+                    smartcompute-industrial monitor-sensors
+                </div>
+            </section>
+
+            <section id="ejemplos">
+                <h1><span class="emoji">💡</span>Ejemplos Prácticos</h1>
+
+                <h2>Ejemplo 1: Detección de Amenazas en Empresa</h2>
+
+                <h3>Escenario</h3>
+                <p>Una empresa detecta actividad sospechosa en su red corporativa.</p>
+
+                <h3>Proceso con SmartCompute</h3>
+
+                <h4>1. Análisis Automático</h4>
+                <div class="warning">
+                    <pre>
+[2024-12-01 14:30:00] Análisis iniciado automáticamente
+[2024-12-01 14:30:15] ⚠️  Proceso sospechoso detectado: cryptominer.exe
+[2024-12-01 14:30:16] ⚠️  Conexión no autorizada: 203.0.113.42:4444
+[2024-12-01 14:30:17] 🚨 Incidente creado: INC-20241201-001
+                    </pre>
+                </div>
+
+                <h4>2. Alerta en Dashboard</h4>
+                <div class="warning">
+                    <h4>🚨 ALERTA CRÍTICA</h4>
+                    <ul>
+                        <li><strong>Incidente:</strong> INC-20241201-001</li>
+                        <li><strong>Severidad:</strong> Alta</li>
+                        <li><strong>Cliente:</strong> workstation-finance-05</li>
+                        <li><strong>Descripción:</strong> Malware detectado con conexión C&C</li>
+                    </ul>
+
+                    <h4>Recomendaciones:</h4>
+                    <ul>
+                        <li>✓ Aislar estación de trabajo inmediatamente</li>
+                        <li>✓ Analizar tráfico de red relacionado</li>
+                        <li>✓ Ejecutar escaneo antimalware completo</li>
+                        <li>✓ Cambiar credenciales de usuario afectado</li>
+                    </ul>
+                </div>
+
+                <h2>Ejemplo 2: Monitoreo Industrial con Parada de Emergencia</h2>
+
+                <h3>Escenario</h3>
+                <p>Una planta manufacturera necesita monitoreo continuo de sus sistemas críticos.</p>
+
+                <h3>Incidente Real</h3>
+                <div class="warning">
+                    <pre>
+[2024-12-01 09:15:22] 🟡 ADVERTENCIA: Temperatura Línea 1: 26.5°C
+[2024-12-01 09:15:23] 📊 Reduciendo velocidad de producción automáticamente
+[2024-12-01 09:18:45] 🔴 CRÍTICO: Presión Sistema Hidráulico: 225 bar
+[2024-12-01 09:18:46] 🛑 PARADA DE EMERGENCIA ACTIVADA
+[2024-12-01 09:18:47] 📞 Notificación enviada a supervisor de turno
+[2024-12-01 09:18:48] 🚨 Incidente creado: INC-INDUSTRIAL-001
+                    </pre>
+                </div>
+
+                <h3>Reporte Automático ISA/IEC</h3>
+                <div class="info">
+                    <h4>📋 REPORTE DE INCIDENTE INDUSTRIAL</h4>
+                    <ul>
+                        <li><strong>ID:</strong> INC-INDUSTRIAL-001</li>
+                        <li><strong>Fecha:</strong> 2024-12-01 09:18:46</li>
+                    </ul>
+
+                    <h4>🔧 ANÁLISIS TÉCNICO:</h4>
+                    <ul>
+                        <li>Sensor de presión superó umbral crítico (225 bar > 220 bar)</li>
+                        <li>Sistema de parada de emergencia funcionó correctamente</li>
+                        <li>Tiempo de respuesta: 1.2 segundos</li>
+                    </ul>
+
+                    <h4>📏 CUMPLIMIENTO ISA/IEC:</h4>
+                    <ul>
+                        <li>✓ ISA-84 (IEC 61511): Sistema SIS funcionó dentro de parámetros</li>
+                        <li>✓ IEC 62443: Seguridad cibernética mantenida</li>
+                        <li>✓ ISA-95: Comunicación MES/ERP preservada</li>
+                    </ul>
+
+                    <h4>🛠️ RECOMENDACIONES:</h4>
+                    <ol>
+                        <li>Inspeccionar válvulas de alivio de presión</li>
+                        <li>Verificar calibración de sensores (última: 2024-11-15)</li>
+                        <li>Revisar programa de mantenimiento preventivo</li>
+                        <li>Documentar incidente en sistema CMMS</li>
+                    </ol>
+                </div>
+
+                <h2>Ejemplo 3: Integración Multi-Sitio</h2>
+
+                <h3>Arquitectura Implementada</h3>
+                <div class="architecture-diagram">
+                    <pre>
+        Internet/VPN
+             │
+    ┌────────┼────────┐
+    │                 │
+┌───▼───┐         ┌───▼───┐
+│Madrid │         │Barcelona│
+│Office │         │ Office │
+└───┬───┘         └───┬───┘
+    │                 │
+    └─────────────────┼─────────────────┐
+                      │                 │
+              ┌───────▼────────┐    ┌───▼───┐
+              │ Data Center    │    │Remote │
+              │ (Servidor      │    │Factory│
+              │  Central)      │    │       │
+              └────────────────┘    └───────┘
+                    </pre>
+                </div>
+
+                <h3>Dashboard Centralizado</h3>
+                <table class="stats-table">
+                    <thead>
+                        <tr>
+                            <th>🌍 Sitio</th>
+                            <th>📊 Activos</th>
+                            <th>⚠️ Alertas</th>
+                            <th>📈 Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Madrid</td>
+                            <td>20</td>
+                            <td>2</td>
+                            <td><span class="badge badge-success">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td>Barcelona</td>
+                            <td>15</td>
+                            <td>0</td>
+                            <td><span class="badge badge-success">Óptimo</span></td>
+                        </tr>
+                        <tr>
+                            <td>Data Center</td>
+                            <td>5</td>
+                            <td>1</td>
+                            <td><span class="badge badge-success">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td>Factory</td>
+                            <td>8</td>
+                            <td>3</td>
+                            <td><span class="badge badge-warning">Atención</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning">
+                    <h4>🚨 Incidentes Activos:</h4>
+                    <ul>
+                        <li>Madrid: Actualización pendiente (MS-001)</li>
+                        <li>Data Center: Alto uso CPU servidor (DC-003)</li>
+                        <li>Factory: Temperatura elevada Línea 2 (FA-007)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="avanzadas">
+                <h1><span class="emoji">🧠</span>Características Avanzadas</h1>
+
+                <h2>Correlación Automática de Incidentes</h2>
+                <p>SmartCompute utiliza algoritmos avanzados para correlacionar eventos relacionados:</p>
+
+                <div class="info">
+                    <h4>🧠 CORRELACIÓN DETECTADA:</h4>
+                    <ul>
+                        <li><strong>Evento 1:</strong> Alto uso de CPU en servidor DB (14:30:00)</li>
+                        <li><strong>Evento 2:</strong> Lentitud en aplicación web (14:30:15)</li>
+                        <li><strong>Evento 3:</strong> Timeouts de conexión cliente (14:30:30)</li>
+                    </ul>
+                    <p><strong>Causa raíz:</strong> Sobrecarga de base de datos</p>
+                    <p><strong>Incidentes relacionados:</strong> 3</p>
+                    <p><strong>Recomendación:</strong> Optimizar consultas SQL y aumentar recursos</p>
+                </div>
+
+                <h2>Análisis Predictivo</h2>
+                <div class="command-block">
+                    # Activar análisis predictivo
+                    smartcompute enable-predictive-analysis
+
+                    # Configurar modelos de predicción
+                    smartcompute configure-prediction \
+                        --metric cpu_usage \
+                        --threshold 80 \
+                        --prediction_window 24h \
+                        --confidence 0.85
+                </div>
+
+                <div class="success">
+                    <h4>🔮 PREDICCIÓN DE RECURSOS</h4>
+                    <ul>
+                        <li><strong>Sistema:</strong> database-server-01</li>
+                        <li><strong>Predicción:</strong> CPU alcanzará 90% en 6 horas</li>
+                        <li><strong>Confianza:</strong> 92%</li>
+                        <li><strong>Recomendación:</strong> Escalar recursos o redistribuir carga</li>
+                    </ul>
+                </div>
+
+                <h2>Integración con SIEM</h2>
+                <div class="command-block">
+                    # Configurar integración Splunk
+                    smartcompute configure-siem \
+                        --type splunk \
+                        --endpoint "https://splunk.empresa.com:8088" \
+                        --token "B5A79AAD-D822-46CC-80D1-819F80D7BFE0"
+
+                    # Configurar integración QRadar
+                    smartcompute configure-siem \
+                        --type qradar \
+                        --endpoint "https://qradar.empresa.com" \
+                        --username "smartcompute" \
+                        --certificate "/etc/certs/qradar.pem"
+                </div>
+
+                <h2>Automatización con Playbooks</h2>
+                <pre><code># /etc/smartcompute/playbooks/malware_response.yaml
+name: "Respuesta Automática a Malware"
+trigger:
+  - event_type: "malware_detected"
+  - severity: "high"
+
+actions:
+  - name: "Aislar cliente"
+    type: "network_isolation"
+    parameters:
+      method: "firewall_rule"
+
+  - name: "Notificar equipo SOC"
+    type: "notification"
+    parameters:
+      channels: ["email", "slack", "sms"]
+      recipients: ["soc@empresa.com"]
+
+  - name: "Generar reporte forense"
+    type: "forensic_analysis"
+    parameters:
+      include_memory: true
+      include_disk: false</code></pre>
+            </section>
+
+            <section id="integracion">
+                <h1><span class="emoji">🔌</span>Integración con Sistemas Existentes</h1>
+
+                <h2>Integración con Active Directory</h2>
+                <div class="command-block">
+                    # Configurar autenticación AD
+                    smartcompute configure-auth \
+                        --type ldap \
+                        --server "dc.empresa.com:389" \
+                        --base-dn "DC=empresa,DC=com" \
+                        --service-account "CN=smartcompute,OU=Service Accounts,DC=empresa,DC=com"
+
+                    # Mapeo de grupos
+                    smartcompute map-groups \
+                        --admin-group "CN=SmartCompute Admins,OU=Groups,DC=empresa,DC=com" \
+                        --operator-group "CN=SmartCompute Operators,OU=Groups,DC=empresa,DC=com" \
+                        --viewer-group "CN=SmartCompute Viewers,OU=Groups,DC=empresa,DC=com"
+                </div>
+
+                <h2>Integración con Sistemas de Monitoreo</h2>
+
+                <h3>Prometheus/Grafana</h3>
+                <pre><code># prometheus.yml
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'smartcompute'
+    static_configs:
+      - targets: ['localhost:8443']
+    metrics_path: '/metrics'
+    scheme: 'https'
+    tls_config:
+      insecure_skip_verify: true</code></pre>
+
+                <div class="info">
+                    <h4>📊 Métricas exportadas por SmartCompute:</h4>
+                    <pre><code>smartcompute_clients_connected 25
+smartcompute_incidents_total{severity="critical"} 2
+smartcompute_incidents_total{severity="high"} 5
+smartcompute_incidents_total{severity="medium"} 12
+smartcompute_analyses_completed_total 1247
+smartcompute_server_uptime_seconds 3600</code></pre>
+                </div>
+
+                <h2>Integración con Sistemas Industriales</h2>
+
+                <h3>Integración con Historian (PI System)</h3>
+                <pre><code># pi_integration.py
+from osisoft.pidevclub.piwebapi import PIWebApiClient
+
+class PISystemIntegration:
+    def __init__(self, pi_server, username, password):
+        self.client = PIWebApiClient(pi_server, username, password)
+
+    def send_sensor_data(self, smartcompute_data):
+        for sensor in smartcompute_data["sensors"]:
+            point_name = f"SmartCompute.{sensor['location']}.{sensor['type']}"
+            value = sensor["value"]
+            timestamp = sensor["timestamp"]
+
+            self.client.write_value(point_name, value, timestamp)</code></pre>
+            </section>
+
+            <section id="monitoreo">
+                <h1><span class="emoji">📡</span>Monitoreo y Alertas</h1>
+
+                <h2>Configuración de Alertas</h2>
+
+                <h3>Alertas por Email</h3>
+                <div class="command-block">
+                    # Configurar SMTP
+                    smartcompute configure-email \
+                        --smtp-server "smtp.empresa.com" \
+                        --smtp-port 587 \
+                        --username "smartcompute@empresa.com" \
+                        --password "password" \
+                        --use-tls true
+
+                    # Configurar reglas de alerta
+                    smartcompute create-alert-rule \
+                        --name "CPU Alto" \
+                        --condition "cpu_usage > 90" \
+                        --duration "5m" \
+                        --severity "high" \
+                        --action "email:admin@empresa.com"
+                </div>
+
+                <h3>Alertas por Slack</h3>
+                <div class="command-block">
+                    # Configurar Slack
+                    smartcompute configure-slack \
+                        --webhook "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX" \
+                        --channel "#it-alerts"
+
+                    # Regla de alerta para Slack
+                    smartcompute create-alert-rule \
+                        --name "Malware Detectado" \
+                        --condition "event_type == 'malware_detected'" \
+                        --severity "critical" \
+                        --action "slack:#security-alerts"
+                </div>
+
+                <h2>Dashboards Personalizados</h2>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>📊 Dashboard Ejecutivo</h4>
+                        <ul>
+                            <li>Sistemas monitoreados</li>
+                            <li>Incidentes por día</li>
+                            <li>Actividad por hora</li>
+                            <li>Métricas de alto nivel</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🔧 Dashboard Técnico</h4>
+                        <ul>
+                            <li>Sistemas con problemas</li>
+                            <li>Uso de recursos</li>
+                            <li>Logs recientes</li>
+                            <li>Métricas detalladas</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="problemas">
+                <h1><span class="emoji">🔧</span>Resolución de Problemas</h1>
+
+                <h2>Problemas Comunes y Soluciones</h2>
+
+                <h3>1. Cliente No Se Conecta al Servidor</h3>
+
+                <div class="warning">
+                    <h4>Síntomas:</h4>
+                    <pre>
+[ERROR] Failed to connect to server: Connection refused
+[ERROR] SSL certificate verification failed
+                    </pre>
+                </div>
+
+                <div class="command-block">
+                    # Verificar conectividad de red
+                    telnet servidor-central 8443
+
+                    # Verificar certificados SSL
+                    openssl s_client -connect servidor-central:8443 -verify_return_error
+
+                    # Verificar configuración del cliente
+                    smartcompute validate-config
+                </div>
+
+                <div class="success">
+                    <h4>Soluciones:</h4>
+                    <div class="command-block">
+                        # 1. Verificar firewall
+                        sudo ufw allow 8443/tcp
+
+                        # 2. Regenerar certificados
+                        sudo smartcompute regenerate-certificates
+
+                        # 3. Verificar configuración DNS
+                        nslookup servidor-central
+
+                        # 4. Reiniciar servicios
+                        sudo systemctl restart smartcompute-client
+                    </div>
+                </div>
+
+                <h3>2. Alto Uso de Memoria en el Servidor</h3>
+
+                <div class="warning">
+                    <h4>Síntomas:</h4>
+                    <pre>
+[WARN] Memory usage: 85% (6.8GB/8GB)
+[ERROR] Database connection pool exhausted
+                    </pre>
+                </div>
+
+                <div class="command-block">
+                    # Verificar uso de memoria
+                    smartcompute server-stats --memory
+
+                    # Verificar conexiones de base de datos
+                    smartcompute db-stats --connections
+                </div>
+
+                <h2>Herramientas de Diagnóstico</h2>
+
+                <h3>Test de Conectividad Completo</h3>
+                <div class="command-block">
+                    smartcompute diagnostic-test --full
+                </div>
+
+                <div class="success">
+                    <pre>
+╔══════════════════════════════════════════════════════════╗
+║                  DIAGNÓSTICO COMPLETO                   ║
+╚══════════════════════════════════════════════════════════╝
+
+✓ Conectividad de red: OK
+✓ Certificados SSL: OK
+✓ Autenticación: OK
+✓ Base de datos: OK
+✓ Permisos de archivo: OK
+✓ Servicios del sistema: OK
+✓ Uso de recursos: OK (CPU: 25%, RAM: 60%)
+
+⚠ Advertencias:
+- Certificado expira en 30 días
+- 3 análisis fallan en las últimas 24h
+
+🔧 Recomendaciones:
+- Renovar certificados SSL
+- Revisar configuración de análisis de red
+                    </pre>
+                </div>
+
+                <h3>Benchmark de Rendimiento</h3>
+                <div class="command-block">
+                    smartcompute benchmark
+                </div>
+
+                <table class="stats-table">
+                    <thead>
+                        <tr>
+                            <th>Métrica</th>
+                            <th>Actual</th>
+                            <th>Esperado</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Análisis/minuto</td>
+                            <td>12</td>
+                            <td>10</td>
+                            <td><span class="badge badge-success">✓ OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Tiempo respuesta DB</td>
+                            <td>15ms</td>
+                            <td>20ms</td>
+                            <td><span class="badge badge-success">✓ OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Memoria por cliente</td>
+                            <td>2.5MB</td>
+                            <td>5MB</td>
+                            <td><span class="badge badge-success">✓ OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>CPU por análisis</td>
+                            <td>0.1%</td>
+                            <td>0.2%</td>
+                            <td><span class="badge badge-success">✓ OK</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="success">
+                    <p><strong>Rendimiento: ÓPTIMO ✓</strong></p>
+                </div>
+            </section>
+
+            <section id="practicas">
+                <h1><span class="emoji">⭐</span>Mejores Prácticas</h1>
+
+                <h2>Seguridad</h2>
+
+                <h3>1. Gestión de Certificados</h3>
+                <div class="command-block">
+                    # Generar certificados para producción
+                    openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt -days 365 \
+                        -subj "/C=ES/ST=Madrid/L=Madrid/O=Empresa/CN=smartcompute.empresa.com"
+
+                    # Configurar renovación automática
+                    echo "0 2 1 * * /opt/smartcompute/scripts/renew-certificates.sh" | crontab -
+
+                    # Implementar rotación de claves JWT
+                    smartcompute rotate-jwt-key --schedule monthly
+                </div>
+
+                <h3>2. Control de Acceso</h3>
+                <div class="command-block">
+                    # Configurar RBAC (Role-Based Access Control)
+                    smartcompute create-role \
+                        --name "security-analyst" \
+                        --permissions "view_incidents,create_incidents,view_clients"
+
+                    smartcompute create-role \
+                        --name "system-admin" \
+                        --permissions "all"
+
+                    # Asignar roles a usuarios
+                    smartcompute assign-role \
+                        --user "juan.perez@empresa.com" \
+                        --role "security-analyst"
+                </div>
+
+                <h2>Rendimiento</h2>
+
+                <h3>1. Optimización de Base de Datos</h3>
+                <pre><code>-- Índices recomendados para PostgreSQL
+CREATE INDEX CONCURRENTLY idx_incidents_created_at
+ON incidents(created_at DESC);
+
+CREATE INDEX CONCURRENTLY idx_clients_last_seen
+ON clients(last_seen DESC) WHERE status = 'active';
+
+CREATE INDEX CONCURRENTLY idx_analyses_client_timestamp
+ON analyses(client_id, timestamp DESC);</code></pre>
+
+                <h3>2. Configuración de Red</h3>
+                <div class="command-block">
+                    # Optimizar parámetros de red en el servidor
+                    echo 'net.core.somaxconn = 4096' >> /etc/sysctl.conf
+                    echo 'net.ipv4.tcp_max_syn_backlog = 4096' >> /etc/sysctl.conf
+                    echo 'net.core.netdev_max_backlog = 4096' >> /etc/sysctl.conf
+                    sysctl -p
+
+                    # Configurar compresión para reducir ancho de banda
+                    smartcompute configure-compression \
+                        --algorithm gzip \
+                        --level 6 \
+                        --threshold 1KB
+                </div>
+
+                <h2>Mantenimiento</h2>
+
+                <h3>1. Backups Automatizados</h3>
+                <div class="info">
+                    <p>Programar en crontab para ejecutar diariamente:</p>
+                    <code>0 2 * * * /opt/smartcompute/scripts/backup.sh</code>
+                </div>
+
+                <h3>2. Monitoreo de Salud</h3>
+                <div class="command-block">
+                    # Verificar servicios automáticamente
+                    systemctl is-active smartcompute-server >/dev/null 2>&1 || {
+                        echo "CRÍTICO: Servidor SmartCompute no está ejecutándose"
+                        systemctl restart smartcompute-server
+                        exit 2
+                    }
+                </div>
+            </section>
+
+            <section id="api">
+                <h1><span class="emoji">🔌</span>API y Automatización</h1>
+
+                <h2>API REST</h2>
+
+                <h3>Autenticación</h3>
+                <div class="command-block">
+                    # Obtener token JWT
+                    curl -X POST https://smartcompute.empresa.com:8443/api/auth/login \
+                        -H "Content-Type: application/json" \
+                        -d '{
+                            "username": "admin",
+                            "password": "your_password"
+                        }'
+                </div>
+
+                <div class="success">
+                    <h4>Respuesta:</h4>
+                    <pre><code>{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "expires_in": 86400,
+    "user": {
+        "id": "admin",
+        "roles": ["administrator"]
+    }
+}</code></pre>
+                </div>
+
+                <h3>Endpoints Principales</h3>
+
+                <h4>1. Gestión de Clientes</h4>
+                <div class="command-block">
+                    # Listar clientes
+                    curl -H "Authorization: Bearer $TOKEN" \
+                        https://smartcompute.empresa.com:8443/api/clients
+
+                    # Registrar nuevo cliente
+                    curl -X POST \
+                        -H "Authorization: Bearer $TOKEN" \
+                        -H "Content-Type: application/json" \
+                        -d '{
+                            "client_id": "new-workstation-001",
+                            "client_name": "Nueva Estación de Trabajo",
+                            "client_type": "enterprise",
+                            "location": "Madrid Office"
+                        }' \
+                        https://smartcompute.empresa.com:8443/api/clients
+                </div>
+
+                <h4>2. Gestión de Incidentes</h4>
+                <div class="command-block">
+                    # Listar incidentes
+                    curl -H "Authorization: Bearer $TOKEN" \
+                        "https://smartcompute.empresa.com:8443/api/incidents?status=open&severity=high"
+
+                    # Crear incidente manual
+                    curl -X POST \
+                        -H "Authorization: Bearer $TOKEN" \
+                        -H "Content-Type: application/json" \
+                        -d '{
+                            "title": "Mantenimiento Programado",
+                            "description": "Mantenimiento de servidor de base de datos",
+                            "severity": "medium",
+                            "client_id": "database-server-01",
+                            "assigned_to": "admin"
+                        }' \
+                        https://smartcompute.empresa.com:8443/api/incidents
+                </div>
+
+                <h2>SDKs y Librerías</h2>
+
+                <h3>Python SDK</h3>
+                <pre><code># smartcompute_sdk.py
+import requests
+import json
+from datetime import datetime
+
+class SmartComputeAPI:
+    def __init__(self, base_url, username, password):
+        self.base_url = base_url.rstrip('/')
+        self.session = requests.Session()
+        self.login(username, password)
+
+    def login(self, username, password):
+        """Autenticarse y obtener token JWT"""
+        response = self.session.post(
+            f"{self.base_url}/api/auth/login",
+            json={"username": username, "password": password}
+        )
+        response.raise_for_status()
+
+        token = response.json()["token"]
+        self.session.headers.update({"Authorization": f"Bearer {token}"})
+
+    def get_clients(self, status=None):
+        """Obtener lista de clientes"""
+        params = {"status": status} if status else {}
+        response = self.session.get(f"{self.base_url}/api/clients", params=params)
+        response.raise_for_status()
+        return response.json()
+
+    def create_incident(self, title, description, severity, client_id=None):
+        """Crear nuevo incidente"""
+        incident_data = {
+            "title": title,
+            "description": description,
+            "severity": severity,
+            "timestamp": datetime.now().isoformat()
+        }
+        if client_id:
+            incident_data["client_id"] = client_id
+
+        response = self.session.post(
+            f"{self.base_url}/api/incidents",
+            json=incident_data
+        )
+        response.raise_for_status()
+        return response.json()
+
+# Ejemplo de uso
+api = SmartComputeAPI(
+    "https://smartcompute.empresa.com:8443",
+    "admin",
+    "password"
+)
+
+# Obtener clientes online
+online_clients = api.get_clients(status="online")
+print(f"Clientes conectados: {len(online_clients)}")
+
+# Crear incidente automáticamente
+incident = api.create_incident(
+    title="Alto uso de CPU detectado",
+    description="Servidor web mostrando 95% uso de CPU por 10 minutos",
+    severity="high",
+    client_id="web-server-01"
+)
+print(f"Incidente creado: {incident['incident_id']}")
+</code></pre>
+
+                <h3>PowerShell Module</h3>
+                <pre><code># SmartCompute.psm1
+function Connect-SmartCompute {
+    param(
+        [string]$ServerUrl,
+        [string]$Username,
+        [string]$Password
+    )
+
+    $loginData = @{
+        username = $Username
+        password = $Password
+    } | ConvertTo-Json
+
+    $response = Invoke-RestMethod -Uri "$ServerUrl/api/auth/login" `
+        -Method Post -Body $loginData -ContentType "application/json"
+
+    $Global:SmartComputeToken = $response.token
+    $Global:SmartComputeUrl = $ServerUrl
+}
+
+# Ejemplo de uso:
+# Connect-SmartCompute -ServerUrl "https://smartcompute.empresa.com:8443" -Username "admin" -Password "password"
+# $clients = Get-SmartComputeClients -Status "online"
+# New-SmartComputeIncident -Title "Test" -Description "Prueba desde PowerShell" -Severity "low"
+</code></pre>
+            </section>
+
+            <section id="soporte">
+                <h1><span class="emoji">🆘</span>Soporte y Recursos</h1>
+
+                <h2>Documentación Adicional</h2>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>📚 Guías Específicas</h4>
+                        <ul>
+                            <li>Guía de Instalación Enterprise</li>
+                            <li>Guía de Instalación Industrial</li>
+                            <li>Guía de Integración SIEM</li>
+                            <li>Guía de Cloud Deployment</li>
+                            <li>Guía de API Reference</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🌐 Recursos en Línea</h4>
+                        <ul>
+                            <li>Portal de Documentación</li>
+                            <li>Base de Conocimiento</li>
+                            <li>Foro de la Comunidad</li>
+                            <li>Canal de YouTube</li>
+                            <li>Tutoriales y demos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h2>Soporte Técnico</h2>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>📧 Soporte Básico (incluido)</h4>
+                        <ul>
+                            <li>Documentación online</li>
+                            <li>Foro de la comunidad</li>
+                            <li>Actualizaciones de software</li>
+                            <li>Horario: 9:00-17:00 (hora local)</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>⚡ Soporte Premium</h4>
+                        <ul>
+                            <li>Email prioritario: ggwre04p0@mozmail.com</li>
+                            <li>Tiempo de respuesta: 4 horas</li>
+                            <li>Soporte especializado</li>
+                            <li>Horario: 7:00-19:00 (hora local)</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🏢 Soporte Enterprise</h4>
+                        <ul>
+                            <li>Gerente de cuenta dedicado</li>
+                            <li>Tiempo de respuesta: 1 hora</li>
+                            <li>Soporte 24/7</li>
+                            <li>Acceso a ingenieros especialistas</li>
+                            <li>Consultoria de implementación</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="contact-info">
+                    <h3><span class="emoji">📞</span>Información de Contacto</h3>
+                    <p><strong>📧 Email General:</strong> <a href="mailto:ggwre04p0@mozmail.com">ggwre04p0@mozmail.com</a></p>
+                    <p><strong>💼 LinkedIn:</strong> <a href="https://linkedin.com/in/gatux-dev" target="_blank">https://linkedin.com/in/gatux-dev</a></p>
+                    <p><strong>💬 Consultas Técnicas:</strong> <a href="mailto:ggwre04p0@mozmail.com">ggwre04p0@mozmail.com</a></p>
+                </div>
+
+                <h2>Recursos de Aprendizaje</h2>
+
+                <h3>Certificaciones Disponibles</h3>
+                <table class="stats-table">
+                    <thead>
+                        <tr>
+                            <th>Certificación</th>
+                            <th>Duración</th>
+                            <th>Requisitos</th>
+                            <th>Costo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>SmartCompute Certified Operator (SCCO)</strong></td>
+                            <td>2 días</td>
+                            <td>Conocimientos básicos de IT</td>
+                            <td>€800</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SmartCompute Certified Administrator (SCCA)</strong></td>
+                            <td>4 días</td>
+                            <td>SCCO o experiencia equivalente</td>
+                            <td>€1,500</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SmartCompute Certified Security Analyst (SCCSA)</strong></td>
+                            <td>3 días</td>
+                            <td>SCCA + experiencia en seguridad</td>
+                            <td>€1,200</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Laboratorios de Práctica</h3>
+                <div class="info">
+                    <p><strong>Acceso a laboratorio virtual:</strong> Contactar: <a href="mailto:ggwre04p0@mozmail.com">ggwre04p0@mozmail.com</a></p>
+
+                    <h4>Credenciales de demo:</h4>
+                    <ul>
+                        <li><strong>Usuario:</strong> demo@smartcompute.com</li>
+                        <li><strong>Contraseña:</strong> SmartCompute2024!</li>
+                    </ul>
+
+                    <h4>Entornos disponibles:</h4>
+                    <ul>
+                        <li>Laboratorio Enterprise (25 clientes simulados)</li>
+                        <li>Laboratorio Industrial (8 PLCs virtuales)</li>
+                        <li>Laboratorio Híbrido (Enterprise + Industrial)</li>
+                    </ul>
+                </div>
+
+                <h2>Roadmap y Actualizaciones</h2>
+
+                <h3>Próximas Características (Q1 2025)</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>🧠 SmartCompute 2.1</h4>
+                        <ul>
+                            <li>Machine Learning para detección de anomalías</li>
+                            <li>Integración nativa con Microsoft Sentinel</li>
+                            <li>Soporte para Kubernetes nativo</li>
+                            <li>API GraphQL</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🔐 SmartCompute 2.2</h4>
+                        <ul>
+                            <li>Análisis de comportamiento de usuarios (UEBA)</li>
+                            <li>Integración con Zero Trust frameworks</li>
+                            <li>Soporte multi-tenant</li>
+                            <li>Mobile app para gestión de incidentes</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Proceso de Actualizaciones</h3>
+                <div class="command-block">
+                    # Verificar actualizaciones disponibles
+                    smartcompute check-updates
+
+                    # Configurar actualizaciones automáticas
+                    smartcompute configure-auto-updates \
+                        --enabled true \
+                        --schedule "0 2 * * 0"  # Domingos a las 2 AM
+                        --backup-before true
+                </div>
+
+                <div class="success">
+                    <pre>
+Available update: SmartCompute 2.0.1
+- Bug fixes for industrial protocol detection
+- Performance improvements for large deployments
+- Security patches
+                    </pre>
+                </div>
+            </section>
+
+            <section id="conclusion">
+                <h1><span class="emoji">🎯</span>Conclusión</h1>
+
+                <p>SmartCompute ofrece una solución integral para el monitoreo de seguridad tanto en entornos empresariales como industriales. Esta guía proporciona todo lo necesario para:</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>✅ Implementación Exitosa</h4>
+                        <ul>
+                            <li>Instalación exitosa en Windows y Linux</li>
+                            <li>Configuración óptima para diferentes entornos</li>
+                            <li>Uso efectivo de todas las características</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🔧 Operación Eficiente</h4>
+                        <ul>
+                            <li>Integración con sistemas existentes</li>
+                            <li>Automatización de procesos de seguridad</li>
+                            <li>Resolución de problemas comunes</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>⭐ Mejores Prácticas</h4>
+                        <ul>
+                            <li>Implementación de mejores prácticas</li>
+                            <li>Mantenimiento proactivo</li>
+                            <li>Escalabilidad y crecimiento</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h2>Para obtener el máximo valor de SmartCompute:</h2>
+                <ol>
+                    <li><strong>Comience con una instalación piloto</strong> en un entorno controlado</li>
+                    <li><strong>Configure alertas</strong> relevantes para su organización</li>
+                    <li><strong>Integre gradualmente</strong> con sistemas existentes</li>
+                    <li><strong>Entrene a su equipo</strong> en el uso de las herramientas</li>
+                    <li><strong>Implemente automatización</strong> para respuestas comunes</li>
+                    <li><strong>Revise y ajuste</strong> regularmente las configuraciones</li>
+                </ol>
+
+                <div class="success">
+                    <h4>¿Necesita ayuda adicional?</h4>
+                    <p>Contacte a nuestro equipo de soporte en <a href="mailto:ggwre04p0@mozmail.com">ggwre04p0@mozmail.com</a> o visite nuestro <a href="https://linkedin.com/in/gatux-dev" target="_blank">perfil de LinkedIn</a> para obtener información más específica sobre su caso de uso.</p>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <h3>SmartCompute - Protegiendo su infraestructura con inteligencia avanzada</h3>
+            <p><strong>Desarrollado por:</strong> <a href="https://linkedin.com/in/gatux-dev" target="_blank">LinkedIn Profile</a></p>
+            <p><strong>Contacto:</strong> <a href="mailto:ggwre04p0@mozmail.com">ggwre04p0@mozmail.com</a></p>
+            <p>&copy; 2024 SmartCompute. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <button class="scroll-to-top" onclick="scrollToTop()">↑</button>
+
+    <script>
+        // Mostrar/ocultar botón de scroll to top
+        window.onscroll = function() {
+            const button = document.querySelector('.scroll-to-top');
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                button.style.display = "block";
+            } else {
+                button.style.display = "none";
+            }
+        };
+
+        // Función para scroll to top
+        function scrollToTop() {
+            document.body.scrollTop = 0; // Para Safari
+            document.documentElement.scrollTop = 0; // Para Chrome, Firefox, IE y Opera
+        }
+
+        // Smooth scrolling para los enlaces de navegación
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Highlighting de la sección actual en el menú de navegación
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('nav a[href^="#"]');
+
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Agregar estilo para el enlace activo
+        const style = document.createElement('style');
+        style.textContent = `
+            nav a.active {
+                background-color: #667eea !important;
+                color: white !important;
+                transform: translateX(5px);
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Copiar código al hacer clic en bloques de código
+        document.querySelectorAll('pre code, .command-block').forEach(block => {
+            block.addEventListener('click', function() {
+                const text = this.textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    // Mostrar feedback visual
+                    const originalBg = this.style.backgroundColor;
+                    this.style.backgroundColor = '#28a745';
+                    setTimeout(() => {
+                        this.style.backgroundColor = originalBg;
+                    }, 200);
+                });
+            });
+
+            // Agregar cursor pointer para indicar que es clickeable
+            block.style.cursor = 'pointer';
+            block.title = 'Haz clic para copiar';
+        });
+    </script>
+</body>
+</html>

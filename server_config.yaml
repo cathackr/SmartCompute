@@ -1,0 +1,208 @@
+# SmartCompute Central Server Configuration
+# ========================================
+
+server:
+  host: "0.0.0.0"
+  port: 8080
+  ssl_port: 8443
+  ssl_enabled: true
+  ssl_cert: "certs/server.crt"
+  ssl_key: "certs/server.key"
+  max_connections: 1000
+  request_timeout: 30
+
+database:
+  path: "smartcompute_central.db"
+  backup_enabled: true
+  backup_interval: 3600  # 1 hora en segundos
+  backup_retention: 30   # días
+  raid_config: "raid1"   # raid0, raid1, raid5, raid10
+  encryption_enabled: true
+
+redis:
+  host: "localhost"
+  port: 6379
+  db: 0
+  password: null
+  ssl: false
+  max_connections: 100
+
+cloud:
+  # Proveedor: local, gcp, aws, azure, private
+  provider: "local"
+  region: "us-central1"
+  backup_bucket: "smartcompute-backups"
+
+  # Google Cloud Platform
+  gcp:
+    project_id: "smartcompute-project"
+    credentials_file: "gcp-credentials.json"
+    storage_class: "STANDARD"
+
+  # Amazon Web Services
+  aws:
+    access_key_id: ""
+    secret_access_key: ""
+    region: "us-east-1"
+    storage_class: "STANDARD"
+
+  # Microsoft Azure
+  azure:
+    account_name: ""
+    account_key: ""
+    container_name: "smartcompute-backups"
+
+  # Nube privada
+  private:
+    endpoint_url: "https://private-cloud.company.com"
+    access_key: ""
+    secret_key: ""
+    bucket_name: "smartcompute"
+
+security:
+  api_key_required: true
+  api_keys:
+    - "smartcompute-enterprise-key-2025"
+    - "smartcompute-industrial-key-2025"
+
+  jwt_secret: "your-super-secure-jwt-secret-here"
+  jwt_expiration: 86400  # 24 horas
+
+  rate_limiting: true
+  rate_limit_requests: 1000  # por hora
+  rate_limit_window: 3600    # ventana en segundos
+
+  allowed_origins:
+    - "*"  # En producción, especificar dominios exactos
+
+  cors_enabled: true
+
+  # Configuración de autenticación
+  auth:
+    ldap_enabled: false
+    ldap_server: "ldap://company.com"
+    ldap_base_dn: "dc=company,dc=com"
+
+    oauth_enabled: false
+    oauth_provider: "google"  # google, azure, okta
+    oauth_client_id: ""
+    oauth_client_secret: ""
+
+incident_management:
+  auto_escalation: true
+  escalation_timeout: 1800  # 30 minutos
+
+  severity_mapping:
+    critical:
+      escalation_time: 300   # 5 minutos
+      notification_channels: ["email", "sms", "webhook"]
+    high:
+      escalation_time: 900   # 15 minutos
+      notification_channels: ["email", "webhook"]
+    medium:
+      escalation_time: 3600  # 1 hora
+      notification_channels: ["email"]
+    low:
+      escalation_time: 86400 # 24 horas
+      notification_channels: ["email"]
+
+  notification:
+    email:
+      smtp_server: "smtp.company.com"
+      smtp_port: 587
+      username: "alerts@company.com"
+      password: "smtp-password"
+      from_address: "smartcompute@company.com"
+      to_addresses:
+        - "security-team@company.com"
+        - "ops-team@company.com"
+
+    webhook:
+      url: "https://company.com/webhooks/smartcompute"
+      secret: "webhook-secret"
+      timeout: 10
+
+    sms:
+      provider: "twilio"  # twilio, aws_sns
+      account_sid: ""
+      auth_token: ""
+      from_number: "+1234567890"
+      to_numbers:
+        - "+1987654321"
+
+monitoring:
+  metrics_enabled: true
+  metrics_interval: 60  # segundos
+
+  health_check:
+    enabled: true
+    endpoint: "/health"
+    timeout: 5
+
+  logging:
+    level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+    file: "logs/smartcompute_server.log"
+    max_size: "100MB"
+    backup_count: 10
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+scaling:
+  auto_scaling: true
+  min_instances: 1
+  max_instances: 10
+  cpu_threshold: 80      # porcentaje
+  memory_threshold: 80   # porcentaje
+  scale_up_cooldown: 300 # segundos
+  scale_down_cooldown: 600
+
+deployment:
+  # Configuración para diferentes entornos
+  environment: "production"  # development, staging, production
+
+  docker:
+    image: "smartcompute/central-server:latest"
+    registry: "gcr.io/smartcompute-project"
+
+  kubernetes:
+    namespace: "smartcompute"
+    service_account: "smartcompute-server"
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "1Gi"
+      limits:
+        cpu: "2000m"
+        memory: "4Gi"
+
+  terraform:
+    backend: "gcs"
+    bucket: "smartcompute-terraform-state"
+    prefix: "central-server"
+
+# Configuraciones específicas por entorno
+development:
+  database:
+    path: "smartcompute_dev.db"
+  security:
+    api_key_required: false
+    jwt_expiration: 3600
+  logging:
+    level: "DEBUG"
+
+staging:
+  cloud:
+    provider: "gcp"
+    backup_bucket: "smartcompute-staging-backups"
+  security:
+    rate_limit_requests: 500
+
+production:
+  server:
+    ssl_enabled: true
+  security:
+    api_key_required: true
+    rate_limiting: true
+  cloud:
+    provider: "gcp"  # Cambiar según necesidades
+  monitoring:
+    metrics_enabled: true

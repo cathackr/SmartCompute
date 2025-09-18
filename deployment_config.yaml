@@ -1,0 +1,264 @@
+# SmartCompute Central Server - Deployment Configuration
+# =====================================================
+
+project_name: "smartcompute-central"
+version: "1.0.0"
+environment: "production"  # development, staging, production
+
+# Resource requirements
+resources:
+  cpu: "2000m"           # 2 CPU cores
+  memory: "4Gi"          # 4GB RAM
+  storage: "100Gi"       # 100GB storage
+  replicas: 2            # Number of replicas for HA
+  max_replicas: 10       # Maximum for auto-scaling
+
+# Docker configuration
+docker:
+  registry: "gcr.io/smartcompute-project"
+  image_name: "central-server"
+  build_args:
+    - "ENVIRONMENT=production"
+
+# Google Cloud Platform
+gcp:
+  project_id: "smartcompute-project-12345"
+  region: "us-central1"
+  zone: "us-central1-a"
+
+  # GKE Configuration
+  cluster:
+    name: "smartcompute-cluster"
+    node_count: 3
+    machine_type: "e2-standard-4"
+    disk_size: 100
+    preemptible: false
+    auto_scaling:
+      min_nodes: 2
+      max_nodes: 10
+
+  # Database
+  database:
+    instance_name: "smartcompute-db"
+    tier: "db-g1-small"
+    storage_size: 100
+    backup_enabled: true
+    ha_enabled: true
+
+  # Storage
+  storage:
+    backup_bucket: "smartcompute-prod-backups"
+    retention_days: 90
+    storage_class: "STANDARD"
+
+# Amazon Web Services
+aws:
+  region: "us-east-1"
+  availability_zones:
+    - "us-east-1a"
+    - "us-east-1b"
+    - "us-east-1c"
+
+  # EKS Configuration
+  cluster:
+    name: "smartcompute-cluster"
+    version: "1.27"
+    node_groups:
+      - name: "smartcompute-nodes"
+        instance_types: ["t3.large"]
+        min_size: 2
+        max_size: 10
+        desired_size: 3
+
+  # RDS Database
+  database:
+    engine: "postgres"
+    engine_version: "15.3"
+    instance_class: "db.t3.micro"
+    allocated_storage: 100
+    backup_retention: 7
+
+  # S3 Storage
+  storage:
+    backup_bucket: "smartcompute-prod-backups"
+    versioning: true
+    lifecycle_rules:
+      - expiration_days: 90
+
+# Microsoft Azure
+azure:
+  location: "East US"
+  resource_group: "smartcompute-rg"
+
+  # AKS Configuration
+  cluster:
+    name: "smartcompute-aks"
+    node_count: 3
+    vm_size: "Standard_DS2_v2"
+
+  # Database
+  database:
+    server_name: "smartcompute-psql"
+    sku_name: "B_Gen5_1"
+    storage_mb: 51200
+
+  # Storage Account
+  storage:
+    account_name: "smartcomputebackups"
+    replication_type: "LRS"
+
+# Private Cloud / On-Premises
+private:
+  kubernetes:
+    cluster_endpoint: "https://k8s.company.com:6443"
+    namespace: "smartcompute"
+    ingress_class: "nginx"
+    storage_class: "nfs-client"
+
+  database:
+    host: "postgres.company.com"
+    port: 5432
+    database: "smartcompute"
+    ssl_mode: "require"
+
+  storage:
+    nfs_server: "nfs.company.com"
+    nfs_path: "/exports/smartcompute-backups"
+
+# Security Configuration
+security:
+  tls:
+    enabled: true
+    cert_manager: true
+    issuer: "letsencrypt-prod"  # letsencrypt-prod, selfsigned, custom
+
+  network_policies:
+    enabled: true
+    default_deny: true
+
+  pod_security:
+    enforce: "restricted"
+
+  secrets:
+    external_secrets: true
+    provider: "vault"  # vault, gcp-secret-manager, aws-secrets-manager, azure-key-vault
+
+# Monitoring and Logging
+monitoring:
+  prometheus:
+    enabled: true
+    retention: "30d"
+    storage_size: "50Gi"
+
+  grafana:
+    enabled: true
+    admin_password: "auto-generated"
+
+  alertmanager:
+    enabled: true
+    slack_webhook: "https://hooks.slack.com/services/..."
+
+  logging:
+    level: "INFO"
+    retention_days: 30
+    centralized: true
+    provider: "elasticsearch"  # elasticsearch, loki, fluentd
+
+# Backup Configuration
+backup:
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  retention:
+    daily: 7
+    weekly: 4
+    monthly: 12
+    yearly: 3
+
+  destinations:
+    - type: "cloud_storage"
+      enabled: true
+      encryption: true
+    - type: "local_storage"
+      enabled: false
+      path: "/backups"
+
+  raid_configuration: "raid1"  # raid0, raid1, raid5, raid10
+
+  verification:
+    enabled: true
+    schedule: "0 4 * * 0"  # Weekly on Sunday at 4 AM
+
+# High Availability
+ha:
+  enabled: true
+  min_replicas: 2
+  max_replicas: 10
+
+  auto_scaling:
+    cpu_threshold: 70
+    memory_threshold: 80
+
+  load_balancer:
+    type: "LoadBalancer"  # NodePort, LoadBalancer, Ingress
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+
+  health_checks:
+    liveness:
+      path: "/health"
+      initial_delay: 30
+      period: 10
+    readiness:
+      path: "/ready"
+      initial_delay: 5
+      period: 5
+
+# Development Environment Overrides
+development:
+  resources:
+    cpu: "500m"
+    memory: "1Gi"
+    storage: "20Gi"
+    replicas: 1
+
+  security:
+    tls:
+      enabled: false
+    network_policies:
+      enabled: false
+
+  monitoring:
+    prometheus:
+      enabled: false
+    grafana:
+      enabled: false
+
+# Staging Environment Overrides
+staging:
+  resources:
+    cpu: "1000m"
+    memory: "2Gi"
+    storage: "50Gi"
+    replicas: 1
+
+  backup:
+    retention:
+      daily: 3
+      weekly: 2
+      monthly: 1
+
+# Production Environment (full configuration applies)
+production:
+  # All default configurations apply
+  security:
+    network_policies:
+      enabled: true
+    pod_security:
+      enforce: "restricted"
+
+  monitoring:
+    prometheus:
+      enabled: true
+    grafana:
+      enabled: true
+    alertmanager:
+      enabled: true
