@@ -1,0 +1,34 @@
+{
+  "name": "smartcompute-industrial",
+  "version": "2.0.0",
+  "description": "SmartCompute Industrial - Sistema de aprobaciones y procesamiento asíncrono",
+  "main": "smartcompute_approval_workflow.js",
+  "scripts": {
+    "start": "node smartcompute_approval_workflow.js",
+    "dev": "nodemon smartcompute_approval_workflow.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "industrial",
+    "iot",
+    "automation",
+    "approval",
+    "workflow",
+    "smartcompute"
+  ],
+  "author": "ggwre04p0@mozmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.14.2",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.7",
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
