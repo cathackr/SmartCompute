@@ -1,0 +1,23 @@
+{
+  "version": "2.0.0",
+  "build_date": "20250919_204856",
+  "build_type": "production",
+  "developer": "ggwre04p0@mozmail.com",
+  "linkedin": "https://www.linkedin.com/in/mart\u00edn-iribarne-swtf/",
+  "features": [
+    "Secure 2FA Authentication",
+    "Visual AI Analysis",
+    "HRM Reasoning System",
+    "Approval Workflows",
+    "Continuous Learning",
+    "Mobile Interface",
+    "Industrial Integration"
+  ],
+  "supported_equipment": [
+    "Siemens S7 PLCs",
+    "Allen-Bradley CompactLogix",
+    "Schneider Electric HMIs",
+    "Industrial Switches",
+    "UPS Systems"
+  ]
+}

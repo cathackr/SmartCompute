@@ -1,0 +1,962 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCompute Enterprise - Análisis en Tiempo Real</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        .metric-card {
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        .status-excellent { color: #28a745; }
+        .status-good { color: #ffc107; }
+        .status-critical { color: #dc3545; }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+        .header-title {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .real-time-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #28a745;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+            margin-right: 8px;
+        }
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="glass-card p-4 text-center">
+                    <h1 class="header-title display-4 mb-3">
+                        <i class="fas fa-shield-alt me-3"></i>
+                        SmartCompute Enterprise
+                    </h1>
+                    <h2 class="text-white mb-3">
+                        <span class="real-time-indicator"></span>
+                        Análisis en Tiempo Real
+                    </h2>
+                    <div class="row text-white">
+                        <div class="col-md-4">
+                            <i class="fas fa-clock me-2"></i>
+                            <strong>Ejecutado:</strong> 2025-09-17T18:15:26.445530
+                        </div>
+                        <div class="col-md-4">
+                            <i class="fas fa-stopwatch me-2"></i>
+                            <strong>Duración:</strong> 23.0s
+                        </div>
+                        <div class="col-md-4">
+                            <i class="fas fa-chart-line me-2"></i>
+                            <strong>Tests:</strong> 5/5
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPIs Row -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="glass-card p-4 text-center metric-card">
+                    <div class="display-4 mb-2">
+                        <i class="fas fa-heartbeat status-success"></i>
+                    </div>
+                    <h5 class="text-white">Salud del Sistema</h5>
+                    <h3 class="text-white">🟢 EXCELENTE</h3>
+                    <small class="text-light">CPU: 3.8%</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="glass-card p-4 text-center metric-card">
+                    <div class="display-4 mb-2">
+                        <i class="fas fa-shield-alt" style="color: #28a745"></i>
+                    </div>
+                    <h5 class="text-white">Score de Seguridad</h5>
+                    <h3 class="text-white">100.0%</h3>
+                    <small class="text-light">🟢 SEGURO</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="glass-card p-4 text-center metric-card">
+                    <div class="display-4 mb-2">
+                        <i class="fas fa-building" style="color: #28a745"></i>
+                    </div>
+                    <h5 class="text-white">Módulos Enterprise</h5>
+                    <h3 class="text-white">100.0%</h3>
+                    <small class="text-light">8 módulos</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="glass-card p-4 text-center metric-card">
+                    <div class="display-4 mb-2">
+                        <i class="fas fa-check-circle" style="color: #28a745"></i>
+                    </div>
+                    <h5 class="text-white">Tasa de Éxito</h5>
+                    <h3 class="text-white">100.0%</h3>
+                    <small class="text-light">Tests ejecutados</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="glass-card p-4">
+                    <h5 class="text-white mb-3">
+                        <i class="fas fa-server me-2"></i>
+                        Métricas del Sistema
+                    </h5>
+                    <div class="chart-container">
+                        <canvas id="systemChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="glass-card p-4">
+                    <h5 class="text-white mb-3">
+                        <i class="fas fa-cogs me-2"></i>
+                        Módulos de Seguridad
+                    </h5>
+                    <div class="chart-container">
+                        <canvas id="securityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Process Monitoring Row -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="glass-card p-4">
+                    <h5 class="text-white mb-3">
+                        <i class="fas fa-microchip me-2"></i>
+                        Monitor de Procesos Detallado
+                        <span class="badge bg-success ms-2">
+                            32 procesos
+                        </span>
+                    </h5>
+
+                    <!-- Process Summary Cards -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="card bg-dark border-light">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-warning">
+                                        <i class="fas fa-list me-1"></i>
+                                        Procesos
+                                    </h6>
+                                    <h4 class="text-white">32</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-dark border-light">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-info">
+                                        <i class="fas fa-network-wired me-1"></i>
+                                        Red L3/L4
+                                    </h6>
+                                    <h4 class="text-white">34</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-dark border-light">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-primary">
+                                        <i class="fas fa-ethernet me-1"></i>
+                                        Capa L1/L2
+                                    </h6>
+                                    <h4 class="text-white">3</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-dark border-light">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-success">
+                                        <i class="fas fa-plug me-1"></i>
+                                        Puertos
+                                    </h6>
+                                    <h4 class="text-white">4</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Process Details Table -->
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>PID</th>
+                                    <th>Proceso</th>
+                                    <th>CPU %</th>
+                                    <th>Memoria MB</th>
+                                    <th>Directorio</th>
+                                    <th>Conexiones</th>
+                                    <th>Archivos</th>
+                                </tr>
+                            </thead>
+                            <tbody id="processTable">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Network Connections Table -->
+                    <h6 class="text-white mt-4 mb-3">
+                        <i class="fas fa-globe me-2"></i>
+                        Conexiones de Red Avanzadas
+                    </h6>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th>PID</th>
+                                    <th>Proceso</th>
+                                    <th>Adaptador</th>
+                                    <th>Puerto Físico</th>
+                                    <th>Protocolo</th>
+                                    <th>Local:Puerto</th>
+                                    <th>Remoto:Puerto</th>
+                                    <th>Canal</th>
+                                    <th>Frecuencia</th>
+                                    <th>Cifrado</th>
+                                    <th>Velocidad</th>
+                                    <th>Tiempo</th>
+                                    <th>TX/RX</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="networkTable">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Layer 1/2 Direct Connections Row -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="glass-card p-4">
+                    <h5 class="text-white mb-3">
+                        <i class="fas fa-sitemap me-2"></i>
+                        Conexiones Directas Capa 1/2 (Físicas)
+                        <span class="badge bg-primary ms-2">
+                            3 interfaces
+                        </span>
+                    </h5>
+
+                    <!-- Layer 1/2 Summary Cards -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="card bg-dark border-primary">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-primary">
+                                        <i class="fas fa-microchip me-1"></i>
+                                        MACs Detectadas
+                                    </h6>
+                                    <h4 class="text-white" id="macCount">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-dark border-success">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-success">
+                                        <i class="fas fa-wifi me-1"></i>
+                                        DHCP Activo
+                                    </h6>
+                                    <h4 class="text-white" id="dhcpCount">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-dark border-warning">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-warning">
+                                        <i class="fas fa-tags me-1"></i>
+                                        VLANs
+                                    </h6>
+                                    <h4 class="text-white" id="vlanCount">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-dark border-info">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-info">
+                                        <i class="fas fa-link me-1"></i>
+                                        Trunk Links
+                                    </h6>
+                                    <h4 class="text-white" id="trunkCount">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Layer 1/2 Details Table -->
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>MAC Address</th>
+                                    <th>Fabricante</th>
+                                    <th>Firmware</th>
+                                    <th>IP Solicitada</th>
+                                    <th>DHCP</th>
+                                    <th>VLAN</th>
+                                    <th>VXLAN</th>
+                                    <th>Tipo Enlace</th>
+                                    <th>Cat. Cable</th>
+                                    <th>Velocidad</th>
+                                    <th>Duplex</th>
+                                    <th>MTU</th>
+                                    <th>Estado</th>
+                                    <th>Interfaz</th>
+                                </tr>
+                            </thead>
+                            <tbody id="layer12Table">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Recommendations Panel -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="glass-card p-4">
+                    <h5 class="text-white mb-3">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        Recomendaciones de Seguridad (OWASP, NIST, ISO 27001)
+                        <span class="badge warning ms-2">
+                            11 recomendaciones
+                        </span>
+                    </h5>
+
+                    <!-- Security Summary Cards -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="card bg-dark border-danger">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-danger">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                        Nivel de Riesgo
+                                    </h6>
+                                    <h5 class="text-white">ALTO</h5>
+                                    <small class="text-muted">77.7/100</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-dark border-info">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-info">
+                                        <i class="fas fa-book me-1"></i>
+                                        OWASP
+                                    </h6>
+                                    <h4 class="text-white" id="owaspCount">0</h4>
+                                    <small class="text-muted">recomendaciones</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-dark border-warning">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-warning">
+                                        <i class="fas fa-cog me-1"></i>
+                                        NIST
+                                    </h6>
+                                    <h4 class="text-white" id="nistCount">0</h4>
+                                    <small class="text-muted">recomendaciones</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-dark border-success">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-success">
+                                        <i class="fas fa-certificate me-1"></i>
+                                        ISO 27001
+                                    </h6>
+                                    <h4 class="text-white" id="isoCount">0</h4>
+                                    <small class="text-muted">recomendaciones</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Recommendations Table -->
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Prioridad</th>
+                                    <th>Framework</th>
+                                    <th>Recomendación</th>
+                                    <th>Categoría</th>
+                                    <th>Riesgo</th>
+                                    <th>Esfuerzo</th>
+                                    <th>Impacto</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recommendationsTable">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Expandable Details -->
+                    <div class="accordion mt-3" id="recommendationsAccordion">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Results -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="glass-card p-4">
+                    <h5 class="text-white mb-3">
+                        <i class="fas fa-list-check me-2"></i>
+                        Estado de Módulos Enterprise
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Módulo</th>
+                                    <th>Estado</th>
+                                    <th>Tamaño</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Admin Authorization</td>
+                                    <td>✅ ✅ OK</td>
+                                    <td>30 KB</td>
+                                </tr>
+                                <tr>
+                                    <td>Mcp Integrated Analysis</td>
+                                    <td>✅ ✅ OK</td>
+                                    <td>25 KB</td>
+                                </tr>
+                                <tr>
+                                    <td>Hrm Learning Framework</td>
+                                    <td>✅ ✅ OK</td>
+                                    <td>26 KB</td>
+                                </tr>
+                                <tr>
+                                    <td>User Auth System</td>
+                                    <td>✅ ✅ OK</td>
+                                    <td>25 KB</td>
+                                </tr>
+                                <tr>
+                                    <td>Nodejs Sandbox</td>
+                                    <td>✅ ✅ OK</td>
+                                    <td>33 KB</td>
+                                </tr>
+                                <tr>
+                                    <td>Secret Manager</td>
+                                    <td>✅ ✅ OK</td>
+                                    <td>17 KB</td>
+                                </tr>
+                                <tr>
+                                    <td>Mitre Experimenter</td>
+                                    <td>✅ ✅ OK</td>
+                                    <td>35 KB</td>
+                                </tr>
+                                <tr>
+                                    <td>Live Analysis</td>
+                                    <td>✅ ✅ OK</td>
+                                    <td>44 KB</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="glass-card p-4">
+                    <h5 class="text-white mb-3">
+                        <i class="fas fa-bug me-2"></i>
+                        Estado de Tests de Seguridad
+                    </h5>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item bg-transparent border-secondary text-white">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Hrm Learning
+                                </h6>
+                            </div>
+                            <p class="mb-1">Exitoso</p>
+                        </div>
+                        <div class="list-group-item bg-transparent border-secondary text-white">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Mitre Experimenter
+                                </h6>
+                            </div>
+                            <p class="mb-1">Exitoso</p>
+                        </div>
+                        <div class="list-group-item bg-transparent border-secondary text-white">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Nodejs Sandbox
+                                </h6>
+                            </div>
+                            <p class="mb-1">Exitoso</p>
+                        </div>
+                        <div class="list-group-item bg-transparent border-secondary text-white">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Admin Authorization
+                                </h6>
+                            </div>
+                            <p class="mb-1">Exitoso</p>
+                        </div>
+                        <div class="list-group-item bg-transparent border-secondary text-white">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    Secret Manager
+                                </h6>
+                            </div>
+                            <p class="mb-1">Exitoso</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-time Updates -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="glass-card p-4">
+                    <h5 class="text-white mb-3">
+                        <i class="fas fa-chart-area me-2"></i>
+                        Métricas en Tiempo Real
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <div class="pulse">
+                                <div class="display-6 text-info">
+                                    <i class="fas fa-microchip"></i>
+                                </div>
+                                <h6 class="text-white">CPU</h6>
+                                <h4 class="text-info">3.8%</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="pulse">
+                                <div class="display-6 text-warning">
+                                    <i class="fas fa-memory"></i>
+                                </div>
+                                <h6 class="text-white">Memoria</h6>
+                                <h4 class="text-warning">60.0%</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="pulse">
+                                <div class="display-6 text-success">
+                                    <i class="fas fa-hdd"></i>
+                                </div>
+                                <h6 class="text-white">Disco</h6>
+                                <h4 class="text-success">33.7%</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="pulse">
+                                <div class="display-6 text-primary">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                <h6 class="text-white">Procesos SC</h6>
+                                <h4 class="text-primary">0</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="glass-card p-3 text-center">
+                    <p class="text-white mb-0">
+                        <i class="fas fa-robot me-2"></i>
+                        Generado por SmartCompute Enterprise Analysis Engine
+                        <span class="ms-3">
+                            <i class="fas fa-clock me-1"></i>
+                            2025-09-17 18:15:26
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // System Chart
+        const systemCtx = document.getElementById('systemChart').getContext('2d');
+        new Chart(systemCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['CPU', 'Memoria', 'Disco'],
+                datasets: [{
+                    data: [3.8, 60.0, 33.7],
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Populate Process Details Table
+        const processData = [{"pid": 1728, "name": "firewalld", "cpu_percent": 0.0, "memory_mb": 40, "cwd": "N/A", "connections": 0, "open_files": 0}, {"pid": 2141, "name": "Xorg", "cpu_percent": 0.0, "memory_mb": 161, "cwd": "N/A", "connections": 0, "open_files": 0}, {"pid": 2502, "name": "kwin_x11", "cpu_percent": 0.0, "memory_mb": 199, "cwd": "/home/gatux", "connections": 0, "open_files": 2}, {"pid": 2610, "name": "plasmashell", "cpu_percent": 0.0, "memory_mb": 286, "cwd": "/home/gatux", "connections": 0, "open_files": 10}, {"pid": 2825, "name": "megasync", "cpu_percent": 0.0, "memory_mb": 157, "cwd": "/home/gatux/.local/share/data/Mega Limited/MEGAsync", "connections": 3, "open_files": 10}, {"pid": 2963, "name": "firefox-bin", "cpu_percent": 0.0, "memory_mb": 697, "cwd": "/home/gatux", "connections": 4, "open_files": 10}, {"pid": 2978, "name": "crashhelper", "cpu_percent": 0.0, "memory_mb": 2, "cwd": "/home/gatux", "connections": 0, "open_files": 3}, {"pid": 3020, "name": "dolphin", "cpu_percent": 0.0, "memory_mb": 166, "cwd": "/home/gatux", "connections": 0, "open_files": 6}, {"pid": 3556, "name": "fusermount3", "cpu_percent": 0.0, "memory_mb": 1, "cwd": "N/A", "connections": 0, "open_files": 0}, {"pid": 3986, "name": "forkserver", "cpu_percent": 0.0, "memory_mb": 26, "cwd": "/home/gatux", "connections": 0, "open_files": 4}, {"pid": 4002, "name": "Socket Process", "cpu_percent": 0.0, "memory_mb": 35, "cwd": "/proc/4003/fdinfo", "connections": 0, "open_files": 4}, {"pid": 4031, "name": "WebExtensions", "cpu_percent": 0.0, "memory_mb": 389, "cwd": "/proc/4032/fdinfo", "connections": 0, "open_files": 10}, {"pid": 4043, "name": "RDD Process", "cpu_percent": 0.0, "memory_mb": 141, "cwd": "/proc/4044/fdinfo", "connections": 0, "open_files": 4}, {"pid": 4082, "name": "Privileged Cont", "cpu_percent": 0.0, "memory_mb": 98, "cwd": "/proc/4083/fdinfo", "connections": 0, "open_files": 10}, {"pid": 4281, "name": "Utility Process", "cpu_percent": 0.0, "memory_mb": 53, "cwd": "/proc/4282/fdinfo", "connections": 0, "open_files": 4}, {"pid": 5627, "name": "Isolated Web Co", "cpu_percent": 0.0, "memory_mb": 389, "cwd": "/proc/5629/fdinfo", "connections": 0, "open_files": 10}, {"pid": 5806, "name": "Isolated Web Co", "cpu_percent": 0.0, "memory_mb": 193, "cwd": "/proc/5807/fdinfo", "connections": 0, "open_files": 10}, {"pid": 5985, "name": "Isolated Web Co", "cpu_percent": 0.0, "memory_mb": 276, "cwd": "/proc/5987/fdinfo", "connections": 0, "open_files": 10}, {"pid": 6636, "name": "claude", "cpu_percent": 0.0, "memory_mb": 346, "cwd": "/home/gatux/smartcompute", "connections": 1, "open_files": 0}, {"pid": 6969, "name": "mount.ntfs", "cpu_percent": 0.0, "memory_mb": 1, "cwd": "N/A", "connections": 0, "open_files": 0}, {"pid": 6986, "name": "mount.ntfs", "cpu_percent": 0.0, "memory_mb": 2, "cwd": "N/A", "connections": 0, "open_files": 0}, {"pid": 9472, "name": "Isolated Web Co", "cpu_percent": 0.0, "memory_mb": 534, "cwd": "/proc/9474/fdinfo", "connections": 0, "open_files": 10}, {"pid": 9671, "name": "Isolated Servic", "cpu_percent": 0.0, "memory_mb": 90, "cwd": "/proc/9672/fdinfo", "connections": 0, "open_files": 4}, {"pid": 9822, "name": "Isolated Web Co", "cpu_percent": 0.0, "memory_mb": 219, "cwd": "/proc/9824/fdinfo", "connections": 0, "open_files": 10}, {"pid": 9950, "name": "Isolated Web Co", "cpu_percent": 0.0, "memory_mb": 127, "cwd": "/proc/9952/fdinfo", "connections": 0, "open_files": 10}, {"pid": 10446, "name": "Isolated Web Co", "cpu_percent": 0.0, "memory_mb": 120, "cwd": "/proc/10447/fdinfo", "connections": 0, "open_files": 10}, {"pid": 10531, "name": "Web Content", "cpu_percent": 0.0, "memory_mb": 73, "cwd": "/proc/10533/fdinfo", "connections": 0, "open_files": 4}, {"pid": 10602, "name": "Web Content", "cpu_percent": 0.0, "memory_mb": 73, "cwd": "/proc/10604/fdinfo", "connections": 0, "open_files": 4}, {"pid": 10609, "name": "Web Content", "cpu_percent": 0.0, "memory_mb": 73, "cwd": "/proc/10610/fdinfo", "connections": 0, "open_files": 4}, {"pid": 11911, "name": "file:// Content", "cpu_percent": 0.0, "memory_mb": 325, "cwd": "/proc/11913/fdinfo", "connections": 0, "open_files": 10}, {"pid": 14254, "name": "bash", "cpu_percent": 0.0, "memory_mb": 3, "cwd": "/home/gatux/smartcompute", "connections": 0, "open_files": 0}, {"pid": 14277, "name": "python3", "cpu_percent": 0.0, "memory_mb": 34, "cwd": "/home/gatux/smartcompute", "connections": 0, "open_files": 0}];
+        const processTableBody = document.getElementById('processTable');
+
+        processData.slice(0, 15).forEach(process => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><span class="badge bg-info">${process.pid}</span></td>
+                <td><strong>${process.name}</strong></td>
+                <td><span class="badge bg-warning">${process.cpu_percent.toFixed(1)}%</span></td>
+                <td><span class="badge bg-primary">${process.memory_mb.toFixed(1)} MB</span></td>
+                <td><small class="text-muted">${process.cwd.length > 30 ? process.cwd.substring(0, 30) + '...' : process.cwd}</small></td>
+                <td><span class="badge bg-success">${process.connections}</span></td>
+                <td><span class="badge bg-secondary">${process.open_files}</span></td>
+            `;
+            processTableBody.appendChild(row);
+        });
+
+        // Populate Network Connections Table
+        const networkData = [{"pid": 0, "process_name": "System", "local_address": "::", "local_port": 5353, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "Unknown", "channel": null, "frequency": null, "connection_time": null, "physical_port": "N/A", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "unknown"}, {"pid": 2963, "process_name": "firefox-bin", "local_address": "192.168.0.185", "local_port": 50838, "remote_address": "34.107.243.93", "remote_port": 443, "protocol": "TCP", "status": "ESTABLISHED", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": 15402.079733848572, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 90476, "bytes_received": 457509, "interface_name": "wlan0"}, {"pid": 0, "process_name": "System", "local_address": "2800:2262:4000:dbf::b172", "local_port": 45482, "remote_address": "2606:4700::6810:1922", "remote_port": 443, "protocol": "TCP", "status": "TIME_WAIT", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": null, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "wlan0"}, {"pid": 0, "process_name": "System", "local_address": "192.168.0.185", "local_port": 36156, "remote_address": "34.110.138.217", "remote_port": 443, "protocol": "TCP", "status": "TIME_WAIT", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": null, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "wlan0"}, {"pid": 2825, "process_name": "megasync", "local_address": "127.0.0.1", "local_port": 6341, "remote_address": "N/A", "remote_port": 0, "protocol": "TCP", "status": "LISTEN", "network_adapter": "Loopback", "channel": null, "frequency": null, "connection_time": 15402.835112333298, "physical_port": "Virtual (Loopback)", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 90476, "bytes_received": 457509, "interface_name": "lo"}, {"pid": 0, "process_name": "System", "local_address": "2800:2262:4000:dbf::b172", "local_port": 34940, "remote_address": "2607:6bc0::10", "remote_port": 443, "protocol": "TCP", "status": "TIME_WAIT", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": null, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "wlan0"}, {"pid": 2963, "process_name": "firefox-bin", "local_address": "192.168.0.185", "local_port": 53988, "remote_address": "185.70.42.37", "remote_port": 443, "protocol": "TCP", "status": "ESTABLISHED", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": 15402.090988397598, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 90476, "bytes_received": 457509, "interface_name": "wlan0"}, {"pid": 0, "process_name": "System", "local_address": "::1", "local_port": 25, "remote_address": "N/A", "remote_port": 0, "protocol": "TCP", "status": "LISTEN", "network_adapter": "Loopback", "channel": null, "frequency": null, "connection_time": null, "physical_port": "Virtual (Loopback)", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "lo"}, {"pid": 2825, "process_name": "megasync", "local_address": "2800:2262:4000:dbf::b172", "local_port": 40634, "remote_address": "2a0b:e46:1:100::28", "remote_port": 443, "protocol": "TCP", "status": "ESTABLISHED", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": 15402.843836307526, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 90476, "bytes_received": 457509, "interface_name": "wlan0"}, {"pid": 0, "process_name": "System", "local_address": "192.168.0.185", "local_port": 123, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": null, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "wlan0"}, {"pid": 0, "process_name": "System", "local_address": "127.0.0.1", "local_port": 123, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "Loopback", "channel": null, "frequency": null, "connection_time": null, "physical_port": "Virtual (Loopback)", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "lo"}, {"pid": 2825, "process_name": "megasync", "local_address": "192.168.0.185", "local_port": 44616, "remote_address": "66.203.125.14", "remote_port": 443, "protocol": "TCP", "status": "ESTABLISHED", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": 15402.847575426102, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 90476, "bytes_received": 457509, "interface_name": "wlan0"}, {"pid": 0, "process_name": "System", "local_address": "0.0.0.0", "local_port": 5353, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "Unknown", "channel": null, "frequency": null, "connection_time": null, "physical_port": "N/A", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "unknown"}, {"pid": 0, "process_name": "System", "local_address": "127.0.0.1", "local_port": 25, "remote_address": "N/A", "remote_port": 0, "protocol": "TCP", "status": "LISTEN", "network_adapter": "Loopback", "channel": null, "frequency": null, "connection_time": null, "physical_port": "Virtual (Loopback)", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "lo"}, {"pid": 2623, "process_name": "kdeconnectd", "local_address": "::", "local_port": 1716, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "Unknown", "channel": null, "frequency": null, "connection_time": 15403.747970104218, "physical_port": "N/A", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 90476, "bytes_received": 457509, "interface_name": "unknown"}, {"pid": 0, "process_name": "System", "local_address": "0.0.0.0", "local_port": 60876, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "Unknown", "channel": null, "frequency": null, "connection_time": null, "physical_port": "N/A", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "unknown"}, {"pid": 0, "process_name": "System", "local_address": "::", "local_port": 34434, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "Unknown", "channel": null, "frequency": null, "connection_time": null, "physical_port": "N/A", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "unknown"}, {"pid": 0, "process_name": "System", "local_address": "192.168.0.185", "local_port": 33385, "remote_address": "192.168.0.1", "remote_port": 53, "protocol": "UDP", "status": "NONE", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": null, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "wlan0"}, {"pid": 0, "process_name": "System", "local_address": "0.0.0.0", "local_port": 123, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "Unknown", "channel": null, "frequency": null, "connection_time": null, "physical_port": "N/A", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "unknown"}, {"pid": 2623, "process_name": "kdeconnectd", "local_address": "::", "local_port": 1716, "remote_address": "N/A", "remote_port": 0, "protocol": "TCP", "status": "LISTEN", "network_adapter": "Unknown", "channel": null, "frequency": null, "connection_time": 15403.750843524933, "physical_port": "N/A", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 90476, "bytes_received": 457509, "interface_name": "unknown"}, {"pid": 2963, "process_name": "firefox-bin", "local_address": "2800:2262:4000:dbf::b172", "local_port": 41734, "remote_address": "2800:3f0:4002:801::200e", "remote_port": 443, "protocol": "TCP", "status": "ESTABLISHED", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": 15402.103578805923, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 90476, "bytes_received": 457509, "interface_name": "wlan0"}, {"pid": 0, "process_name": "System", "local_address": "fe80::86f5:6414:69dd:4e90", "local_port": 123, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "Unknown", "channel": null, "frequency": null, "connection_time": null, "physical_port": "N/A", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "unknown"}, {"pid": 0, "process_name": "System", "local_address": "fe80::86f5:6414:69dd:4e90", "local_port": 546, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "Unknown", "channel": null, "frequency": null, "connection_time": null, "physical_port": "N/A", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "unknown"}, {"pid": 2963, "process_name": "firefox-bin", "local_address": "2800:2262:4000:dbf::b172", "local_port": 34632, "remote_address": "2800:3f0:4002:807::200e", "remote_port": 443, "protocol": "TCP", "status": "ESTABLISHED", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": 15402.106549024582, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 90476, "bytes_received": 457509, "interface_name": "wlan0"}, {"pid": 6636, "process_name": "claude", "local_address": "2800:2262:4000:dbf::b172", "local_port": 57412, "remote_address": "2607:6bc0::10", "remote_port": 443, "protocol": "TCP", "status": "ESTABLISHED", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": 14359.179307937622, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 90476, "bytes_received": 457509, "interface_name": "wlan0"}, {"pid": 0, "process_name": "System", "local_address": "2800:2262:4000:dbf:dc8a:bc5a:564:9c95", "local_port": 123, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": null, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "wlan0"}, {"pid": 0, "process_name": "System", "local_address": "192.168.0.185", "local_port": 68, "remote_address": "192.168.0.1", "remote_port": 67, "protocol": "UDP", "status": "NONE", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": null, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "wlan0"}, {"pid": 0, "process_name": "System", "local_address": "2800:2262:4000:dbf::b172", "local_port": 123, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": null, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "wlan0"}, {"pid": 0, "process_name": "System", "local_address": "2800:2262:4000:dbf::b172", "local_port": 34928, "remote_address": "2607:6bc0::10", "remote_port": 443, "protocol": "TCP", "status": "TIME_WAIT", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": null, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "wlan0"}, {"pid": 0, "process_name": "System", "local_address": "0.0.0.0", "local_port": 68, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "Unknown", "channel": null, "frequency": null, "connection_time": null, "physical_port": "N/A", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "unknown"}, {"pid": 0, "process_name": "System", "local_address": "::1", "local_port": 123, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "Loopback", "channel": null, "frequency": null, "connection_time": null, "physical_port": "Virtual (Loopback)", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "lo"}, {"pid": 0, "process_name": "System", "local_address": "::", "local_port": 123, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "Unknown", "channel": null, "frequency": null, "connection_time": null, "physical_port": "N/A", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "unknown"}, {"pid": 0, "process_name": "System", "local_address": "::", "local_port": 546, "remote_address": "N/A", "remote_port": 0, "protocol": "UDP", "status": "NONE", "network_adapter": "Unknown", "channel": null, "frequency": null, "connection_time": null, "physical_port": "N/A", "encryption_type": "N/A", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "unknown"}, {"pid": 0, "process_name": "System", "local_address": "192.168.0.185", "local_port": 44218, "remote_address": "192.168.0.1", "remote_port": 53, "protocol": "UDP", "status": "NONE", "network_adapter": "WiFi/Wireless", "channel": 149, "frequency": "5.745 GHz", "connection_time": null, "physical_port": "PCI: 0000:04:00.0", "encryption_type": "Unknown", "transmission_speed": "Unknown", "bytes_sent": 0, "bytes_received": 0, "interface_name": "wlan0"}];
+        const networkTableBody = document.getElementById('networkTable');
+
+        networkData.slice(0, 15).forEach(conn => {
+            const row = document.createElement('tr');
+            const statusBadge = conn.status === 'LISTEN' ? 'bg-success' : 'bg-secondary';
+
+            // Formatear tiempo de conexión
+            let connectionTimeStr = 'N/A';
+            if (conn.connection_time) {
+                const hours = Math.floor(conn.connection_time / 3600);
+                const minutes = Math.floor((conn.connection_time % 3600) / 60);
+                const seconds = Math.floor(conn.connection_time % 60);
+                connectionTimeStr = hours > 0 ? `${hours}h ${minutes}m` :
+                                  minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+            }
+
+            // Formatear datos TX/RX
+            const txRxStr = `↑${(conn.bytes_sent/1024).toFixed(1)}MB / ↓${(conn.bytes_received/1024).toFixed(1)}MB`;
+
+            // Determinar badge del adaptador
+            let adapterBadge = 'bg-secondary';
+            if (conn.network_adapter.includes('Ethernet')) adapterBadge = 'bg-success';
+            else if (conn.network_adapter.includes('WiFi')) adapterBadge = 'bg-info';
+            else if (conn.network_adapter.includes('Loopback')) adapterBadge = 'bg-warning';
+
+            // Determinar badge de cifrado
+            let encryptionBadge = 'bg-secondary';
+            if (conn.encryption_type.includes('WPA')) encryptionBadge = 'bg-success';
+            else if (conn.encryption_type.includes('WEP')) encryptionBadge = 'bg-warning';
+            else if (conn.encryption_type === 'Open') encryptionBadge = 'bg-danger';
+
+            row.innerHTML = `
+                <td><span class="badge bg-info">${conn.pid || '0'}</span></td>
+                <td><strong>${conn.process_name}</strong></td>
+                <td><span class="badge ${adapterBadge}">${conn.network_adapter}</span></td>
+                <td><small class="text-muted">${conn.physical_port}</small></td>
+                <td><span class="badge bg-primary">${conn.protocol}</span></td>
+                <td>${conn.local_address}:${conn.local_port}</td>
+                <td>${conn.remote_address}:${conn.remote_port}</td>
+                <td><span class="badge bg-info">${conn.channel || 'N/A'}</span></td>
+                <td><small class="text-info">${conn.frequency || 'N/A'}</small></td>
+                <td><span class="badge ${encryptionBadge}">${conn.encryption_type}</span></td>
+                <td><span class="badge bg-warning">${conn.transmission_speed}</span></td>
+                <td><small class="text-muted">${connectionTimeStr}</small></td>
+                <td><small class="text-success">${txRxStr}</small></td>
+                <td><span class="badge ${statusBadge}">${conn.status}</span></td>
+            `;
+            networkTableBody.appendChild(row);
+        });
+
+        // Populate Layer 1/2 Connections Table
+        const layer12Data = [{"mac_address": "f8:da:0c:59:f5:41", "manufacturer": "Unknown Manufacturer", "firmware_version": "N/A", "ip_requested": "192.168.0.185", "dhcp_active": false, "vlan_id": null, "vxlan_vni": null, "link_type": "access", "cable_category": "Wireless", "interface_name": "wlan0", "port_speed": "Unknown", "duplex_mode": "NIC_DUPLEX_UNKNOWN", "mtu_size": 1500, "link_state": "UP", "last_seen": 1758143704.5821006, "packet_count": 632473, "byte_count": 561125004}, {"mac_address": "3c:52:82:e5:21:ba", "manufacturer": "Unknown Manufacturer", "firmware_version": "rtl8168h-2_0.0.2 02/26/15", "ip_requested": "N/A", "dhcp_active": false, "vlan_id": null, "vxlan_vni": null, "link_type": "access", "cable_category": "Unknown", "interface_name": "eth0", "port_speed": "Unknown", "duplex_mode": "NIC_DUPLEX_UNKNOWN", "mtu_size": 1500, "link_state": "DOWN", "last_seen": 1758143704.5998502, "packet_count": 0, "byte_count": 0}, {"mac_address": "f0:81:75:35:19:36", "manufacturer": "Unknown Manufacturer", "firmware_version": "Remote Device", "ip_requested": "192.168.0.1", "dhcp_active": true, "vlan_id": null, "vxlan_vni": null, "link_type": "access", "cable_category": "Remote", "interface_name": "wlan0", "port_speed": "Unknown", "duplex_mode": "unknown", "mtu_size": 0, "link_state": "DETECTED", "last_seen": 1758143704.599863, "packet_count": 0, "byte_count": 0}];
+        const layer12TableBody = document.getElementById('layer12Table');
+
+        let macCount = 0;
+        let dhcpCount = 0;
+        let vlanCount = 0;
+        let trunkCount = 0;
+
+        layer12Data.forEach((conn, index) => {
+            const row = document.createElement('tr');
+
+            // Contar estadísticas
+            macCount++;
+            if (conn.dhcp_active) dhcpCount++;
+            if (conn.vlan_id) vlanCount++;
+            if (conn.link_type === 'trunk') trunkCount++;
+
+            // Determinar badges
+            const dhcpBadge = conn.dhcp_active ? 'bg-success' : 'bg-secondary';
+            const dhcpText = conn.dhcp_active ? 'SÍ' : 'NO';
+
+            const linkTypeBadge = conn.link_type === 'trunk' ? 'bg-warning' :
+                                 conn.link_type === 'access' ? 'bg-info' : 'bg-secondary';
+
+            const stateBadge = conn.link_state === 'UP' ? 'bg-success' :
+                              conn.link_state === 'DOWN' ? 'bg-danger' : 'bg-info';
+
+            // Determinar badge de categoría de cable
+            let cableBadge = 'bg-secondary';
+            if (conn.cable_category.includes('Cat 6A') || conn.cable_category.includes('Cat 7')) {
+                cableBadge = 'bg-success';
+            } else if (conn.cable_category.includes('Cat 5e') || conn.cable_category.includes('Cat 6')) {
+                cableBadge = 'bg-info';
+            } else if (conn.cable_category.includes('Cat 5')) {
+                cableBadge = 'bg-warning';
+            } else if (conn.cable_category.includes('Wireless')) {
+                cableBadge = 'bg-primary';
+            }
+
+            row.innerHTML = `
+                <td><span class="badge bg-dark">${index + 1}</span></td>
+                <td><code class="text-info">${conn.mac_address}</code></td>
+                <td><strong>${conn.manufacturer}</strong></td>
+                <td><small class="text-muted">${conn.firmware_version}</small></td>
+                <td><span class="text-warning">${conn.ip_requested}</span></td>
+                <td><span class="badge ${dhcpBadge}">${dhcpText}</span></td>
+                <td><span class="badge bg-warning">${conn.vlan_id || 'N/A'}</span></td>
+                <td><span class="badge bg-info">${conn.vxlan_vni || 'N/A'}</span></td>
+                <td><span class="badge ${linkTypeBadge}">${conn.link_type.toUpperCase()}</span></td>
+                <td><span class="badge ${cableBadge}">${conn.cable_category}</span></td>
+                <td><small class="text-success">${conn.port_speed}</small></td>
+                <td><span class="badge bg-secondary">${conn.duplex_mode.toUpperCase()}</span></td>
+                <td><small class="text-muted">${conn.mtu_size}</small></td>
+                <td><span class="badge ${stateBadge}">${conn.link_state}</span></td>
+                <td><code class="text-primary">${conn.interface_name}</code></td>
+            `;
+            layer12TableBody.appendChild(row);
+        });
+
+        // Update summary counts
+        document.getElementById('macCount').textContent = macCount;
+        document.getElementById('dhcpCount').textContent = dhcpCount;
+        document.getElementById('vlanCount').textContent = vlanCount;
+        document.getElementById('trunkCount').textContent = trunkCount;
+
+        // Populate Security Recommendations
+        const recommendationsData = [{"id": "OWASP-A01-2021", "title": "Implementar Control de Acceso Robusto", "description": "Fortalecer mecanismos de autenticaci\u00f3n y autorizaci\u00f3n para prevenir acceso no autorizado", "framework": "OWASP", "category": "Access Control", "risk_level": "High", "impact": "Previene acceso no autorizado a sistemas cr\u00edticos", "implementation_effort": "Medium", "compliance_references": ["OWASP Top 10 2021 A01", "ISO 27001 A.9.1", "NIST SP 800-53 AC-2"], "technical_details": "Implementar autenticaci\u00f3n multifactor, principio de menor privilegio y revisi\u00f3n peri\u00f3dica de accesos", "remediation_steps": ["Implementar autenticaci\u00f3n de dos factores (2FA/MFA)", "Aplicar principio de menor privilegio", "Configurar timeouts de sesi\u00f3n apropiados", "Implementar revisi\u00f3n peri\u00f3dica de cuentas de usuario", "Usar contrase\u00f1as fuertes y pol\u00edticas de rotaci\u00f3n"], "priority_score": 90, "affected_assets": ["User accounts", "Administrative interfaces", "API endpoints"]}, {"id": "NIST-PR-AC-1", "title": "Gesti\u00f3n de Identidades y Credenciales", "description": "Implementar gesti\u00f3n centralizada de identidades y credenciales", "framework": "NIST", "category": "Access Control", "risk_level": "High", "impact": "Fortalece control de acceso y reduce riesgo de credenciales comprometidas", "implementation_effort": "High", "compliance_references": ["NIST CSF PR.AC-1", "ISO 27001 A.9.2", "NIST SP 800-63"], "technical_details": "Implementar soluci\u00f3n IAM con SSO, MFA y gesti\u00f3n de ciclo de vida de identidades", "remediation_steps": ["Implementar soluci\u00f3n de Identity Management (IAM)", "Configurar Single Sign-On (SSO)", "Implementar autenticaci\u00f3n multifactor", "Establecer pol\u00edticas de contrase\u00f1as fuertes", "Automatizar provisioning/deprovisioning de cuentas"], "priority_score": 88, "affected_assets": ["User accounts", "Service accounts", "Administrative accounts", "API keys"]}, {"id": "ISO27001-A.13.1.1", "title": "Controles de Red", "description": "Implementar controles de seguridad en redes", "framework": "ISO 27001", "category": "Network Security", "risk_level": "High", "impact": "Protege integridad y confidencialidad de comunicaciones de red", "implementation_effort": "High", "compliance_references": ["ISO 27001 A.13.1.1", "NIST SP 800-53 SC-7"], "technical_details": "Firewalls, IPS, segmentaci\u00f3n de red, cifrado de comunicaciones", "remediation_steps": ["Implementar firewalls de nueva generaci\u00f3n", "Configurar IPS en puntos cr\u00edticos", "Implementar segmentaci\u00f3n de red", "Usar cifrado para comunicaciones cr\u00edticas", "Monitorear tr\u00e1fico de red continuamente"], "priority_score": 85, "affected_assets": ["Network infrastructure", "Communication channels", "Remote connections"]}, {"id": "OWASP-A02-2021", "title": "Corregir Fallas Criptogr\u00e1ficas", "description": "Implementar cifrado adecuado para datos en tr\u00e1nsito y en reposo", "framework": "OWASP", "category": "Data Protection", "risk_level": "High", "impact": "Protege datos sensibles de exposici\u00f3n y manipulaci\u00f3n", "implementation_effort": "Medium", "compliance_references": ["OWASP Top 10 2021 A02", "ISO 27001 A.10.1", "NIST SP 800-53 SC-8"], "technical_details": "Usar algoritmos de cifrado modernos, gesti\u00f3n segura de claves y TLS 1.3", "remediation_steps": ["Implementar cifrado AES-256 para datos en reposo", "Usar TLS 1.3 para todas las comunicaciones", "Implementar gesti\u00f3n segura de claves criptogr\u00e1ficas", "Deshabilitar protocolos y cifrados obsoletos", "Implementar Perfect Forward Secrecy (PFS)"], "priority_score": 85, "affected_assets": ["Database", "Network communications", "File storage", "API connections"]}, {"id": "ISO27001-A.9.1.2", "title": "Control de Acceso a Redes y Servicios", "description": "Implementar controles rigurosos de acceso a servicios de red", "framework": "ISO 27001", "category": "Network Security", "risk_level": "High", "impact": "Previene acceso no autorizado a recursos de red cr\u00edticos", "implementation_effort": "Medium", "compliance_references": ["ISO 27001 A.9.1.2", "NIST SP 800-53 AC-3"], "technical_details": "Segmentaci\u00f3n de red, ACLs, VLANs y controles de acceso basados en roles", "remediation_steps": ["Implementar segmentaci\u00f3n de red", "Configurar firewalls con reglas restrictivas", "Usar VLANs para separar tr\u00e1fico", "Implementar NAC (Network Access Control)", "Monitorear accesos a servicios cr\u00edticos"], "priority_score": 82, "affected_assets": ["Network services", "Servers", "Databases", "Critical applications"]}, {"id": "OWASP-A09-2021", "title": "Implementar Logging y Monitoreo de Seguridad", "description": "Establecer logging comprehensivo y monitoreo en tiempo real", "framework": "OWASP", "category": "Monitoring & Logging", "risk_level": "Medium", "impact": "Mejora detecci\u00f3n de incidentes y capacidad de respuesta", "implementation_effort": "High", "compliance_references": ["OWASP Top 10 2021 A09", "ISO 27001 A.12.4", "NIST SP 800-53 AU-2"], "technical_details": "SIEM, logs centralizados, alertas autom\u00e1ticas, retenci\u00f3n de logs", "remediation_steps": ["Implementar soluci\u00f3n SIEM centralizada", "Configurar logging de eventos de seguridad", "Establecer alertas autom\u00e1ticas para eventos cr\u00edticos", "Implementar retenci\u00f3n apropiada de logs", "Realizar an\u00e1lisis regular de logs de seguridad"], "priority_score": 75, "affected_assets": ["All systems", "Network infrastructure", "Applications", "Security tools"]}, {"id": "ISO27001-A.12.4.1", "title": "Registro de Eventos (Event Logging)", "description": "Implementar logging comprehensivo de eventos de seguridad", "framework": "ISO 27001", "category": "Monitoring & Logging", "risk_level": "Medium", "impact": "Facilita detecci\u00f3n de incidentes y an\u00e1lisis forense", "implementation_effort": "High", "compliance_references": ["ISO 27001 A.12.4.1", "NIST SP 800-53 AU-2"], "technical_details": "Logging centralizado, protecci\u00f3n de logs, retenci\u00f3n apropiada y an\u00e1lisis automatizado", "remediation_steps": ["Configurar logging en todos los sistemas cr\u00edticos", "Centralizar logs en servidor seguro", "Implementar protecci\u00f3n de integridad de logs", "Establecer pol\u00edticas de retenci\u00f3n", "Configurar an\u00e1lisis automatizado de logs"], "priority_score": 75, "affected_assets": ["All systems", "Security devices", "Applications", "Network equipment"]}, {"id": "NIST-DE-CM-1", "title": "Monitoreo Continuo de Red", "description": "Implementar monitoreo continuo de actividad de red", "framework": "NIST", "category": "Monitoring & Logging", "risk_level": "Medium", "impact": "Mejora detecci\u00f3n temprana de actividades maliciosas", "implementation_effort": "High", "compliance_references": ["NIST CSF DE.CM-1", "ISO 27001 A.12.4", "NIST SP 800-94"], "technical_details": "Implementar IDS/IPS, an\u00e1lisis de tr\u00e1fico de red y detecci\u00f3n de anomal\u00edas", "remediation_steps": ["Implementar sistema IDS/IPS en puntos cr\u00edticos", "Configurar monitoreo de tr\u00e1fico de red", "Establecer baselines de tr\u00e1fico normal", "Implementar detecci\u00f3n de anomal\u00edas", "Configurar alertas automatizadas"], "priority_score": 72, "affected_assets": ["Network infrastructure", "Firewalls", "Switches", "Routers"]}, {"id": "ISO27001-A.16.1.1", "title": "Responsabilidades y Procedimientos de Gesti\u00f3n de Incidentes", "description": "Establecer procedimientos formales de gesti\u00f3n de incidentes de seguridad", "framework": "ISO 27001", "category": "Incident Response", "risk_level": "Medium", "impact": "Mejora capacidad de respuesta y recuperaci\u00f3n ante incidentes", "implementation_effort": "Medium", "compliance_references": ["ISO 27001 A.16.1.1", "NIST SP 800-61"], "technical_details": "Plan de respuesta a incidentes, equipo CSIRT, procedimientos de comunicaci\u00f3n", "remediation_steps": ["Desarrollar plan de respuesta a incidentes", "Formar equipo de respuesta (CSIRT)", "Establecer procedimientos de comunicaci\u00f3n", "Implementar herramientas de gesti\u00f3n de incidentes", "Realizar ejercicios de simulaci\u00f3n regulares"], "priority_score": 70, "affected_assets": ["All organizational assets", "Business processes", "Reputation"]}, {"id": "ISO27001-A.8.1.1", "title": "Inventario de Activos de Informaci\u00f3n", "description": "Mantener inventario preciso de todos los activos de informaci\u00f3n", "framework": "ISO 27001", "category": "Configuration Management", "risk_level": "Medium", "impact": "Asegura protecci\u00f3n adecuada de activos cr\u00edticos de informaci\u00f3n", "implementation_effort": "Medium", "compliance_references": ["ISO 27001 A.8.1.1", "NIST CSF ID.AM-5"], "technical_details": "Clasificar y etiquetar activos seg\u00fan su valor y criticidad para el negocio", "remediation_steps": ["Identificar y catalogar todos los activos de informaci\u00f3n", "Asignar propietarios responsables de cada activo", "Clasificar activos seg\u00fan criticidad", "Establecer procedimientos de manejo de activos", "Revisar inventario peri\u00f3dicamente"], "priority_score": 68, "affected_assets": ["Databases", "Documents", "Intellectual property", "Personal data"]}, {"id": "NIST-ID-AM-1", "title": "Inventario de Activos de Hardware", "description": "Mantener inventario actualizado de todos los dispositivos de hardware", "framework": "NIST", "category": "Configuration Management", "risk_level": "Medium", "impact": "Mejora visibilidad y control de activos organizacionales", "implementation_effort": "Medium", "compliance_references": ["NIST CSF ID.AM-1", "ISO 27001 A.8.1", "CIS Control 1"], "technical_details": "Implementar herramientas de descubrimiento autom\u00e1tico y registro de activos", "remediation_steps": ["Implementar herramienta de gesti\u00f3n de activos", "Realizar escaneo autom\u00e1tico de red", "Mantener base de datos de activos actualizada", "Clasificar activos por criticidad", "Establecer proceso de alta/baja de activos"], "priority_score": 65, "affected_assets": ["Network devices", "Servers", "Workstations", "IoT devices"]}];
+        const recommendationsTableBody = document.getElementById('recommendationsTable');
+        const recommendationsAccordion = document.getElementById('recommendationsAccordion');
+
+        let owaspCount = 0;
+        let nistCount = 0;
+        let isoCount = 0;
+
+        recommendationsData.forEach((rec, index) => {
+            // Count by framework
+            if (rec.framework === 'OWASP') owaspCount++;
+            else if (rec.framework === 'NIST') nistCount++;
+            else if (rec.framework === 'ISO 27001') isoCount++;
+
+            // Determine badges and colors
+            const riskBadge = rec.risk_level === 'Critical' ? 'bg-danger' :
+                             rec.risk_level === 'High' ? 'bg-warning' :
+                             rec.risk_level === 'Medium' ? 'bg-info' : 'bg-success';
+
+            const frameworkBadge = rec.framework === 'OWASP' ? 'bg-info' :
+                                  rec.framework === 'NIST' ? 'bg-warning' : 'bg-success';
+
+            const effortBadge = rec.implementation_effort === 'High' ? 'bg-danger' :
+                               rec.implementation_effort === 'Medium' ? 'bg-warning' : 'bg-success';
+
+            // Create table row
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><span class="badge bg-primary">${rec.priority_score}</span></td>
+                <td><span class="badge ${frameworkBadge}">${rec.framework}</span></td>
+                <td><strong>${rec.title}</strong><br>
+                    <small class="text-muted">${rec.description.substring(0, 80)}...</small></td>
+                <td><span class="badge bg-secondary">${rec.category}</span></td>
+                <td><span class="badge ${riskBadge}">${rec.risk_level}</span></td>
+                <td><span class="badge ${effortBadge}">${rec.implementation_effort}</span></td>
+                <td><small class="text-success">${rec.impact.substring(0, 50)}...</small></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-info" data-bs-toggle="collapse"
+                            data-bs-target="#details${index}" aria-expanded="false">
+                        <i class="fas fa-info-circle"></i> Detalles
+                    </button>
+                </td>
+            `;
+            recommendationsTableBody.appendChild(row);
+
+            // Create accordion item for details
+            const accordionItem = document.createElement('div');
+            accordionItem.className = 'accordion-item bg-dark border-secondary';
+            accordionItem.innerHTML = `
+                <div class="collapse" id="details${index}" data-bs-parent="#recommendationsAccordion">
+                    <div class="accordion-body bg-dark text-white">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="text-warning">📋 Detalles Técnicos:</h6>
+                                <p class="small">${rec.technical_details}</p>
+
+                                <h6 class="text-info">🎯 Activos Afectados:</h6>
+                                <ul class="small">
+                                    ${rec.affected_assets.map(asset => `<li>${asset}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-success">🔧 Pasos de Remediación:</h6>
+                                <ol class="small">
+                                    ${rec.remediation_steps.map(step => `<li>${step}</li>`).join('')}
+                                </ol>
+
+                                <h6 class="text-primary">📚 Referencias de Cumplimiento:</h6>
+                                <ul class="small">
+                                    ${rec.compliance_references.map(ref => `<li><code>${ref}</code></li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            recommendationsAccordion.appendChild(accordionItem);
+        });
+
+        // Update framework counts
+        document.getElementById('owaspCount').textContent = owaspCount;
+        document.getElementById('nistCount').textContent = nistCount;
+        document.getElementById('isoCount').textContent = isoCount;
+
+        // Security Chart
+        const securityCtx = document.getElementById('securityChart').getContext('2d');
+        new Chart(securityCtx, {
+            type: 'bar',
+            data: {
+                labels: ["Hrm Learning", "Mitre Experimenter", "Nodejs Sandbox", "Admin Authorization", "Secret Manager"],
+                datasets: [{
+                    label: 'Estado (%)',
+                    data: [100, 100, 100, 100, 100],
+                    backgroundColor: 'rgba(40, 167, 69, 0.8)',
+                    borderColor: 'rgba(40, 167, 69, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            color: 'white'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: 'white',
+                            maxRotation: 45
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Auto-refresh simulation (en implementación real, conectaría a WebSocket)
+        setInterval(() => {
+            // Simular actualización de datos en tiempo real
+            const indicators = document.querySelectorAll('.real-time-indicator');
+            indicators.forEach(indicator => {
+                indicator.style.backgroundColor = indicator.style.backgroundColor === 'rgb(40, 167, 69)' ? '#ffc107' : '#28a745';
+            });
+        }, 2000);
+    </script>
+</body>
+</html>

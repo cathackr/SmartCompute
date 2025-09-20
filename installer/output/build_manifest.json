@@ -1,0 +1,250 @@
+{
+  "product": {
+    "name": "SmartCompute Enterprise",
+    "version": "1.0.0",
+    "build": "2025.09.17",
+    "description": "Advanced Security Analysis Platform",
+    "publisher": "SmartCompute Security Solutions",
+    "website": "https://smartcompute.enterprise"
+  },
+  "build": {
+    "timestamp": "2025-09-17T19:43:41.100217",
+    "source_files": {
+      "main": [
+        {
+          "name": "run_enterprise_analysis.py",
+          "size": 36097,
+          "modified": "2025-09-17T18:09:23.971702"
+        },
+        {
+          "name": "process_monitor.py",
+          "size": 47073,
+          "modified": "2025-09-17T17:59:15.378750"
+        },
+        {
+          "name": "security_recommendations_engine.py",
+          "size": 28893,
+          "modified": "2025-09-17T18:08:40.175635"
+        },
+        {
+          "name": "generate_html_reports.py",
+          "size": 61659,
+          "modified": "2025-09-17T18:14:52.556183"
+        },
+        {
+          "name": "quick_start.sh",
+          "size": 326,
+          "modified": "2025-09-13T01:40:35.131817"
+        },
+        {
+          "name": "ejecutar_analisis.sh",
+          "size": 1292,
+          "modified": "2025-09-13T07:27:41.653214"
+        },
+        {
+          "name": "system_health_check.sh",
+          "size": 1353,
+          "modified": "2025-09-17T07:06:21.568707"
+        },
+        {
+          "name": "apply_improvements.sh",
+          "size": 4795,
+          "modified": "2025-09-17T17:00:58.196376"
+        },
+        {
+          "name": "install_smartcompute.sh",
+          "size": 3200,
+          "modified": "2025-09-14T10:36:44.664887"
+        }
+      ],
+      "enterprise": [
+        {
+          "name": "mcp_enterprise_orchestrator.py",
+          "size": 32656,
+          "modified": "2025-09-16T07:02:03.669072"
+        },
+        {
+          "name": "xdr_performance_benchmarks.py",
+          "size": 24245,
+          "modified": "2025-09-17T03:47:18.099936"
+        },
+        {
+          "name": "ml_threat_prioritization.py",
+          "size": 40887,
+          "modified": "2025-09-17T05:46:32.280203"
+        },
+        {
+          "name": "mcp_server.py",
+          "size": 24212,
+          "modified": "2025-09-16T07:03:30.825302"
+        },
+        {
+          "name": "deployment_automation_cicd.py",
+          "size": 50567,
+          "modified": "2025-09-17T06:06:53.233731"
+        },
+        {
+          "name": "monitoring_alerting_system.py",
+          "size": 38373,
+          "modified": "2025-09-17T05:56:07.993090"
+        },
+        {
+          "name": "smartcompute_admin_authorization.py",
+          "size": 30874,
+          "modified": "2025-09-17T17:32:38.779418"
+        },
+        {
+          "name": "business_context_xdr_router.py",
+          "size": 40255,
+          "modified": "2025-09-17T01:09:13.571950"
+        },
+        {
+          "name": "mcp_hrm_bridge.py",
+          "size": 17307,
+          "modified": "2025-09-16T07:00:01.724747"
+        },
+        {
+          "name": "test_xdr_integration.py",
+          "size": 17568,
+          "modified": "2025-09-17T01:12:58.624289"
+        },
+        {
+          "name": "xdr_mcp_coordinators.py",
+          "size": 41217,
+          "modified": "2025-09-16T07:17:38.863425"
+        },
+        {
+          "name": "smartcompute_mcp_integrated_analysis.py",
+          "size": 26640,
+          "modified": "2025-09-17T07:46:39.950144"
+        },
+        {
+          "name": "backup_disaster_recovery.py",
+          "size": 33120,
+          "modified": "2025-09-17T06:12:11.634062"
+        },
+        {
+          "name": "intelligent_alert_aggregator.py",
+          "size": 39191,
+          "modified": "2025-09-17T05:37:54.767360"
+        },
+        {
+          "name": "smartcompute_hrm_learning_framework.py",
+          "size": 27239,
+          "modified": "2025-09-17T17:03:59.380625"
+        },
+        {
+          "name": "smartcompute_user_auth_system.py",
+          "size": 25863,
+          "modified": "2025-09-17T17:00:19.364318"
+        },
+        {
+          "name": "smartcompute_nodejs_sandbox.py",
+          "size": 34744,
+          "modified": "2025-09-17T17:09:19.824981"
+        },
+        {
+          "name": "smartcompute_secret_manager.py",
+          "size": 17903,
+          "modified": "2025-09-17T17:02:02.672469"
+        },
+        {
+          "name": "compliance_incident_workflows.py",
+          "size": 41991,
+          "modified": "2025-09-17T05:49:44.744523"
+        },
+        {
+          "name": "smartcompute_mitre_experimenter.py",
+          "size": 36900,
+          "modified": "2025-09-17T17:06:10.632783"
+        },
+        {
+          "name": "smartcompute_live_analysis.py",
+          "size": 45526,
+          "modified": "2025-09-17T06:51:17.688203"
+        },
+        {
+          "name": "test_mcp_integration.py",
+          "size": 20421,
+          "modified": "2025-09-16T07:10:27.734370"
+        },
+        {
+          "name": "performance_optimization_scaling.py",
+          "size": 42513,
+          "modified": "2025-09-17T06:15:11.902229"
+        },
+        {
+          "name": "threat_correlation_engine.py",
+          "size": 35167,
+          "modified": "2025-09-17T05:28:01.582729"
+        },
+        {
+          "name": "test_xdr_simple.py",
+          "size": 9747,
+          "modified": "2025-09-17T03:41:38.419474"
+        },
+        {
+          "name": "generate_pdf_report.py",
+          "size": 7232,
+          "modified": "2025-09-17T06:35:16.615384"
+        },
+        {
+          "name": "production_security_hardening.py",
+          "size": 41643,
+          "modified": "2025-09-17T05:54:02.556948"
+        },
+        {
+          "name": "multi_xdr_response_engine.py",
+          "size": 43014,
+          "modified": "2025-09-16T07:20:05.779776"
+        },
+        {
+          "name": "comprehensive_integration_test.py",
+          "size": 39851,
+          "modified": "2025-09-17T06:24:44.730779"
+        },
+        {
+          "name": "siem_intelligence_coordinator.py",
+          "size": 34754,
+          "modified": "2025-09-17T04:44:41.240132"
+        }
+      ],
+      "assets": [
+        {
+          "name": "README.md",
+          "size": 25777,
+          "modified": "2025-09-14T08:23:13.047880"
+        },
+        {
+          "name": "SECURITY_README.md",
+          "size": 4975,
+          "modified": "2025-09-17T07:15:25.953082"
+        },
+        {
+          "name": "requirements.txt",
+          "size": 477,
+          "modified": "2025-09-13T07:26:41.333111"
+        }
+      ],
+      "installer": [
+        {
+          "name": "smartcompute_tray_app.py",
+          "size": 26462,
+          "modified": "2025-09-17T19:23:38.110567"
+        }
+      ]
+    },
+    "installers": [
+      "SmartCompute_Enterprise_Windows_v1.0.0.bat",
+      "SmartCompute_Enterprise_Linux_v1.0.0.sh",
+      "SmartCompute_Enterprise_Windows.nsi",
+      "smartcompute_tray_app.py"
+    ]
+  },
+  "security": {
+    "encryption": "AES-256",
+    "license_validation": true,
+    "code_signing": false,
+    "integrity_check": true
+  }
+}

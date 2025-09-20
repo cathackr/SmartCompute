@@ -1,0 +1,42 @@
+{
+  "system_log": {
+    "events_count": 1,
+    "severity_distribution": {
+      "LOW": 1,
+      "MEDIUM": 0,
+      "HIGH": 0,
+      "CRITICAL": 0
+    },
+    "feature_averages": {
+      "data_size": {
+        "sum": 128,
+        "count": 1
+      },
+      "system_load": {
+        "sum": 0.59,
+        "count": 1
+      },
+      "memory_pressure": {
+        "sum": 0.5092597482526573,
+        "count": 1
+      },
+      "time_of_day": {
+        "sum": 6,
+        "count": 1
+      },
+      "day_of_week": {
+        "sum": 1,
+        "count": 1
+      },
+      "error_count": {
+        "sum": 0,
+        "count": 1
+      },
+      "log_size": {
+        "sum": 0,
+        "count": 1
+      }
+    },
+    "patterns": []
+  }
+}

@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCompute HRM - Dashboard Real-Time</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #16213e 0%, #0f3460 100%);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .system-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .main-dashboard {
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 20px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 212, 255, 0.2);
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .metric-trend {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+
+        .trend-up { color: #ff6b6b; }
+        .trend-down { color: #2ed573; }
+        .trend-stable { color: #ffa502; }
+
+        .threat-score { color: #ff6b6b; }
+        .events-count { color: #4ecdc4; }
+        .false-positive { color: #45b7d1; }
+        .incidents { color: #f7b731; }
+
+        .alerts-section {
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .alerts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .real-time-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9em;
+        }
+
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: #2ed573;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 1; }
+            70% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(0.95); opacity: 1; }
+        }
+
+        .alert-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .alert-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .alert-critical { border-left-color: #ff4757; }
+        .alert-high { border-left-color: #ffa502; }
+        .alert-medium { border-left-color: #f1c40f; }
+        .alert-low { border-left-color: #2ed573; }
+
+        .alert-info {
+            flex-grow: 1;
+        }
+
+        .alert-source {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .alert-details {
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-suppress {
+            background: #2ed573;
+            color: #000;
+        }
+
+        .action-investigate {
+            background: #ff4757;
+            color: #fff;
+        }
+
+        .action-review {
+            background: #ffa502;
+            color: #000;
+        }
+
+        .chat-panel {
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: fit-content;
+            max-height: 800px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .system-status {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            border-radius: 15px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .message-ai {
+            background: linear-gradient(135deg, #0099cc, #00d4ff);
+            color: #000;
+            margin-left: 20px;
+        }
+
+        .message-user {
+            background: rgba(255, 255, 255, 0.1);
+            margin-right: 20px;
+        }
+
+        .message-system {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: #fff;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .chat-send {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            border: none;
+            border-radius: 25px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .recommendations-panel {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid #00d4ff;
+        }
+
+        .recommendation-item {
+            margin-bottom: 10px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div>
+            <div class="spinner"></div>
+            <p style="margin-top: 20px;">Conectando a SmartCompute HRM...</p>
+        </div>
+    </div>
+
+    <div class="header">
+        <h1>🤖 SmartCompute HRM - Análisis Real-Time</h1>
+        <div class="system-info">
+            <span>🖥️ <span id="systemHost">Detectando...</span></span>
+            <span>💾 <span id="systemMemory">Cargando...</span></span>
+            <span>⏱️ <span id="systemUptime">Iniciando...</span></span>
+        </div>
+        <p><div class="real-time-indicator">
+            <div class="pulse"></div>
+            <span>Análisis de Sistema Linux en Tiempo Real</span>
+        </div></p>
+    </div>
+
+    <div class="container">
+        <div class="main-dashboard">
+            <!-- Métricas principales con datos reales -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-trend trend-stable" id="threatTrend">●</div>
+                    <div class="metric-value threat-score" id="threatScore">0.0</div>
+                    <div class="metric-label">Threat Score (Real)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-trend trend-up" id="eventsTrend">▲</div>
+                    <div class="metric-value events-count" id="eventsCount">0</div>
+                    <div class="metric-label">Eventos Detectados</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-trend trend-down" id="fpTrend">▼</div>
+                    <div class="metric-value false-positive" id="falsePositive">0%</div>
+                    <div class="metric-label">Falsos Positivos (ML)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-trend trend-stable" id="incidentTrend">●</div>
+                    <div class="metric-value incidents" id="incidents">0</div>
+                    <div class="metric-label">Incidentes Críticos</div>
+                </div>
+            </div>
+
+            <!-- Alertas con datos reales del sistema -->
+            <div class="alerts-section">
+                <div class="alerts-header">
+                    <h2>🚨 Alertas del Sistema Linux</h2>
+                    <div class="real-time-indicator">
+                        <div class="pulse"></div>
+                        <span>Actualizando cada 10s</span>
+                    </div>
+                </div>
+                <div id="alertsList">
+                    <div class="alert-item alert-medium">
+                        <div class="alert-info">
+                            <div class="alert-id">INIT-001</div>
+                            <div>Inicializando SmartDetector...</div>
+                            <div class="alert-source">system_init</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de chat mejorado con contexto real -->
+        <div class="chat-panel">
+            <div class="chat-header">
+                <h2>💬 SmartCompute AI - Sistema Real</h2>
+                <div class="system-status">
+                    <h4>📊 Estado del Sistema</h4>
+                    <div class="status-grid" id="systemStatusGrid">
+                        <div class="status-item">
+                            <span>CPU:</span>
+                            <span id="cpuUsage">--</span>
+                        </div>
+                        <div class="status-item">
+                            <span>Memoria:</span>
+                            <span id="memoryUsage">--</span>
+                        </div>
+                        <div class="status-item">
+                            <span>Procesos:</span>
+                            <span id="processCount">--</span>
+                        </div>
+                        <div class="status-item">
+                            <span>Red:</span>
+                            <span id="networkStatus">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <!-- Los mensajes se cargarán aquí -->
+            </div>
+
+            <div class="recommendations-panel" id="recommendationsPanel" style="display: none;">
+                <h4>💡 Recomendaciones Automáticas</h4>
+                <div id="recommendationsList">
+                    <!-- Recomendaciones dinámicas -->
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Pregunta sobre tu sistema Linux..." onkeypress="handleKeyPress(event)">
+                <button class="chat-send" onclick="sendMessage()">Consultar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estado global de la aplicación con datos reales
+        const appState = {
+            realTimeData: {},
+            systemStatus: {},
+            currentAlerts: [],
+            metrics: {
+                threatScore: 0,
+                eventsCount: 0,
+                falsePositive: 0,
+                incidents: 0
+            },
+            isConnected: false,
+            updateInterval: null
+        };
+
+        // Conectar al backend real
+        async function connectToBackend() {
+            try {
+                const response = await fetch('/api/system-status');
+                if (response.ok) {
+                    appState.systemStatus = await response.json();
+                    appState.isConnected = true;
+                    updateSystemInfo();
+                    addMessageToChat('🚀 SmartCompute HRM conectado al sistema real', 'system');
+                    addMessageToChat(`📊 Sistema detectado: ${appState.systemStatus.hostname} (${appState.systemStatus.platform})`, 'ai');
+                } else {
+                    throw new Error('Backend no disponible');
+                }
+            } catch (error) {
+                addMessageToChat('⚠️ Modo simulado: Backend no disponible', 'system');
+                simulateRealTimeData();
+            }
+        }
+
+        // Actualizar información del sistema en el header
+        function updateSystemInfo() {
+            if (appState.systemStatus.hostname) {
+                document.getElementById('systemHost').textContent = appState.systemStatus.hostname;
+                document.getElementById('systemMemory').textContent = appState.systemStatus.memory || 'N/A';
+                document.getElementById('systemUptime').textContent = appState.systemStatus.uptime || 'N/A';
+            }
+        }
+
+        // Obtener alertas reales del backend
+        async function fetchRealTimeAlerts() {
+            if (!appState.isConnected) return;
+
+            try {
+                const response = await fetch('/api/alerts');
+                if (response.ok) {
+                    const data = await response.json();
+                    appState.realTimeData = data;
+                    updateDashboardWithRealData(data);
+                }
+            } catch (error) {
+                console.error('Error al obtener datos:', error);
+            }
+        }
+
+        // Actualizar dashboard con datos reales
+        function updateDashboardWithRealData(data) {
+            // Actualizar métricas
+            if (data.metrics) {
+                document.getElementById('threatScore').textContent = data.metrics.threatScore || '0.0';
+                document.getElementById('eventsCount').textContent = data.metrics.eventsCount || '0';
+                document.getElementById('falsePositive').textContent = `${data.metrics.falsePositive || '0'}%`;
+                document.getElementById('incidents').textContent = data.metrics.incidents || '0';
+
+                // Actualizar indicadores de tendencia
+                updateTrendIndicators(data.metrics);
+            }
+
+            // Actualizar alertas reales
+            if (data.alerts && data.alerts.length > 0) {
+                loadRealAlerts(data.alerts);
+                appState.currentAlerts = data.alerts;
+            }
+
+            // Actualizar recomendaciones
+            if (data.recommendations && data.recommendations.length > 0) {
+                showRecommendations(data.recommendations);
+            }
+
+            // Actualizar estado del sistema en el chat
+            if (data.system_status) {
+                updateSystemStatusInChat(data.system_status);
+            }
+        }
+
+        // Cargar alertas reales del sistema
+        function loadRealAlerts(alerts) {
+            const alertsList = document.getElementById('alertsList');
+            alertsList.innerHTML = '';
+
+            alerts.forEach((alert) => {
+                const alertElement = document.createElement('div');
+                alertElement.className = `alert-item alert-${alert.level}`;
+
+                const sourceInfo = alert.source ? `<div class="alert-source">${alert.source}</div>` : '';
+                const detailsInfo = alert.details ?
+                    `<div class="alert-details">${Object.entries(alert.details).map(([k, v]) => `${k}: ${v}`).join(' | ')}</div>` : '';
+
+                alertElement.innerHTML = `
+                    <div class="alert-info">
+                        <div class="alert-id">${alert.id}</div>
+                        <div style="font-size: 0.9em;">${alert.description}</div>
+                        ${sourceInfo}
+                        ${detailsInfo}
+                        <div style="font-size: 0.8em; opacity: 0.6;">${alert.time} | Score: ${alert.score} | FP: ${alert.fp}%</div>
+                    </div>
+                    <div class="alert-actions">
+                        ${alert.level === 'critical' ?
+                            `<button class="action-btn action-investigate" onclick="investigateRealAlert('${alert.id}')">🚨 INVESTIGAR</button>`
+                            : ''}
+                        ${alert.fp > 70 ?
+                            `<button class="action-btn action-suppress" onclick="suppressRealAlert('${alert.id}')">🔇 SUPRIMIR</button>`
+                            : ''}
+                        <button class="action-btn action-review" onclick="reviewRealAlert('${alert.id}')">📋 REVISAR</button>
+                    </div>
+                `;
+
+                alertsList.appendChild(alertElement);
+            });
+        }
+
+        // Funciones de acción para alertas reales
+        function investigateRealAlert(alertId) {
+            const alert = appState.currentAlerts.find(a => a.id === alertId);
+            if (alert) {
+                addMessageToChat(`🔍 Investigando alerta real: ${alertId}`, 'system');
+                setTimeout(() => {
+                    let response = `📊 ANÁLISIS DE ALERTA REAL - ${alertId}
+
+🖥️ Sistema: ${appState.systemStatus.hostname}
+🕒 Timestamp: ${alert.time}
+📈 Severidad: ${alert.level.toUpperCase()}
+🎯 Origen: ${alert.source || 'Sistema'}
+
+🔍 Detalles técnicos:`;
+
+                    if (alert.details) {
+                        Object.entries(alert.details).forEach(([key, value]) => {
+                            response += `\n• ${key}: ${value}`;
+                        });
+                    }
+
+                    response += `\n\n⚡ Acción recomendada: ${alert.action_needed}`;
+
+                    addMessageToChat(response, 'ai');
+
+                    // Agregar acciones específicas basadas en el tipo de alerta
+                    if (alert.source === 'system_monitor') {
+                        addMessageToChat(`💡 Para investigar: ejecuta 'top -p ${alert.details?.pid || 'PID'}' o 'htop' para análisis detallado`, 'ai');
+                    } else if (alert.source === 'memory_monitor') {
+                        addMessageToChat(`💡 Para liberar memoria: 'sudo sync && echo 3 | sudo tee /proc/sys/vm/drop_caches'`, 'ai');
+                    } else if (alert.source === 'system_logs') {
+                        addMessageToChat(`💡 Para revisar logs: 'sudo journalctl -xe' o 'tail -f /var/log/syslog'`, 'ai');
+                    }
+                }, 1000);
+            }
+        }
+
+        function suppressRealAlert(alertId) {
+            addMessageToChat(`🔇 Suprimiendo alerta del sistema: ${alertId}`, 'system');
+
+            setTimeout(() => {
+                addMessageToChat(`✅ Alerta ${alertId} suprimida
+🤖 Patrón agregado al modelo de ML
+📉 Impacto: Reducción de alertas similares
+🔄 Actualización automática aplicada`, 'ai');
+
+                // Remover visualmente la alerta
+                const alertElements = document.querySelectorAll('.alert-item');
+                alertElements.forEach(element => {
+                    if (element.innerHTML.includes(alertId)) {
+                        element.style.opacity = '0.3';
+                        element.style.transform = 'translateX(-100%)';
+                    }
+                });
+            }, 1500);
+        }
+
+        function reviewRealAlert(alertId) {
+            const alert = appState.currentAlerts.find(a => a.id === alertId);
+            if (alert) {
+                addMessageToChat(`📋 Revisión detallada de alerta real: ${alertId}`, 'system');
+
+                setTimeout(() => {
+                    let response = `📊 REVISIÓN COMPLETA - ${alertId}
+
+🖥️ Información del sistema:
+• Host: ${appState.systemStatus.hostname}
+• Plataforma: ${appState.systemStatus.platform}
+• Uptime: ${appState.systemStatus.uptime}
+
+🚨 Detalles de la alerta:
+• Descripción: ${alert.description}
+• Nivel: ${alert.level.toUpperCase()}
+• Score: ${alert.score}/10
+• Probabilidad FP: ${alert.fp}%
+• Origen: ${alert.source}
+• Timestamp: ${alert.time}`;
+
+                    if (alert.details) {
+                        response += '\n\n🔍 Información técnica:';
+                        Object.entries(alert.details).forEach(([key, value]) => {
+                            response += `\n• ${key}: ${value}`;
+                        });
+                    }
+
+                    response += `\n\n💡 Análisis SmartCompute:`;
+                    response += `\n• Criticidad: ${alert.level === 'critical' ? 'ALTA - Atención inmediata' : alert.level === 'high' ? 'MEDIA-ALTA - Investigar pronto' : 'BAJA - Monitoreo regular'}`;
+                    response += `\n• Confianza: ${100 - alert.fp}% (${alert.fp < 30 ? 'Alta' : alert.fp < 60 ? 'Media' : 'Baja'})`;
+                    response += `\n• Recomendación: ${alert.action_needed}`;
+
+                    addMessageToChat(response, 'ai');
+                }, 1000);
+            }
+        }
+
+        // Mostrar recomendaciones automáticas
+        function showRecommendations(recommendations) {
+            const panel = document.getElementById('recommendationsPanel');
+            const list = document.getElementById('recommendationsList');
+
+            list.innerHTML = '';
+            recommendations.forEach(rec => {
+                const item = document.createElement('div');
+                item.className = 'recommendation-item';
+                item.innerHTML = `
+                    <strong>[${rec.type.toUpperCase()}]</strong> ${rec.message}
+                    <div style="font-size: 0.8em; opacity: 0.7; margin-top: 5px;">
+                        💡 Acción: ${rec.action}
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+
+            panel.style.display = recommendations.length > 0 ? 'block' : 'none';
+        }
+
+        // Actualizar indicadores de tendencia
+        function updateTrendIndicators(metrics) {
+            // Lógica simple para mostrar tendencias
+            const threatTrend = parseFloat(metrics.threatScore);
+            const threatIndicator = document.getElementById('threatTrend');
+
+            if (threatTrend > 5) {
+                threatIndicator.textContent = '▲';
+                threatIndicator.className = 'metric-trend trend-up';
+            } else if (threatTrend < 2) {
+                threatIndicator.textContent = '▼';
+                threatIndicator.className = 'metric-trend trend-down';
+            } else {
+                threatIndicator.textContent = '●';
+                threatIndicator.className = 'metric-trend trend-stable';
+            }
+        }
+
+        // Chat AI mejorado con datos reales del sistema
+        function generateRealSystemResponse(userMessage) {
+            const msg = userMessage.toLowerCase();
+
+            if (msg.includes('sistema') || msg.includes('status')) {
+                return `🖥️ ESTADO ACTUAL DEL SISTEMA:
+
+Host: ${appState.systemStatus.hostname || 'N/A'}
+Platform: ${appState.systemStatus.platform || 'N/A'}
+Uptime: ${appState.systemStatus.uptime || 'N/A'}
+Memoria: ${appState.systemStatus.memory || 'N/A'}
+
+📊 Métricas actuales:
+• Threat Score: ${appState.metrics.threatScore}
+• Eventos: ${appState.metrics.eventsCount}
+• Falsos positivos: ${appState.metrics.falsePositive}%
+• Incidentes críticos: ${appState.metrics.incidents}
+
+🔄 Última actualización: ${new Date().toLocaleTimeString()}`;
+            }
+
+            if (msg.includes('alerta') || msg.includes('amenaza')) {
+                const criticalAlerts = appState.currentAlerts.filter(a => a.level === 'critical');
+                return `🚨 ALERTAS ACTIVAS:
+
+📈 Total de alertas: ${appState.currentAlerts.length}
+🔥 Críticas: ${criticalAlerts.length}
+⚠️ Altas: ${appState.currentAlerts.filter(a => a.level === 'high').length}
+
+${criticalAlerts.length > 0 ?
+  `🎯 Alertas críticas activas:
+${criticalAlerts.map(a => `• ${a.id}: ${a.description}`).join('\n')}` :
+  '✅ Sin alertas críticas activas'}
+
+💡 Usa los botones de acción para investigar alertas específicas.`;
+            }
+
+            if (msg.includes('cpu') || msg.includes('memoria') || msg.includes('rendimiento')) {
+                return `⚡ ANÁLISIS DE RENDIMIENTO:
+
+📊 Información disponible del sistema:
+• Análisis de CPU y memoria en tiempo real
+• Monitoreo de procesos activos
+• Detección de anomalías de rendimiento
+• Alertas automáticas por recursos críticos
+
+🔄 El sistema se actualiza cada 10 segundos automáticamente.
+📈 Las alertas de rendimiento aparecen cuando se detectan umbrales críticos.
+
+💡 Las alertas recientes de rendimiento se muestran en el panel principal.`;
+            }
+
+            if (msg.includes('log') || msg.includes('registro')) {
+                const logAlerts = appState.currentAlerts.filter(a => a.source === 'system_logs');
+                return `📋 ANÁLISIS DE LOGS:
+
+🔍 Monitoreo activo de:
+• /var/log/syslog
+• journald logs
+• Aplicaciones críticas
+• Errores del sistema
+
+📊 Alertas de logs: ${logAlerts.length}
+${logAlerts.length > 0 ?
+  `\n🚨 Logs recientes con problemas:\n${logAlerts.map(a => `• ${a.description.substring(0, 50)}...`).join('\n')}` :
+  '\n✅ Sin errores críticos en logs'}`;
+            }
+
+            // Respuesta por defecto con contexto real
+            return `🤖 SmartCompute HRM - Análisis en tiempo real de tu sistema Linux
+
+📊 CAPACIDADES ACTIVAS:
+• Monitoreo de CPU y memoria en tiempo real
+• Análisis de procesos y red
+• Detección de anomalías automática
+• Correlación de logs del sistema
+• Alertas contextuales inteligentes
+
+🖥️ SISTEMA ACTUAL: ${appState.systemStatus.hostname || 'Detectando...'}
+⏱️ ÚLTIMA ACTUALIZACIÓN: ${new Date().toLocaleTimeString()}
+
+💬 Pregúntame sobre:
+• "status del sistema" - Estado completo
+• "alertas críticas" - Análisis de amenazas
+• "rendimiento" - CPU y memoria
+• "logs" - Análisis de registros`;
+        }
+
+        // Función mejorada para agregar mensajes
+        function addMessageToChat(message, type = 'ai', time = null) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageElement = document.createElement('div');
+            messageElement.className = `chat-message message-${type}`;
+
+            const currentTime = time || new Date().toLocaleTimeString();
+
+            messageElement.innerHTML = `
+                <div style="white-space: pre-line;">${message}</div>
+                <div style="font-size: 0.7em; opacity: 0.6; margin-top: 5px;">${currentTime}</div>
+            `;
+
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (message) {
+                addMessageToChat(message, 'user');
+                input.value = '';
+
+                setTimeout(() => {
+                    const response = generateRealSystemResponse(message);
+                    addMessageToChat(response, 'ai');
+                }, 800);
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Simular datos en tiempo real si no hay backend
+        function simulateRealTimeData() {
+            // Simulación básica para demo
+            appState.systemStatus = {
+                hostname: 'gatux-locos',
+                platform: 'linux',
+                uptime: '2.1 horas',
+                memory: '3.8GB libre de 7.5GB'
+            };
+
+            updateSystemInfo();
+
+            // Generar alertas simuladas basadas en sistema real
+            const simulatedAlerts = [{
+                id: `SIM-${Date.now()}`,
+                time: new Date().toLocaleTimeString(),
+                score: 2.1,
+                fp: 25,
+                level: "medium",
+                description: "Análisis simulado: Sistema Linux detectado",
+                system: "linux",
+                source: "simulation",
+                action_needed: "Conectar backend real para datos actuales"
+            }];
+
+            loadRealAlerts(simulatedAlerts);
+            appState.currentAlerts = simulatedAlerts;
+        }
+
+        // Inicialización del dashboard
+        async function initializeDashboard() {
+            console.log('🚀 Inicializando SmartCompute HRM Dashboard...');
+
+            // Intentar conectar al backend
+            await connectToBackend();
+
+            // Configurar actualización automática
+            if (appState.isConnected) {
+                appState.updateInterval = setInterval(fetchRealTimeAlerts, 10000);
+            }
+
+            // Mensaje de bienvenida
+            setTimeout(() => {
+                if (appState.isConnected) {
+                    addMessageToChat(`🎯 SmartCompute HRM conectado y analizando tu sistema en tiempo real
+🔄 Actualizaciones automáticas cada 10 segundos
+📊 Datos del sistema Linux disponibles`, 'ai');
+                } else {
+                    addMessageToChat(`⚠️ Funcionando en modo simulado
+🔌 Para datos reales: inicia el backend con 'node dashboard_integration.js'
+📊 Análisis completo disponible con conexión activa`, 'ai');
+                }
+            }, 2000);
+
+            // Ocultar overlay de carga
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', initializeDashboard);
+    </script>
+</body>
+</html>

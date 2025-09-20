@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCompute HRM - Dashboard Interactivo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #16213e 0%, #0f3460 100%);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.8;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .main-dashboard {
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 20px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 212, 255, 0.2);
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .threat-score { color: #ff6b6b; }
+        .events-count { color: #4ecdc4; }
+        .false-positive { color: #45b7d1; }
+        .incidents { color: #f7b731; }
+
+        .alerts-section {
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .alerts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .alerts-header h2 {
+            font-size: 1.5em;
+            color: #00d4ff;
+        }
+
+        .alert-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .alert-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .alert-critical { border-left-color: #ff4757; }
+        .alert-high { border-left-color: #ffa502; }
+        .alert-medium { border-left-color: #f1c40f; }
+        .alert-low { border-left-color: #2ed573; }
+
+        .alert-info {
+            flex-grow: 1;
+        }
+
+        .alert-id {
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .alert-score {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .alert-action {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .action-suppress { background: #2ed573; color: #000; }
+        .action-investigate { background: #ff4757; color: #fff; }
+        .action-review { background: #ffa502; color: #000; }
+
+        .chart-container {
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 400px;
+        }
+
+        .chart-title {
+            color: #00d4ff;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .threat-chart {
+            display: flex;
+            align-items: end;
+            height: 300px;
+            gap: 8px;
+            padding: 20px 0;
+        }
+
+        .chart-bar {
+            background: linear-gradient(to top, #00d4ff, #0099cc);
+            border-radius: 4px 4px 0 0;
+            flex: 1;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 10px;
+        }
+
+        .chart-bar:hover {
+            background: linear-gradient(to top, #ff6b6b, #ee5a52);
+            transform: scaleY(1.1);
+        }
+
+        .chat-panel {
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: fit-content;
+            max-height: 800px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-header h2 {
+            color: #00d4ff;
+            margin-bottom: 5px;
+        }
+
+        .chat-status {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            border-radius: 15px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .message-ai {
+            background: linear-gradient(135deg, #0099cc, #00d4ff);
+            color: #000;
+            margin-left: 20px;
+        }
+
+        .message-user {
+            background: rgba(255, 255, 255, 0.1);
+            margin-right: 20px;
+        }
+
+        .message-timestamp {
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .chat-send {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            border: none;
+            border-radius: 25px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chat-send:hover {
+            background: linear-gradient(135deg, #0099cc, #007399);
+            transform: translateY(-2px);
+        }
+
+        .live-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #2ed573;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-online { color: #2ed573; }
+        .status-warning { color: #ffa502; }
+        .status-critical { color: #ff4757; }
+
+        .suggestions-panel {
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .suggestion-item {
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-item:hover {
+            background: rgba(0, 212, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        /* Scrollbar personalizado */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #00d4ff, #0099cc);
+            border-radius: 4px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            opacity: 0.6;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🤖 SmartCompute HRM</h1>
+        <p><span class="live-indicator"></span>Dashboard Interactivo en Tiempo Real</p>
+    </div>
+
+    <div class="container">
+        <div class="main-dashboard">
+            <!-- Métricas principales -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value threat-score" id="threatScore">1.8</div>
+                    <div class="metric-label">Threat Score Avg</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value events-count" id="eventsCount">24</div>
+                    <div class="metric-label">Eventos Procesados</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value false-positive" id="falsePositive">12%</div>
+                    <div class="metric-label">Falsos Positivos</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value incidents" id="incidents">0</div>
+                    <div class="metric-label">Incidentes Críticos</div>
+                </div>
+            </div>
+
+            <!-- Alertas actuales -->
+            <div class="alerts-section">
+                <div class="alerts-header">
+                    <h2>🚨 Alertas Actuales</h2>
+                    <span class="status-online">● Sistema Operativo</span>
+                </div>
+                <div id="alertsList">
+                    <!-- Las alertas se cargarán dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Gráfico de tendencias -->
+            <div class="chart-container">
+                <h3 class="chart-title">📈 Tendencia Threat Scores (Últimos 20 eventos)</h3>
+                <div class="threat-chart" id="threatChart">
+                    <!-- Las barras se generarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de chat -->
+        <div class="chat-panel">
+            <div class="chat-header">
+                <h2>💬 SmartCompute AI Assistant</h2>
+                <div class="chat-status">Análisis Inteligente Activo</div>
+            </div>
+
+            <div class="suggestions-panel">
+                <h4>💡 Sugerencias Inteligentes:</h4>
+                <div class="suggestion-item" onclick="sendSuggestion('¿Cuál es el riesgo actual del sistema?')">
+                    🎯 Evaluar riesgo general del sistema
+                </div>
+                <div class="suggestion-item" onclick="sendSuggestion('¿Hay falsos positivos que optimizar?')">
+                    🤖 Optimizar detección de falsos positivos
+                </div>
+                <div class="suggestion-item" onclick="sendSuggestion('¿Qué amenazas están correlacionadas?')">
+                    🔗 Analizar correlación de amenazas
+                </div>
+                <div class="suggestion-item" onclick="sendSuggestion('Estado compliance por sector')">
+                    📋 Revisar estado compliance
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <!-- Los mensajes se cargarán aquí -->
+            </div>
+
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Pregunta al sistema SmartCompute HRM..." onkeypress="handleKeyPress(event)">
+                <button class="chat-send" onclick="sendMessage()">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>SmartCompute HRM v2.0 - Protección Inteligente Adaptativa | Powered by Advanced ML & Threat Intelligence</p>
+    </div>
+
+    <script>
+        // Datos simulados de la demo
+        const demoData = {
+            alertsHistory: [
+                { id: "DEMO-8175", time: "05:41:25", score: 4.4, fp: 35, level: "critical", action: "investigate" },
+                { id: "DEMO-4913", time: "05:41:20", score: 4.4, fp: 35, level: "critical", action: "investigate" },
+                { id: "DEMO-8526", time: "05:41:15", score: 0.1, fp: 90, level: "low", action: "suppress" },
+                { id: "DEMO-5753", time: "05:41:10", score: 4.4, fp: 35, level: "critical", action: "investigate" },
+                { id: "DEMO-2534", time: "05:41:05", score: 0.1, fp: 20, level: "low", action: "review" }
+            ],
+            threatScores: [0.1, 2.1, 4.4, 0.1, 0.1, 4.4, 0.1, 0.1, 4.4, 0.1, 4.4, 0.1, 4.4, 0.1, 4.4, 4.4, 0.1, 4.4, 0.1, 4.4],
+            chatHistory: [
+                { type: "ai", message: "🤖 SmartCompute HRM iniciado. Sistema de análisis adaptativo activado.", time: "05:40:00" },
+                { type: "ai", message: "📊 Procesando eventos en tiempo real. Detección ML anti-falsos positivos activa.", time: "05:40:15" },
+                { type: "ai", message: "💡 Evento DEMO-8526 tiene 90% probabilidad de ser falso positivo. Considera ajustar las reglas de detección.", time: "05:41:15" },
+                { type: "ai", message: "📋 Compliance requerido: acciones de cumplimiento pendientes para sector financiero.", time: "05:41:18" },
+                { type: "ai", message: "📈 TENDENCIA: Alternancia entre threat scores altos y bajos detectada. Patrón de ataque intermitente posible.", time: "05:41:20" }
+            ]
+        };
+
+        // Cargar alertas
+        function loadAlerts() {
+            const alertsList = document.getElementById('alertsList');
+            alertsList.innerHTML = '';
+
+            demoData.alertsHistory.forEach(alert => {
+                const alertElement = document.createElement('div');
+                alertElement.className = `alert-item alert-${alert.level}`;
+
+                let actionClass = '';
+                let actionText = '';
+                switch(alert.action) {
+                    case 'suppress': actionClass = 'action-suppress'; actionText = '🔇 SUPRIMIR'; break;
+                    case 'investigate': actionClass = 'action-investigate'; actionText = '🚨 INVESTIGAR'; break;
+                    case 'review': actionClass = 'action-review'; actionText = '📋 REVISAR'; break;
+                }
+
+                alertElement.innerHTML = `
+                    <div class="alert-info">
+                        <div class="alert-id">${alert.id}</div>
+                        <div style="font-size: 0.9em; opacity: 0.8;">${alert.time} | Score: ${alert.score} | FP: ${alert.fp}%</div>
+                    </div>
+                    <div class="alert-action ${actionClass}">${actionText}</div>
+                `;
+
+                alertsList.appendChild(alertElement);
+            });
+        }
+
+        // Cargar gráfico de threat scores
+        function loadThreatChart() {
+            const chartContainer = document.getElementById('threatChart');
+            chartContainer.innerHTML = '';
+
+            const maxScore = Math.max(...demoData.threatScores);
+
+            demoData.threatScores.forEach((score, index) => {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                const height = (score / (maxScore || 1)) * 100;
+                bar.style.height = `${Math.max(height, 5)}%`;
+                bar.title = `Evento ${index + 1}: Score ${score}`;
+
+                chartContainer.appendChild(bar);
+            });
+        }
+
+        // Cargar historial de chat
+        function loadChatHistory() {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML = '';
+
+            demoData.chatHistory.forEach(msg => {
+                addMessageToChat(msg.message, msg.type, msg.time);
+            });
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Agregar mensaje al chat
+        function addMessageToChat(message, type = 'ai', time = null) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageElement = document.createElement('div');
+            messageElement.className = `chat-message message-${type}`;
+
+            const currentTime = time || new Date().toLocaleTimeString();
+
+            messageElement.innerHTML = `
+                <div>${message}</div>
+                <div class="message-timestamp">${currentTime}</div>
+            `;
+
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Enviar mensaje
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (message) {
+                addMessageToChat(message, 'user');
+                input.value = '';
+
+                // Simular respuesta del AI
+                setTimeout(() => {
+                    const response = generateAIResponse(message);
+                    addMessageToChat(response, 'ai');
+                }, 1000);
+            }
+        }
+
+        // Generar respuesta del AI
+        function generateAIResponse(userMessage) {
+            const responses = {
+                'riesgo': '🎯 ANÁLISIS DE RIESGO: Threat score promedio actual 1.8/10. Sistema en estado óptimo con 85% de precisión en detección de falsos positivos.',
+                'falsos positivos': '🤖 OPTIMIZACIÓN ML: Detectados 3 patrones de falsos positivos. Recomiendo ajustar umbrales para Chrome.exe y Office applications.',
+                'amenazas': '🔗 CORRELACIÓN: Detectado patrón alternante de threat scores. Posible campaña de reconocimiento con técnicas de evasión intermitente.',
+                'compliance': '📋 ESTADO COMPLIANCE: Sector financiero requiere 2 acciones SOX pendientes. Healthcare en cumplimiento HIPAA. Industrial cumple IEC62443.',
+                'tendencia': '📈 ANÁLISIS TENDENCIAL: Últimos 10 eventos muestran patrón cíclico. Threat intelligence sugiere técnicas de APT29 en 3 eventos.',
+                'sectores': '🏢 ANÁLISIS SECTORIAL: Enterprise (85% eventos) vs Industrial (15%). Costo promedio downtime: $750k/hora. SIL3 compliance activo.'
+            };
+
+            const keywords = Object.keys(responses);
+            const matchedKeyword = keywords.find(keyword =>
+                userMessage.toLowerCase().includes(keyword)
+            );
+
+            if (matchedKeyword) {
+                return responses[matchedKeyword];
+            }
+
+            return '🤖 Análisis procesado. Sistemas SmartCompute HRM operando con 99.2% disponibilidad. ¿Necesitas análisis específico de riesgo, compliance o correlación de amenazas?';
+        }
+
+        // Manejar tecla Enter
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Enviar sugerencia predefinida
+        function sendSuggestion(suggestion) {
+            document.getElementById('chatInput').value = suggestion;
+            sendMessage();
+        }
+
+        // Actualizar métricas dinámicamente
+        function updateMetrics() {
+            const metrics = ['threatScore', 'eventsCount', 'falsePositive', 'incidents'];
+
+            setInterval(() => {
+                // Simular pequeños cambios en las métricas
+                const currentThreat = parseFloat(document.getElementById('threatScore').textContent);
+                const newThreat = Math.max(0, currentThreat + (Math.random() - 0.5) * 0.2);
+                document.getElementById('threatScore').textContent = newThreat.toFixed(1);
+
+                const currentEvents = parseInt(document.getElementById('eventsCount').textContent);
+                document.getElementById('eventsCount').textContent = currentEvents + Math.floor(Math.random() * 3);
+
+                // Agregar nuevo mensaje AI ocasionalmente
+                if (Math.random() < 0.1) {
+                    const aiMessages = [
+                        "🔍 Nuevo evento analizado: Clasificado como falso positivo con 92% confianza.",
+                        "⚡ Correlación detectada: 2 eventos relacionados en ventana temporal de 5 minutos.",
+                        "📊 Métricas actualizadas: Sistema mantiene performance óptima.",
+                        "🛡️ Threat intelligence actualizada: Nuevas firmas APT incorporadas."
+                    ];
+                    const randomMessage = aiMessages[Math.floor(Math.random() * aiMessages.length)];
+                    addMessageToChat(randomMessage, 'ai');
+                }
+            }, 10000); // Actualizar cada 10 segundos
+        }
+
+        // Inicializar dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAlerts();
+            loadThreatChart();
+            loadChatHistory();
+            updateMetrics();
+
+            // Mensaje de bienvenida
+            setTimeout(() => {
+                addMessageToChat("🚀 Dashboard SmartCompute HRM cargado. Demo completada exitosamente. Puedes hacer preguntas sobre riesgo, compliance, correlación de amenazas o análisis sectorial.", 'ai');
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "detected_techniques": [
+    {
+      "technique": "CreateRemoteThread",
+      "mitre_id": "T1055.002",
+      "severity": "HIGH",
+      "confidence": 0.3333333333333333,
+      "indicators_found": 1
+    },
+    {
+      "technique": "DLL Injection",
+      "mitre_id": "T1055.001",
+      "severity": "MEDIUM",
+      "confidence": 0.3333333333333333,
+      "indicators_found": 1
+    },
+    {
+      "technique": "PE Injection",
+      "mitre_id": "T1055.002",
+      "severity": "HIGH",
+      "confidence": 0.3333333333333333,
+      "indicators_found": 1
+    }
+  ],
+  "risk_score": 4.333333333333333,
+  "context_analysis": {
+    "target_process": "chrome.exe",
+    "is_suspicious_target": true,
+    "is_trusted_source": false,
+    "timestamp_analysis": null
+  },
+  "recommended_actions": [
+    "Monitor browser/shell processes for anomalous behavior",
+    "Analyze parent process chain",
+    "Check process digital signatures",
+    "Enable advanced EDR monitoring for CreateRemoteThread API calls"
+  ]
+}
