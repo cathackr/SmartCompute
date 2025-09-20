@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCompute Industrial - $25,000/año</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .checkout-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 700px;
+            width: 90%;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .price {
+            font-size: 36px;
+            color: #f5576c;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .features {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .feature-section {
+            margin: 15px 0;
+        }
+        .feature-section h4 {
+            color: #f5576c;
+            margin-bottom: 10px;
+        }
+        .feature {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            padding-left: 10px;
+        }
+        .feature::before {
+            content: "⭐";
+            margin-right: 10px;
+        }
+        .enterprise-features .feature::before {
+            content: "✅";
+        }
+        .industrial-features .feature::before {
+            content: "🏭";
+        }
+        .contact-methods {
+            margin: 30px 0;
+        }
+        .contact-method {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .contact-method:hover {
+            border-color: #f5576c;
+            background: #fff0f2;
+        }
+        .contact-method.selected {
+            border-color: #f5576c;
+            background: #fff0f2;
+        }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .contact-info {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .value-prop {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <div class="header">
+            <div class="logo">SI</div>
+            <h1>SmartCompute Industrial</h1>
+            <div class="price">$25,000 USD/año</div>
+            <p>Infraestructura crítica + Agentes ilimitados + Soporte 24/7</p>
+        </div>
+
+        <div class="value-prop">
+            <h3>🎯 ROI Típico: $150,000/año</h3>
+            <p>Previene 1 incidente crítico ($2M promedio) + Eficiencia operacional</p>
+        </div>
+
+        <div class="features">
+            <div class="feature-section enterprise-features">
+                <h4>✅ Todo Enterprise ($15K) Incluido:</h4>
+                <div class="feature">XDR Export: CrowdStrike, Sentinel, Cisco Umbrella</div>
+                <div class="feature">AI Recommendation Engine con 89.8% éxito</div>
+                <div class="feature">SIEM Integration universal</div>
+                <div class="feature">Real Metrics: 92.4% reducción alertas</div>
+                <div class="feature">Batch export hasta 10,000 eventos/día</div>
+            </div>
+
+            <div class="feature-section industrial-features">
+                <h4>🏭 Features Industriales Exclusivos:</h4>
+                <div class="feature">Protocolos industriales: Modbus, Profinet, OPC UA</div>
+                <div class="feature">Agentes ilimitados (vs 100 en Enterprise)</div>
+                <div class="feature">Export ilimitado (vs 10K/día en Enterprise)</div>
+                <div class="feature">Custom ML Models para tu industria</div>
+                <div class="feature">Integración con sistemas de seguridad (SCADA, PLC)</div>
+                <div class="feature">24/7 Priority Support + TAM dedicado</div>
+                <div class="feature">99.9% SLA uptime (vs 99.5% en Enterprise)</div>
+                <div class="feature">On-site deployment e implementación</div>
+                <div class="feature">Certificaciones industriales (ISA/IEC 62443)</div>
+            </div>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Licencia Industrial Critical Infrastructure:</strong> Para plantas de manufactura, utilities, petróleo/gas, y infraestructura crítica. Incluye consultoría especializada y compliance regulatorio.
+        </div>
+
+        <div class="contact-methods">
+            <h3>Opciones de Contacto Especializado:</h3>
+            
+            <div class="contact-method" onclick="selectMethod('industrial')">
+                <h4>🏭 Consultoría Industrial</h4>
+                <p>Assessment completo de infraestructura crítica</p>
+                <small>Incluye: Site survey + Risk assessment + Compliance gap analysis</small>
+            </div>
+
+            <div class="contact-method" onclick="selectMethod('poc')">
+                <h4>🧪 Proof of Concept (90 días)</h4>
+                <p>Implementación piloto en ambiente productivo</p>
+                <small>Incluye: Setup completo + Training + Soporte 24/7</small>
+            </div>
+
+            <div class="contact-method" onclick="selectMethod('emergency')">
+                <h4>🚨 Emergency Implementation</h4>
+                <p>Implementación urgente post-incidente</p>
+                <small>Response < 48h + On-site deployment + Fast-track setup</small>
+            </div>
+        </div>
+
+        <button class="btn" onclick="proceedWithIndustrialContact()">
+            Contactar Industrial Sales Specialist
+        </button>
+
+        <div class="contact-info">
+            <h4>Contacto Especializado Industrial</h4>
+            <p><strong>Industrial Sales:</strong> industrial@smartcompute.io</p>
+            <p><strong>Emergency Line:</strong> +1 (555) 247-SCADA</p>
+            <p><strong>Technical Lead:</strong> <a href="https://www.linkedin.com/in/mart%C3%ADn-iribarne-swtf/" target="_blank">Martín Iribarne CEH</a></p>
+            <p><strong>Response Time:</strong> 4 horas (emergency), 12h (normal)</p>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #fff0f2; border-radius: 5px;">
+                <strong>💼 Industrial Expertise:</strong>
+                <br>• ISA/IEC 62443 Cybersecurity certified
+                <br>• 10+ years redes industriales críticas  
+                <br>• Experience: Automotive, Chemical, Power, Oil&Gas
+                <br>• Compliance: NERC CIP, NIST, EU NIS2
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedMethod = null;
+
+        function selectMethod(method) {
+            document.querySelectorAll('.contact-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            event.currentTarget.classList.add('selected');
+            selectedMethod = method;
+        }
+
+        function proceedWithIndustrialContact() {
+            if (!selectedMethod) {
+                alert('Por favor selecciona una opción de contacto industrial');
+                return;
+            }
+
+            let subject = '';
+            let body = '';
+
+            switch(selectedMethod) {
+                case 'industrial':
+                    subject = 'Industrial License Consultation - $25K Annual';
+                    body = `Hola,
+
+Solicito consultoría para SmartCompute Industrial License ($25,000/año):
+
+INFORMACIÓN CRÍTICA:
+================================
+Tipo de industria: [Automotive/Chemical/Power/Oil&Gas/Other]
+Nivel de criticidad: [Critical/High/Medium]
+Regulaciones: [NERC CIP/NIST/IEC 62443/NIS2/Other]
+
+INFRAESTRUCTURA ACTUAL:
+================================
+- PLCs/RTUs: [marca y cantidad]
+- SCADA systems: [sistema actual]
+- Network protocols: [Modbus/Profinet/OPC UA/Other]
+- SIEM actual: [sistema]
+- Agentes estimados: [cantidad]
+
+REQUERIMIENTOS TÉCNICOS:
+================================
+- Uptime requerido: [99.9%+/99.99%+]
+- Compliance needs: [certificaciones necesarias]
+- Integration scope: [sistemas críticos]
+- Timeline: [urgente/normal/planned]
+
+OBJETIVOS DE NEGOCIO:
+================================
+- Prevenir downtime no planificado
+- Cumplimiento regulatorio 
+- Mejora MTTD/MTTR
+- ROI target: [especificar]
+
+Por favor incluyan:
+✅ Site assessment proposal
+✅ Compliance gap analysis
+✅ ROI calculation específico
+✅ Implementation timeline
+✅ Support escalation plan
+✅ Referencias industria similar
+
+Contacto técnico: [nombre, cargo, teléfono]
+Contacto procurement: [nombre, cargo, email]
+
+Urgencia: [Emergency/High/Normal]
+
+Gracias,
+[Tu nombre y empresa]`;
+                    break;
+                    
+                case 'poc':
+                    subject = 'Industrial PoC Request - 90 Days Trial';
+                    body = `Hola,
+
+Solicito Proof of Concept SmartCompute Industrial (90 días):
+
+SCOPE DEL POC:
+================================
+- Duración: 90 días productivo
+- Objective: Validar ROI antes de full deployment
+- Budget allocated: [monto aprobado]
+
+INFRAESTRUCTURA PILOTO:
+================================
+- Site location: [ubicación]
+- Critical systems: [sistemas a monitorear]
+- Network scope: [segmentos de red]
+- Expected agents: [cantidad]
+- Current pain points: [problemas actuales]
+
+ÉXITO CRITERIOS:
+================================
+- Reducir false positives en X%
+- Detectar [tipo de amenazas] en <X minutos
+- Integrar con [sistema actual]
+- Demonstrar ROI de $X
+
+REQUERIMIENTOS POC:
+================================
+✅ On-site setup e implementación
+✅ Training completo equipo técnico
+✅ 24/7 support durante POC
+✅ Weekly progress reviews
+✅ Baseline metrics vs results
+✅ Final ROI report + recommendations
+
+STAKEHOLDERS:
+================================
+- Technical lead: [contacto]
+- Security manager: [contacto]  
+- Operations: [contacto]
+- Executive sponsor: [contacto]
+
+Timeline preferido: [fechas]
+
+Gracias,
+[Tu información]`;
+                    break;
+                    
+                case 'emergency':
+                    subject = 'URGENT: Emergency Industrial Implementation';
+                    body = `URGENT REQUEST - SmartCompute Industrial Emergency Deployment
+
+SITUACIÓN CRÍTICA:
+================================
+- Incident type: [Security breach/Downtime/Compliance violation]
+- Impact: [describir impacto operacional]
+- Timeline crítico: [fecha límite]
+- Regulatory pressure: [sí/no - especificar]
+
+REQUERIMIENTOS EMERGENCY:
+================================
+- Response time needed: <48 hours
+- On-site deployment: [sí/no]
+- 24/7 implementation support: Required
+- Budget pre-approved: [monto]
+
+INFRAESTRUCTURA URGENTE:
+================================
+- Critical systems affected: [listar]
+- Current gaps: [vulnerabilidades]
+- Immediate priorities: [1,2,3]
+- Compliance deadlines: [fechas]
+
+CONTACT URGENTE:
+================================
+- Primary contact: [nombre, teléfono 24h]
+- Escalation contact: [nombre, teléfono]
+- Executive sponsor: [nombre]
+- Best call time: [horario + timezone]
+
+Favor contactar en las próximas 2 horas.
+
+Emergency reference: ${Date.now()}
+
+Gracias,
+[Información de contacto completa]`;
+                    break;
+            }
+
+            const mailtoLink = `mailto:industrial@smartcompute.io?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
+        }
+    </script>
+</body>
+</html>

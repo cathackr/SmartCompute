@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCompute Enterprise - $15,000/año</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .checkout-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .price {
+            font-size: 36px;
+            color: #667eea;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .features {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .feature {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .feature::before {
+            content: "✅";
+            margin-right: 10px;
+        }
+        .payment-methods {
+            margin: 30px 0;
+        }
+        .payment-method {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .payment-method:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        .payment-method.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .contact-info {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <div class="header">
+            <div class="logo">SC</div>
+            <h1>SmartCompute Enterprise</h1>
+            <div class="price">$15,000 USD/año</div>
+            <p>Licencia para 100 agentes + Integración XDR + AI Recommendations</p>
+        </div>
+
+        <div class="features">
+            <div class="feature">XDR Export: CrowdStrike Falcon, Microsoft Sentinel, Cisco Umbrella</div>
+            <div class="feature">AI Recommendation Engine con 89.8% éxito</div>
+            <div class="feature">SIEM Integration: CEF, STIX 2.1, JSON nativo</div>
+            <div class="feature">Real Metrics: 92.4% reducción alertas, MTTD 12min</div>
+            <div class="feature">Business Hours Support + 99.5% SLA uptime</div>
+            <div class="feature">Hasta 10,000 exportaciones/día</div>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Actualización de Precios 2025:</strong> Los precios han sido actualizados para reflejar el valor real enterprise. Esta no es una compra automática - es un formulario de contacto para ventas B2B.
+        </div>
+
+        <div class="payment-methods">
+            <h3>Opciones de Contacto Comercial:</h3>
+            
+            <div class="payment-method" onclick="selectMethod('sales')">
+                <h4>📧 Contacto Directo Sales</h4>
+                <p>Respuesta en 24h - Propuesta comercial personalizada</p>
+                <small>Recomendado para empresas +500 empleados</small>
+            </div>
+
+            <div class="payment-method" onclick="selectMethod('demo')">
+                <h4>🎯 Demo Personalizada</h4>
+                <p>Presentación con tus datos reales - 45 minutos</p>
+                <small>Incluye ROI calculation personalizado</small>
+            </div>
+
+            <div class="payment-method" onclick="selectMethod('pilot')">
+                <h4>🧪 Proyecto Piloto</h4>
+                <p>30 días gratis con implementación asistida</p>
+                <small>Incluye setup completo y training</small>
+            </div>
+        </div>
+
+        <button class="btn" onclick="proceedWithContact()">
+            Contactar Sales Enterprise
+        </button>
+
+        <div class="contact-info">
+            <h4>Información de Contacto</h4>
+            <p><strong>Sales Enterprise:</strong> sales@smartcompute.io</p>
+            <p><strong>Demo Requests:</strong> demo@smartcompute.io</p>
+            <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/mart%C3%ADn-iribarne-swtf/" target="_blank">Martín Iribarne CEH</a></p>
+            <p><strong>Response Time:</strong> 24 horas hábiles</p>
+            
+            <div style="margin-top: 20px;">
+                <small>
+                    <strong>Nota:</strong> Para transacciones enterprise (+$15K), manejamos proceso de ventas personalizado con contratos, términos de pago flexibles y soporte dedicado.
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedMethod = null;
+
+        function selectMethod(method) {
+            // Remove previous selection
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Add selection to clicked method
+            event.currentTarget.classList.add('selected');
+            selectedMethod = method;
+        }
+
+        function proceedWithContact() {
+            if (!selectedMethod) {
+                alert('Por favor selecciona una opción de contacto');
+                return;
+            }
+
+            let subject = '';
+            let body = '';
+
+            switch(selectedMethod) {
+                case 'sales':
+                    subject = 'Enterprise License Inquiry - $15K Annual';
+                    body = `Hola,
+
+Estoy interesado en SmartCompute Enterprise License ($15,000/año):
+
+Información de mi empresa:
+- Nombre de empresa: [completar]
+- Número de empleados: [completar]
+- Agentes a monitorear: [completar]
+- SIEM actual: [completar]
+- Timeline de implementación: [completar]
+
+Features de interés:
+✅ XDR Export (CrowdStrike/Sentinel/Cisco)
+✅ AI Recommendations Engine
+✅ Real Performance Metrics
+✅ SIEM Integration Universal
+
+Por favor envíenme:
+- Propuesta comercial detallada
+- Términos de pago enterprise
+- Cronograma de implementación
+- Referencias de clientes
+
+Gracias,
+[Tu nombre y cargo]`;
+                    break;
+                    
+                case 'demo':
+                    subject = 'Demo Request - SmartCompute Enterprise';
+                    body = `Hola,
+
+Solicito demo personalizada de SmartCompute Enterprise:
+
+Datos para la demo:
+- Empresa: [completar]
+- SIEM actual: [completar]
+- Volumen alertas/día: [completar]
+- Principal pain point: [completar]
+
+Preferencias demo:
+- Fecha preferida: [completar]
+- Horario: [completar]
+- Asistentes: [completar]
+
+Favor incluir:
+✅ ROI calculation con nuestros datos
+✅ Export demo a nuestro SIEM
+✅ AI recommendations en acción
+✅ Métricas reales de casos similares
+
+Gracias,
+[Tu nombre y contacto]`;
+                    break;
+                    
+                case 'pilot':
+                    subject = 'Pilot Project Request - 30 Days Free';
+                    body = `Hola,
+
+Solicito proyecto piloto de SmartCompute Enterprise (30 días):
+
+Información técnica:
+- SIEM: [completar]
+- Agentes estimados: [completar]
+- Infraestructura: [completar]
+- Timeline: [completar]
+
+Objetivos del piloto:
+- Reducir falsos positivos en X%
+- Integrar con [SIEM actual]
+- Mejorar MTTD
+- Validar ROI
+
+Favor incluir en el piloto:
+✅ Setup completo asistido
+✅ Training para equipo SOC
+✅ Métricas baseline vs post-implementación
+✅ Informe final con recomendaciones
+
+Contacto técnico: [completar]
+
+Gracias,
+[Tu nombre]`;
+                    break;
+            }
+
+            const mailtoLink = `mailto:sales@smartcompute.io?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
+        }
+    </script>
+</body>
+</html>
