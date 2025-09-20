@@ -1,0 +1,1133 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCompute Industrial - Reporte de Análisis</title>
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #1e3c72;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .header .timestamp {
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #1e3c72;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title .icon {
+            margin-right: 15px;
+            font-size: 1.2em;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric-card h3 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .metric-card p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .protocols-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .protocol-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .protocol-card.detected {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .protocol-card.not-detected {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .protocol-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .status-online {
+            background: #28a745;
+        }
+
+        .status-offline {
+            background: #dc3545;
+        }
+
+        .plc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .plc-card {
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .plc-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .plc-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .plc-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.9em;
+        }
+
+        .sensors-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .sensor-card {
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .sensor-card.normal {
+            border-left: 4px solid #28a745;
+        }
+
+        .sensor-card.warning {
+            border-left: 4px solid #ffc107;
+        }
+
+        .sensor-card.critical {
+            border-left: 4px solid #dc3545;
+        }
+
+        .sensor-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .sensor-value.normal {
+            color: #28a745;
+        }
+
+        .sensor-value.warning {
+            color: #ffc107;
+        }
+
+        .sensor-value.critical {
+            color: #dc3545;
+        }
+
+        .switches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .switch-card {
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .switch-card.emergency {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .switch-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .switch-state {
+            font-weight: bold;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .state-on {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .state-off {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .state-pressed {
+            background: #dc3545;
+            color: white;
+        }
+
+        .scada-messages {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+        }
+
+        .message-item {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+
+        .message-item:last-child {
+            border-bottom: none;
+        }
+
+        .message-priority {
+            width: 8px;
+            height: 40px;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+        .priority-low {
+            background: #28a745;
+        }
+
+        .priority-medium {
+            background: #ffc107;
+        }
+
+        .priority-high {
+            background: #fd7e14;
+        }
+
+        .priority-critical {
+            background: #dc3545;
+        }
+
+        .alerts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .alert-item {
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            display: flex;
+            align-items: center;
+        }
+
+        .alert-item.high {
+            background: #fff5f5;
+            border-color: #dc3545;
+        }
+
+        .alert-item.medium {
+            background: #fff8e1;
+            border-color: #ffc107;
+        }
+
+        .alert-item.low {
+            background: #f3f4f6;
+            border-color: #6c757d;
+        }
+
+        .recommendations-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .recommendation-card {
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .recommendation-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .recommendation-content {
+            padding: 20px;
+            display: none;
+        }
+
+        .recommendation-content.active {
+            display: block;
+        }
+
+        .standard-badge {
+            background: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .priority-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .priority-critical {
+            background: #dc3545;
+            color: white;
+        }
+
+        .priority-high {
+            background: #fd7e14;
+            color: white;
+        }
+
+        .priority-medium {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .technical-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .recommendation-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .recommendation-list li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .recommendation-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .chart-container {
+            margin: 20px 0;
+            height: 300px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .protocols-grid,
+            .plc-grid,
+            .sensors-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="header">
+            <h1>🏭 SmartCompute Industrial</h1>
+            <div class="subtitle">Reporte de Análisis de Sistemas Industriales</div>
+            <div class="timestamp">
+                📅 Generado: 2025-09-18T09:40:34.791612 | ⏱️ Duración: 0.0s
+            </div>
+        </div>
+        
+        
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">📊</span>
+                Resumen General del Sistema
+            </h2>
+            <div class="overview-grid">
+                <div class="metric-card">
+                    <h3>3</h3>
+                    <p>Protocolos Detectados</p>
+                </div>
+                <div class="metric-card">
+                    <h3>2</h3>
+                    <p>PLCs Descubiertos</p>
+                </div>
+                <div class="metric-card">
+                    <h3>8</h3>
+                    <p>Sensores Activos</p>
+                </div>
+                <div class="metric-card">
+                    <h3>11</h3>
+                    <p>Mensajes SCADA</p>
+                </div>
+                <div class="metric-card">
+                    <h3>0</h3>
+                    <p>Alertas Generadas</p>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">🔌</span>
+                Protocolos Industriales
+            </h2>
+            <div class="protocols-grid">
+                
+            <div class="protocol-card detected">
+                <div class="protocol-status status-online"></div>
+                <h4>Modbus TCP</h4>
+                <p><strong>Puerto:</strong> 502</p>
+                <p><strong>Descripción:</strong> Protocolo Modbus sobre TCP/IP</p>
+                <p><strong>Estado:</strong> Detectado</p>
+                <p><strong>Tráfico:</strong> 93 conexiones</p>
+                <p><strong>Última detección:</strong> 2025-09-18T09:40:34.792449</p>
+            </div>
+            
+            <div class="protocol-card not-detected">
+                <div class="protocol-status status-offline"></div>
+                <h4>EtherNet/IP</h4>
+                <p><strong>Puerto:</strong> 44818</p>
+                <p><strong>Descripción:</strong> Protocolo EtherNet/IP (Allen-Bradley)</p>
+                <p><strong>Estado:</strong> No detectado</p>
+                
+                
+            </div>
+            
+            <div class="protocol-card detected">
+                <div class="protocol-status status-online"></div>
+                <h4>PROFINET</h4>
+                <p><strong>Puerto:</strong> 102</p>
+                <p><strong>Descripción:</strong> Protocolo PROFINET (Siemens)</p>
+                <p><strong>Estado:</strong> Detectado</p>
+                <p><strong>Tráfico:</strong> 75 conexiones</p>
+                <p><strong>Última detección:</strong> 2025-09-18T09:40:34.792461</p>
+            </div>
+            
+            <div class="protocol-card detected">
+                <div class="protocol-status status-online"></div>
+                <h4>OPC UA</h4>
+                <p><strong>Puerto:</strong> 4840</p>
+                <p><strong>Descripción:</strong> OPC Unified Architecture</p>
+                <p><strong>Estado:</strong> Detectado</p>
+                <p><strong>Tráfico:</strong> 13 conexiones</p>
+                <p><strong>Última detección:</strong> 2025-09-18T09:40:34.792427</p>
+            </div>
+            
+            <div class="protocol-card not-detected">
+                <div class="protocol-status status-offline"></div>
+                <h4>DNP3</h4>
+                <p><strong>Puerto:</strong> 20000</p>
+                <p><strong>Descripción:</strong> Distributed Network Protocol 3</p>
+                <p><strong>Estado:</strong> No detectado</p>
+                
+                
+            </div>
+            
+            <div class="protocol-card not-detected">
+                <div class="protocol-status status-offline"></div>
+                <h4>BACnet</h4>
+                <p><strong>Puerto:</strong> 47808</p>
+                <p><strong>Descripción:</strong> Building Automation and Control Networks</p>
+                <p><strong>Estado:</strong> No detectado</p>
+                
+                
+            </div>
+            
+            <div class="protocol-card not-detected">
+                <div class="protocol-status status-offline"></div>
+                <h4>S7comm</h4>
+                <p><strong>Puerto:</strong> 102</p>
+                <p><strong>Descripción:</strong> Siemens S7 Communication</p>
+                <p><strong>Estado:</strong> No detectado</p>
+                
+                
+            </div>
+            
+            <div class="protocol-card not-detected">
+                <div class="protocol-status status-offline"></div>
+                <h4>FINS</h4>
+                <p><strong>Puerto:</strong> 9600</p>
+                <p><strong>Descripción:</strong> Factory Interface Network Service (Omron)</p>
+                <p><strong>Estado:</strong> No detectado</p>
+                
+                
+            </div>
+            
+            </div>
+        </div>
+        
+        
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">🤖</span>
+                Controladores PLC
+            </h2>
+            <div class="plc-grid">
+                
+            <div class="plc-card">
+                <div class="plc-header">
+                    <div class="plc-status status-online"></div>
+                    <h4>Allen-Bradley CompactLogix 5380</h4>
+                </div>
+                <div class="plc-info">
+                    <div><strong>IP:</strong> 192.168.1.100</div>
+                    <div><strong>MAC:</strong> 00:1B:1B:12:34:56</div>
+                    <div><strong>Protocolo:</strong> EtherNet/IP</div>
+                    <div><strong>Firmware:</strong> V32.011</div>
+                    <div><strong>Estado:</strong> Online</div>
+                    <div><strong>Rack/Slot:</strong> 0/1</div>
+                    <div><strong>Última comunicación:</strong> 2025-09-18T09:40:34.792472</div>
+                    <div><strong>Errores:</strong> 0</div>
+                </div>
+            </div>
+            
+            <div class="plc-card">
+                <div class="plc-header">
+                    <div class="plc-status status-online"></div>
+                    <h4>Siemens S7-1515-2 PN</h4>
+                </div>
+                <div class="plc-info">
+                    <div><strong>IP:</strong> 192.168.1.101</div>
+                    <div><strong>MAC:</strong> 00:0F:25:78:9A:BC</div>
+                    <div><strong>Protocolo:</strong> PROFINET</div>
+                    <div><strong>Firmware:</strong> V2.8.1</div>
+                    <div><strong>Estado:</strong> Online</div>
+                    <div><strong>Rack/Slot:</strong> 0/2</div>
+                    <div><strong>Última comunicación:</strong> 2025-09-18T09:40:34.792477</div>
+                    <div><strong>Errores:</strong> 0</div>
+                </div>
+            </div>
+            
+            </div>
+        </div>
+        
+        
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">📡</span>
+                Sensores en Tiempo Real
+            </h2>
+            <div class="chart-container">
+                <canvas id="sensorsChart"></canvas>
+            </div>
+            <div class="sensors-container">
+                
+            <div class="sensor-card warning">
+                <h4>Temperatura Reactor</h4>
+                <div class="sensor-value warning">78.55 °C</div>
+                <p><strong>Tipo:</strong> Temperature</p>
+                <p><strong>Ubicación:</strong> Línea 1</p>
+                <p><strong>Estado:</strong> Warning</p>
+                <p><strong>Umbrales:</strong> 15.0 - 85.0 °C</p>
+                <p><strong>Actualizado:</strong> 2025-09-18T09:40:34.792512</p>
+            </div>
+            
+            <div class="sensor-card normal">
+                <h4>Humedad Ambiente</h4>
+                <div class="sensor-value normal">52.13 %</div>
+                <p><strong>Tipo:</strong> Humidity</p>
+                <p><strong>Ubicación:</strong> Línea 5</p>
+                <p><strong>Estado:</strong> Normal</p>
+                <p><strong>Umbrales:</strong> 30.0 - 80.0 %</p>
+                <p><strong>Actualizado:</strong> 2025-09-18T09:40:34.792521</p>
+            </div>
+            
+            <div class="sensor-card normal">
+                <h4>Presión Hidráulica</h4>
+                <div class="sensor-value normal">20.13 bar</div>
+                <p><strong>Tipo:</strong> Pressure</p>
+                <p><strong>Ubicación:</strong> Línea 1</p>
+                <p><strong>Estado:</strong> Normal</p>
+                <p><strong>Umbrales:</strong> 0.0 - 50.0 bar</p>
+                <p><strong>Actualizado:</strong> 2025-09-18T09:40:34.792528</p>
+            </div>
+            
+            <div class="sensor-card warning">
+                <h4>Voltaje Motor A</h4>
+                <div class="sensor-value warning">225.91 V</div>
+                <p><strong>Tipo:</strong> Voltage</p>
+                <p><strong>Ubicación:</strong> Línea 3</p>
+                <p><strong>Estado:</strong> Warning</p>
+                <p><strong>Umbrales:</strong> 200.0 - 240.0 V</p>
+                <p><strong>Actualizado:</strong> 2025-09-18T09:40:34.792533</p>
+            </div>
+            
+            <div class="sensor-card normal">
+                <h4>Corriente Bomba</h4>
+                <div class="sensor-value normal">6.62 A</div>
+                <p><strong>Tipo:</strong> Current</p>
+                <p><strong>Ubicación:</strong> Línea 2</p>
+                <p><strong>Estado:</strong> Normal</p>
+                <p><strong>Umbrales:</strong> 5.0 - 15.0 A</p>
+                <p><strong>Actualizado:</strong> 2025-09-18T09:40:34.792555</p>
+            </div>
+            
+            <div class="sensor-card normal">
+                <h4>Flujo Agua</h4>
+                <div class="sensor-value normal">36.74 L/min</div>
+                <p><strong>Tipo:</strong> Flow</p>
+                <p><strong>Ubicación:</strong> Línea 2</p>
+                <p><strong>Estado:</strong> Normal</p>
+                <p><strong>Umbrales:</strong> 10.0 - 100.0 L/min</p>
+                <p><strong>Actualizado:</strong> 2025-09-18T09:40:34.792567</p>
+            </div>
+            
+            <div class="sensor-card normal">
+                <h4>Vibración Eje</h4>
+                <div class="sensor-value normal">5.62 mm/s</div>
+                <p><strong>Tipo:</strong> Vibration</p>
+                <p><strong>Ubicación:</strong> Línea 3</p>
+                <p><strong>Estado:</strong> Normal</p>
+                <p><strong>Umbrales:</strong> 0.0 - 10.0 mm/s</p>
+                <p><strong>Actualizado:</strong> 2025-09-18T09:40:34.792572</p>
+            </div>
+            
+            <div class="sensor-card normal">
+                <h4>Velocidad Motor</h4>
+                <div class="sensor-value normal">1661.22 RPM</div>
+                <p><strong>Tipo:</strong> Speed</p>
+                <p><strong>Ubicación:</strong> Línea 3</p>
+                <p><strong>Estado:</strong> Normal</p>
+                <p><strong>Umbrales:</strong> 1000 - 3000 RPM</p>
+                <p><strong>Actualizado:</strong> 2025-09-18T09:40:34.792592</p>
+            </div>
+            
+            </div>
+        </div>
+
+        <script>
+            // Datos para gráfico de sensores
+            const sensorsData = {"labels": ["Temperature", "Humidity", "Pressure", "Voltage", "Current", "Flow", "Vibration", "Speed"], "datasets": [{"label": "Valores de Sensores", "data": [78.55, 52.13, 20.13, 225.91, 6.62, 36.74, 5.62, 1661.22], "backgroundColor": ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40", "#FF6384", "#C9CBCF"]}]};
+            
+        const ctx = document.getElementById('sensorsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: sensorsData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Valores Promedio por Tipo de Sensor'
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+        
+        </script>
+        
+        
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">🎛️</span>
+                Interruptores Manuales
+            </h2>
+            <div class="switches-grid">
+                
+            <div class="switch-card emergency">
+                <div class="switch-icon">🚨</div>
+                <h4>Parada Emergencia Línea 1</h4>
+                <div class="switch-state state-on">Released</div>
+                <p><strong>Tipo:</strong> Emergency Stop</p>
+                <p><strong>Ubicación:</strong> Panel 3</p>
+                <p><strong>Último cambio:</strong> 2025-09-18T09:40:34.792724</p>
+                
+            </div>
+            
+            <div class="switch-card ">
+                <div class="switch-icon">🔄</div>
+                <h4>Selector Modo Auto/Manual</h4>
+                <div class="switch-state state-off">Off</div>
+                <p><strong>Tipo:</strong> Selector</p>
+                <p><strong>Ubicación:</strong> Panel 3</p>
+                <p><strong>Último cambio:</strong> 2025-09-18T09:40:34.792732</p>
+                
+            </div>
+            
+            <div class="switch-card ">
+                <div class="switch-icon">🔘</div>
+                <h4>Botón Reset Alarmas</h4>
+                <div class="switch-state state-on">On</div>
+                <p><strong>Tipo:</strong> Pushbutton</p>
+                <p><strong>Ubicación:</strong> Panel 2</p>
+                <p><strong>Último cambio:</strong> 2025-09-18T09:40:34.792736</p>
+                
+            </div>
+            
+            <div class="switch-card ">
+                <div class="switch-icon">⚡</div>
+                <h4>Interruptor Principal</h4>
+                <div class="switch-state state-on">On</div>
+                <p><strong>Tipo:</strong> Main Switch</p>
+                <p><strong>Ubicación:</strong> Panel 3</p>
+                <p><strong>Último cambio:</strong> 2025-09-18T09:40:34.792738</p>
+                
+            </div>
+            
+            <div class="switch-card emergency">
+                <div class="switch-icon">🚨</div>
+                <h4>Parada Emergencia Línea 2</h4>
+                <div class="switch-state state-on">Released</div>
+                <p><strong>Tipo:</strong> Emergency Stop</p>
+                <p><strong>Ubicación:</strong> Panel 2</p>
+                <p><strong>Último cambio:</strong> 2025-09-18T09:40:34.792741</p>
+                
+            </div>
+            
+            <div class="switch-card ">
+                <div class="switch-icon">🔘</div>
+                <h4>Botón Inicio Ciclo</h4>
+                <div class="switch-state state-on">On</div>
+                <p><strong>Tipo:</strong> Pushbutton</p>
+                <p><strong>Ubicación:</strong> Panel 1</p>
+                <p><strong>Último cambio:</strong> 2025-09-18T09:40:34.792744</p>
+                
+            </div>
+            
+            </div>
+        </div>
+        
+        
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">💬</span>
+                Mensajes SCADA (11)
+            </h2>
+            <div class="scada-messages">
+                
+            <div class="message-item">
+                <div class="message-priority priority-high"></div>
+                <div style="flex-grow: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <strong>HMI_001 → PLC_001</strong>
+                        <span>⏳</span>
+                    </div>
+                    <div><strong>Tipo:</strong> Alarm</div>
+                    <div><strong>Contenido:</strong> Temperatura alta en reactor</div>
+                    <div><strong>Prioridad:</strong> High</div>
+                    <div style="color: #6c757d; font-size: 0.9em;">2025-09-18T09:40:34.792799</div>
+                </div>
+            </div>
+            
+            <div class="message-item">
+                <div class="message-priority priority-critical"></div>
+                <div style="flex-grow: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <strong>SAFETY_SYS → ALL</strong>
+                        <span>⏳</span>
+                    </div>
+                    <div><strong>Tipo:</strong> Emergency</div>
+                    <div><strong>Contenido:</strong> Sistema de seguridad activado</div>
+                    <div><strong>Prioridad:</strong> Critical</div>
+                    <div style="color: #6c757d; font-size: 0.9em;">2025-09-18T09:40:34.792804</div>
+                </div>
+            </div>
+            
+            <div class="message-item">
+                <div class="message-priority priority-critical"></div>
+                <div style="flex-grow: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <strong>PLC_001 → MAINTENANCE</strong>
+                        <span>✅</span>
+                    </div>
+                    <div><strong>Tipo:</strong> Error</div>
+                    <div><strong>Contenido:</strong> Fallo comunicación módulo I/O</div>
+                    <div><strong>Prioridad:</strong> Critical</div>
+                    <div style="color: #6c757d; font-size: 0.9em;">2025-09-18T09:40:34.792807</div>
+                </div>
+            </div>
+            
+            <div class="message-item">
+                <div class="message-priority priority-medium"></div>
+                <div style="flex-grow: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <strong>OPERATOR → PLC_002</strong>
+                        <span>✅</span>
+                    </div>
+                    <div><strong>Tipo:</strong> Command</div>
+                    <div><strong>Contenido:</strong> Cambio a modo manual solicitado</div>
+                    <div><strong>Prioridad:</strong> Medium</div>
+                    <div style="color: #6c757d; font-size: 0.9em;">2025-09-18T09:40:34.792810</div>
+                </div>
+            </div>
+            
+            <div class="message-item">
+                <div class="message-priority priority-low"></div>
+                <div style="flex-grow: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <strong>PLC_002 → SCADA_SRV</strong>
+                        <span>⏳</span>
+                    </div>
+                    <div><strong>Tipo:</strong> Status</div>
+                    <div><strong>Contenido:</strong> Bomba B iniciada correctamente</div>
+                    <div><strong>Prioridad:</strong> Low</div>
+                    <div style="color: #6c757d; font-size: 0.9em;">2025-09-18T09:40:34.792812</div>
+                </div>
+            </div>
+            
+            <div class="message-item">
+                <div class="message-priority priority-critical"></div>
+                <div style="flex-grow: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <strong>PLC_001 → MAINTENANCE</strong>
+                        <span>✅</span>
+                    </div>
+                    <div><strong>Tipo:</strong> Error</div>
+                    <div><strong>Contenido:</strong> Fallo comunicación módulo I/O</div>
+                    <div><strong>Prioridad:</strong> Critical</div>
+                    <div style="color: #6c757d; font-size: 0.9em;">2025-09-18T09:40:34.792815</div>
+                </div>
+            </div>
+            
+            <div class="message-item">
+                <div class="message-priority priority-critical"></div>
+                <div style="flex-grow: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <strong>SAFETY_SYS → ALL</strong>
+                        <span>✅</span>
+                    </div>
+                    <div><strong>Tipo:</strong> Emergency</div>
+                    <div><strong>Contenido:</strong> Sistema de seguridad activado</div>
+                    <div><strong>Prioridad:</strong> Critical</div>
+                    <div style="color: #6c757d; font-size: 0.9em;">2025-09-18T09:40:34.792818</div>
+                </div>
+            </div>
+            
+            <div class="message-item">
+                <div class="message-priority priority-high"></div>
+                <div style="flex-grow: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <strong>HMI_001 → PLC_001</strong>
+                        <span>✅</span>
+                    </div>
+                    <div><strong>Tipo:</strong> Alarm</div>
+                    <div><strong>Contenido:</strong> Temperatura alta en reactor</div>
+                    <div><strong>Prioridad:</strong> High</div>
+                    <div style="color: #6c757d; font-size: 0.9em;">2025-09-18T09:40:34.792822</div>
+                </div>
+            </div>
+            
+            <div class="message-item">
+                <div class="message-priority priority-critical"></div>
+                <div style="flex-grow: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <strong>PLC_001 → MAINTENANCE</strong>
+                        <span>⏳</span>
+                    </div>
+                    <div><strong>Tipo:</strong> Error</div>
+                    <div><strong>Contenido:</strong> Fallo comunicación módulo I/O</div>
+                    <div><strong>Prioridad:</strong> Critical</div>
+                    <div style="color: #6c757d; font-size: 0.9em;">2025-09-18T09:40:34.792826</div>
+                </div>
+            </div>
+            
+            <div class="message-item">
+                <div class="message-priority priority-high"></div>
+                <div style="flex-grow: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <strong>HMI_001 → PLC_001</strong>
+                        <span>✅</span>
+                    </div>
+                    <div><strong>Tipo:</strong> Alarm</div>
+                    <div><strong>Contenido:</strong> Temperatura alta en reactor</div>
+                    <div><strong>Prioridad:</strong> High</div>
+                    <div style="color: #6c757d; font-size: 0.9em;">2025-09-18T09:40:34.792829</div>
+                </div>
+            </div>
+            
+            <div class="message-item">
+                <div class="message-priority priority-critical"></div>
+                <div style="flex-grow: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <strong>SAFETY_SYS → ALL</strong>
+                        <span>⏳</span>
+                    </div>
+                    <div><strong>Tipo:</strong> Emergency</div>
+                    <div><strong>Contenido:</strong> Sistema de seguridad activado</div>
+                    <div><strong>Prioridad:</strong> Critical</div>
+                    <div style="color: #6c757d; font-size: 0.9em;">2025-09-18T09:40:34.792831</div>
+                </div>
+            </div>
+            
+            </div>
+        </div>
+        
+        
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">🚨</span>
+                Alertas del Sistema (0)
+            </h2>
+            <div class="alerts-container">
+                <p>No hay alertas activas en el sistema.</p>
+            </div>
+        </div>
+        
+        
+        <div class="section">
+            <h2 class="section-title">
+                <span class="icon">📋</span>
+                Recomendaciones ISA/IEC (4)
+            </h2>
+            <div class="recommendations-container">
+                
+            <div class="recommendation-card">
+                <div class="recommendation-header" onclick="toggleRecommendation(0)">
+                    <div>
+                        <span class="standard-badge">ISA-95</span>
+                        <span class="priority-badge priority-high">High</span>
+                        <h4 style="margin: 10px 0 5px 0;">Integración Sistema de Control Empresarial</h4>
+                        <p style="margin: 0; color: #6c757d;">Implementar arquitectura ISA-95 para mejor integración entre niveles</p>
+                    </div>
+                    <span id="toggle-0">▼</span>
+                </div>
+                <div class="recommendation-content" id="content-0">
+                    <div class='technical-details'><h5>Detalles Técnicos:</h5><ul><li>Definir claramente los niveles 0-4 de la pirámide de automatización</li><li>Implementar interfaces estándar entre MES y sistemas de control</li><li>Establecer modelos de datos consistentes para intercambio de información</li></ul></div>
+                    <h5>Recomendaciones:</h5><ul class='recommendation-list'><li>Configurar gateway OPC UA para comunicación entre niveles</li><li>Implementar base de datos histórica centralizada</li><li>Definir workflows de producción estándar</li></ul>
+                    <p><strong>Aplicable a:</strong> PLC Systems, SCADA, MES Integration</p>
+                </div>
+            </div>
+            
+            <div class="recommendation-card">
+                <div class="recommendation-header" onclick="toggleRecommendation(1)">
+                    <div>
+                        <span class="standard-badge">IEC 61511</span>
+                        <span class="priority-badge priority-critical">Critical</span>
+                        <h4 style="margin: 10px 0 5px 0;">Safety Instrumented Systems (SIS)</h4>
+                        <p style="margin: 0; color: #6c757d;">Implementar sistemas instrumentados de seguridad según IEC 61511</p>
+                    </div>
+                    <span id="toggle-1">▼</span>
+                </div>
+                <div class="recommendation-content" id="content-1">
+                    <div class='technical-details'><h5>Detalles Técnicos:</h5><ul><li>Realizar análisis SIL (Safety Integrity Level) para funciones críticas</li><li>Implementar arquitectura 2oo3 para sistemas críticos</li><li>Establecer procedimientos de prueba periódica automática</li></ul></div>
+                    <h5>Recomendaciones:</h5><ul class='recommendation-list'><li>Configurar sistemas de parada de emergencia independientes</li><li>Implementar diagnósticos automáticos de seguridad</li><li>Establecer bypass controlado con autorización</li></ul>
+                    <p><strong>Aplicable a:</strong> Emergency Stop Systems, Safety PLCs, Process Interlocks</p>
+                </div>
+            </div>
+            
+            <div class="recommendation-card">
+                <div class="recommendation-header" onclick="toggleRecommendation(2)">
+                    <div>
+                        <span class="standard-badge">IEC 62443</span>
+                        <span class="priority-badge priority-high">High</span>
+                        <h4 style="margin: 10px 0 5px 0;">Ciberseguridad en Redes Industriales</h4>
+                        <p style="margin: 0; color: #6c757d;">Implementar medidas de ciberseguridad según IEC 62443</p>
+                    </div>
+                    <span id="toggle-2">▼</span>
+                </div>
+                <div class="recommendation-content" id="content-2">
+                    <div class='technical-details'><h5>Detalles Técnicos:</h5><ul><li>Establecer zonas y conductos de seguridad (Security Zones & Conduits)</li><li>Implementar autenticación y autorización robusta</li><li>Configurar monitoreo continuo de amenazas</li></ul></div>
+                    <h5>Recomendaciones:</h5><ul class='recommendation-list'><li>Segmentar redes industriales con firewalls especializados</li><li>Implementar autenticación de dos factores para acceso a PLCs</li><li>Configurar logging y monitoreo de eventos de seguridad</li></ul>
+                    <p><strong>Aplicable a:</strong> Network Infrastructure, PLC Access, SCADA Systems</p>
+                </div>
+            </div>
+            
+            <div class="recommendation-card">
+                <div class="recommendation-header" onclick="toggleRecommendation(3)">
+                    <div>
+                        <span class="standard-badge">ISA-101</span>
+                        <span class="priority-badge priority-medium">Medium</span>
+                        <h4 style="margin: 10px 0 5px 0;">Interfaz Humano-Máquina</h4>
+                        <p style="margin: 0; color: #6c757d;">Optimizar interfaces de usuario según principios ISA-101</p>
+                    </div>
+                    <span id="toggle-3">▼</span>
+                </div>
+                <div class="recommendation-content" id="content-3">
+                    <div class='technical-details'><h5>Detalles Técnicos:</h5><ul><li>Implementar jerarquía de pantallas según filosofía de operación</li><li>Usar colores y símbolos estándar para indicación de estados</li><li>Minimizar sobrecarga de información en pantallas críticas</li></ul></div>
+                    <h5>Recomendaciones:</h5><ul class='recommendation-list'><li>Rediseñar pantallas SCADA con navegación intuitiva</li><li>Implementar sistema de alarmas por prioridad</li><li>Configurar pantallas de visión general (overview) efectivas</li></ul>
+                    <p><strong>Aplicable a:</strong> SCADA Interface, HMI Panels, Operator Workstations</p>
+                </div>
+            </div>
+            
+            </div>
+        </div>
+        
+        
+        <div class="section" style="text-align: center; background: rgba(255, 255, 255, 0.9);">
+            <p style="color: #6c757d;">
+                SmartCompute Industrial v1.0.0 |
+                Generado el 2025-09-18 09:40:34 |
+                © 2025 SmartCompute Security Solutions
+            </p>
+        </div>
+        
+    </div>
+
+    <script>
+        
+        function toggleRecommendation(index) {
+            const content = document.getElementById('content-' + index);
+            const toggle = document.getElementById('toggle-' + index);
+
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                toggle.textContent = '▼';
+            } else {
+                content.classList.add('active');
+                toggle.textContent = '▲';
+            }
+        }
+
+        // Auto-refresh para datos en tiempo real (opcional)
+        function refreshData() {
+            console.log('Refreshing data...');
+            // Implementar lógica de actualización en tiempo real si es necesario
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('SmartCompute Industrial Report loaded');
+
+            // Agregar animaciones suaves
+            const cards = document.querySelectorAll('.sensor-card, .plc-card, .protocol-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+        
+    </script>
+</body>
+</html>

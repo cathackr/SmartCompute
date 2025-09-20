@@ -1,0 +1,10 @@
+{
+  "generated_datasets": 2,
+  "total_test_cases": 15,
+  "files": {
+    "basic": "datasets/synthetic/basic_matrices.json",
+    "special": "datasets/synthetic/special_matrices.json"
+  },
+  "generated_at": "2025-08-27T19:18:19.715272",
+  "seed": 42
+}

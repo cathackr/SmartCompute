@@ -1,0 +1,202 @@
+{
+  "event_id": 8,
+  "timestamp": null,
+  "analysis_modules": {
+    "advanced_detection": {
+      "detected_techniques": [
+        {
+          "technique": "CreateRemoteThread",
+          "mitre_id": "T1055.002",
+          "severity": "HIGH",
+          "confidence": 0.3333333333333333,
+          "indicators_found": 1
+        },
+        {
+          "technique": "DLL Injection",
+          "mitre_id": "T1055.001",
+          "severity": "MEDIUM",
+          "confidence": 0.3333333333333333,
+          "indicators_found": 1
+        },
+        {
+          "technique": "PE Injection",
+          "mitre_id": "T1055.002",
+          "severity": "HIGH",
+          "confidence": 0.3333333333333333,
+          "indicators_found": 1
+        }
+      ],
+      "risk_score": 4.333333333333333,
+      "context_analysis": {
+        "target_process": "chrome.exe",
+        "is_suspicious_target": true,
+        "is_trusted_source": false,
+        "timestamp_analysis": null
+      },
+      "recommended_actions": [
+        "Monitor browser/shell processes for anomalous behavior",
+        "Analyze parent process chain",
+        "Check process digital signatures",
+        "Enable advanced EDR monitoring for CreateRemoteThread API calls"
+      ]
+    },
+    "behavioral_analysis": {
+      "behavioral_score": 0.25,
+      "anomalies_detected": [],
+      "context_insights": {
+        "process": {
+          "process_name": "chrome.exe",
+          "is_known_process": true,
+          "parent_chain_anomaly": false,
+          "resource_usage_anomaly": false,
+          "behavioral_anomalies": []
+        },
+        "user": {
+          "user": "unknown",
+          "host": "unknown",
+          "is_known_user": false,
+          "location_anomaly": false,
+          "time_anomaly": false,
+          "behavioral_anomalies": [
+            "unknown_user"
+          ]
+        },
+        "network": {
+          "source_ip": "unknown",
+          "host": "unknown",
+          "is_internal_ip": true,
+          "geolocation_anomaly": false,
+          "behavioral_anomalies": []
+        },
+        "temporal": {
+          "timestamp": "",
+          "day_of_week": null,
+          "hour_of_day": null,
+          "is_business_hours": false,
+          "temporal_anomalies": []
+        }
+      },
+      "risk_factors": [],
+      "behavioral_recommendation": []
+    },
+    "ml_false_positive": {
+      "false_positive_probability": 0.85,
+      "confidence_level": "HIGH",
+      "evidence": [
+        "chrome_in_legitimate_location",
+        "legitimate_keywords_found_1",
+        "chrome_createremotethread_pattern",
+        "low_behavioral_anomaly",
+        "known_process"
+      ],
+      "recommendation": "LIKELY_FALSE_POSITIVE: Consider suppressing or lowering priority",
+      "detailed_scores": {
+        "process_legitimacy": 3.0,
+        "temporal_legitimacy": 0.0,
+        "description_legitimacy": 2.5,
+        "behavioral_legitimacy": 3.0
+      }
+    },
+    "threat_intelligence": {
+      "ioc_matches": [
+        {
+          "ioc_type": "technique_indicator",
+          "matched_value": "createremotethread",
+          "confidence": 0.7,
+          "associated_threats": [
+            "T1055.002"
+          ],
+          "source": "Pattern Matching"
+        }
+      ],
+      "technique_analysis": {
+        "identified_techniques": [
+          {
+            "technique_id": "T1055.002",
+            "technique_name": "Portable Executable Injection",
+            "confidence": 0.8,
+            "evidence": "CreateRemoteThread API call observed"
+          },
+          {
+            "technique_id": "T1055",
+            "technique_name": "Process Injection",
+            "confidence": 0.9,
+            "evidence": "Process injection behavior detected"
+          }
+        ],
+        "tactic_coverage": [
+          "Defense Evasion",
+          "Privilege Escalation"
+        ],
+        "kill_chain_stage": "Actions on Objectives"
+      },
+      "threat_actor_attribution": [
+        {
+          "threat_actor": "APT29",
+          "aliases": [
+            "Cozy Bear",
+            "The Dukes"
+          ],
+          "confidence": 0.45,
+          "matching_techniques": [
+            "T1055",
+            "T1055.002"
+          ],
+          "target_sectors": [
+            "Government",
+            "Healthcare",
+            "Technology"
+          ]
+        },
+        {
+          "threat_actor": "Cobalt Strike Users",
+          "aliases": [
+            "CS Teams"
+          ],
+          "confidence": 0.2333333333333333,
+          "matching_techniques": [
+            "T1055.002"
+          ],
+          "target_sectors": [
+            "Finance",
+            "Healthcare",
+            "Government"
+          ]
+        }
+      ],
+      "risk_assessment": {
+        "threat_score": 0.6000000000000001,
+        "risk_level": "HIGH",
+        "risk_factors": [
+          "IOC match: technique_indicator",
+          "MITRE technique: T1055.002",
+          "MITRE technique: T1055",
+          "Threat actor attribution: APT29",
+          "Threat actor attribution: Cobalt Strike Users"
+        ],
+        "recommendation": "HIGH_PRIORITY: Likely malicious activity - escalate to security team"
+      },
+      "contextual_indicators": [
+        "browser_targeting",
+        "critical_severity_event"
+      ]
+    }
+  },
+  "final_assessment": {
+    "final_risk_score": 0.195,
+    "risk_level": "LOW",
+    "confidence_level": "HIGH_FALSE_POSITIVE",
+    "false_positive_probability": 0.85,
+    "requires_response": false,
+    "recommendation": {
+      "action": "SUPPRESS_ALERT",
+      "reasoning": "85%+ probabilidad de falso positivo. Evento t\u00edpico de Chrome con CreateRemoteThread para extensiones.",
+      "next_steps": [
+        "Suprimir alerta o reducir prioridad",
+        "Actualizar reglas de detecci\u00f3n para reducir ruido",
+        "Monitorear patrones similares para refinamiento"
+      ]
+    },
+    "summary": "Detecci\u00f3n de CreateRemoteThread, DLL Injection, PE Injection en proceso Chrome. \u26a0\ufe0f FALSO POSITIVO (probabilidad: 85.0%) - Actividad leg\u00edtima de extensiones Chrome."
+  }
+}

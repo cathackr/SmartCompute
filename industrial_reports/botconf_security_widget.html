@@ -1,0 +1,588 @@
+<!-- BotConf 2024 Security Widget -->
+<div class="widget-card botconf-widget">
+    <div class="widget-header">
+        <div class="widget-title">
+            <div class="widget-icon botconf-icon">
+                <i class="fas fa-shield-virus"></i>
+            </div>
+            🔬 BotConf 2024 - Detección Electromagnética
+        </div>
+        <div class="botconf-badge">
+            <span class="research-badge">RESEARCH</span>
+            <span class="active-badge">ACTIVO</span>
+        </div>
+    </div>
+
+    <!-- EM Spectrum Analysis -->
+    <div class="em-analysis-container">
+        <div class="em-header">
+            <h4>🌊 Análisis del Espectro Electromagnético</h4>
+            <div class="confidence-score">
+                <span class="confidence-label">Confianza:</span>
+                <span class="confidence-value" id="emConfidence">94.7%</span>
+            </div>
+        </div>
+
+        <!-- Frequency Bands -->
+        <div class="frequency-bands">
+            <div class="band-item normal">
+                <div class="band-label">RF Low (0-30 MHz)</div>
+                <div class="band-value" id="rfLow">-42 dBm</div>
+                <div class="band-status">🟢 Normal</div>
+            </div>
+            <div class="band-item warning">
+                <div class="band-label">RF Mid (30-300 MHz)</div>
+                <div class="band-value" id="rfMid">-38 dBm</div>
+                <div class="band-status">🟡 Elevated</div>
+            </div>
+            <div class="band-item normal">
+                <div class="band-label">RF High (300-3000 MHz)</div>
+                <div class="band-value" id="rfHigh">-45 dBm</div>
+                <div class="band-status">🟢 Normal</div>
+            </div>
+        </div>
+
+        <!-- EM Signature Detection -->
+        <div class="em-signatures">
+            <h5>🔍 Firmas Electromagnéticas Detectadas</h5>
+            <div class="signatures-grid">
+                <div class="signature-item">
+                    <div class="signature-icon">📱</div>
+                    <div class="signature-info">
+                        <div class="signature-name">IoT Device Pattern</div>
+                        <div class="signature-details">3 dispositivos • Normal</div>
+                    </div>
+                    <div class="signature-status normal">✓</div>
+                </div>
+                <div class="signature-item">
+                    <div class="signature-icon">🤖</div>
+                    <div class="signature-info">
+                        <div class="signature-name">PLC Communication</div>
+                        <div class="signature-details">Modbus/PROFINET • Activo</div>
+                    </div>
+                    <div class="signature-status normal">✓</div>
+                </div>
+                <div class="signature-item warning">
+                    <div class="signature-icon">⚠️</div>
+                    <div class="signature-info">
+                        <div class="signature-name">Anomalous Pattern</div>
+                        <div class="signature-details">Frecuencia inusual • Investigando</div>
+                    </div>
+                    <div class="signature-status warning">!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-time EM Chart -->
+        <div class="em-chart-container">
+            <canvas id="emSpectrumChart"></canvas>
+        </div>
+
+        <!-- BOTCONF Research Info -->
+        <div class="research-info">
+            <div class="research-header">
+                <h5>📚 Investigación Base</h5>
+                <div class="research-authors">
+                    <span>👨‍🔬 Duy-Phuc Pham</span>
+                    <span>👩‍🔬 Damien Marion</span>
+                    <span>👩‍🔬 Annelie Heuser</span>
+                </div>
+            </div>
+            <div class="research-details">
+                <div class="research-paper">
+                    <span class="paper-title">"Electromagnetic-based Malware Detection for IoT Devices"</span>
+                    <span class="paper-venue">BOTCONF 2024</span>
+                </div>
+                <div class="implementation-info">
+                    <span class="impl-label">Implementación Comercial:</span>
+                    <span class="impl-author">Martín Iribarne (CEH)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detection Statistics -->
+        <div class="detection-stats">
+            <div class="stat-item">
+                <div class="stat-value" id="totalScans">2,847</div>
+                <div class="stat-label">Escaneos EM</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="threatsDetected">3</div>
+                <div class="stat-label">Amenazas</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="falsePositives">0.2%</div>
+                <div class="stat-label">Falsos Positivos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="avgResponseTime">0.8s</div>
+                <div class="stat-label">Tiempo Respuesta</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.botconf-widget {
+    background: linear-gradient(135deg, rgba(147, 51, 234, 0.05) 0%, rgba(79, 70, 229, 0.05) 100%);
+    border: 2px solid rgba(147, 51, 234, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.botconf-widget::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #9333ea, #4f46e5, #06b6d4);
+    animation: botconf-glow 3s ease-in-out infinite;
+}
+
+@keyframes botconf-glow {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.botconf-icon {
+    background: linear-gradient(135deg, #9333ea 0%, #4f46e5 100%);
+    animation: pulse-icon 2s infinite;
+}
+
+@keyframes pulse-icon {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.botconf-badge {
+    display: flex;
+    gap: 8px;
+}
+
+.research-badge {
+    background: #9333ea;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 0.7em;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.active-badge {
+    background: #10b981;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 0.7em;
+    font-weight: 700;
+    position: relative;
+}
+
+.active-badge::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+.em-analysis-container {
+    margin-top: 20px;
+}
+
+.em-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(147, 51, 234, 0.1);
+}
+
+.confidence-score {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.confidence-label {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.confidence-value {
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #10b981;
+}
+
+.frequency-bands {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.band-item {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.band-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.band-item.normal {
+    border-color: #10b981;
+}
+
+.band-item.warning {
+    border-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.band-item.critical {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.band-label {
+    font-size: 0.85em;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.band-value {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.band-status {
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+.em-signatures {
+    margin-bottom: 25px;
+}
+
+.signatures-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.signature-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.signature-item:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateX(5px);
+}
+
+.signature-item.warning {
+    background: rgba(245, 158, 11, 0.1);
+    border-left: 4px solid #f59e0b;
+}
+
+.signature-icon {
+    font-size: 1.5em;
+    margin-right: 12px;
+}
+
+.signature-info {
+    flex: 1;
+}
+
+.signature-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.signature-details {
+    font-size: 0.85em;
+    color: #666;
+}
+
+.signature-status {
+    font-size: 1.2em;
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.signature-status.normal {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.signature-status.warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.em-chart-container {
+    height: 250px;
+    margin: 20px 0;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.research-info {
+    background: linear-gradient(135deg, rgba(147, 51, 234, 0.05) 0%, rgba(79, 70, 229, 0.05) 100%);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.research-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.research-authors {
+    display: flex;
+    gap: 8px;
+    font-size: 0.8em;
+}
+
+.research-authors span {
+    background: rgba(147, 51, 234, 0.1);
+    padding: 3px 8px;
+    border-radius: 12px;
+    color: #7c3aed;
+    font-weight: 500;
+}
+
+.research-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.research-paper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.paper-title {
+    font-style: italic;
+    color: #4f46e5;
+    font-weight: 500;
+}
+
+.paper-venue {
+    background: #4f46e5;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+.implementation-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.impl-label {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.impl-author {
+    background: #10b981;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+.detection-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #4f46e5;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.85em;
+    color: #666;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .frequency-bands {
+        grid-template-columns: 1fr;
+    }
+
+    .detection-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .research-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .research-authors {
+        flex-wrap: wrap;
+    }
+}
+</style>
+
+<script>
+// Initialize EM Spectrum Chart
+function initializeEMChart() {
+    const ctx = document.getElementById('emSpectrumChart').getContext('2d');
+
+    // Simulated electromagnetic spectrum data
+    const frequencyLabels = ['1MHz', '10MHz', '100MHz', '1GHz', '2.4GHz', '5GHz'];
+    const normalPattern = [-45, -42, -38, -35, -40, -45];
+    const currentPattern = [-44, -41, -38, -36, -39, -46];
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: frequencyLabels,
+            datasets: [{
+                label: 'Patrón Normal (dBm)',
+                data: normalPattern,
+                borderColor: '#10b981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                tension: 0.4,
+                fill: true
+            }, {
+                label: 'Lectura Actual (dBm)',
+                data: currentPattern,
+                borderColor: '#4f46e5',
+                backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: '🌊 Espectro Electromagnético - Análisis BotConf 2024'
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Potencia (dBm)'
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Frecuencia'
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                }
+            },
+            animation: {
+                duration: 1000,
+                easing: 'easeInOutQuart'
+            }
+        }
+    });
+}
+
+// Update EM data in real-time
+function updateEMData() {
+    // Simulate real-time EM detection data
+    const confidence = (92 + Math.random() * 6).toFixed(1);
+    const rfLow = (-45 + Math.random() * 6).toFixed(1);
+    const rfMid = (-40 + Math.random() * 8).toFixed(1);
+    const rfHigh = (-47 + Math.random() * 4).toFixed(1);
+
+    document.getElementById('emConfidence').textContent = confidence + '%';
+    document.getElementById('rfLow').textContent = rfLow + ' dBm';
+    document.getElementById('rfMid').textContent = rfMid + ' dBm';
+    document.getElementById('rfHigh').textContent = rfHigh + ' dBm';
+
+    // Update statistics
+    const totalScans = 2847 + Math.floor(Math.random() * 10);
+    const threatsDetected = Math.floor(Math.random() * 5);
+    const falsePositives = (0.1 + Math.random() * 0.3).toFixed(1);
+    const responseTime = (0.6 + Math.random() * 0.4).toFixed(1);
+
+    document.getElementById('totalScans').textContent = totalScans.toLocaleString();
+    document.getElementById('threatsDetected').textContent = threatsDetected;
+    document.getElementById('falsePositives').textContent = falsePositives + '%';
+    document.getElementById('avgResponseTime').textContent = responseTime + 's';
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('emSpectrumChart')) {
+        initializeEMChart();
+
+        // Update EM data every 5 seconds
+        setInterval(updateEMData, 5000);
+
+        // Initial update
+        updateEMData();
+    }
+});
+</script>

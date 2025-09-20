@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCompute HRM - Dashboard Operacional</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #16213e 0%, #0f3460 100%);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .main-dashboard {
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 20px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 212, 255, 0.2);
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .threat-score { color: #ff6b6b; }
+        .events-count { color: #4ecdc4; }
+        .false-positive { color: #45b7d1; }
+        .incidents { color: #f7b731; }
+
+        .alerts-section {
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .alert-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .alert-critical { border-left-color: #ff4757; }
+        .alert-high { border-left-color: #ffa502; }
+        .alert-medium { border-left-color: #f1c40f; }
+        .alert-low { border-left-color: #2ed573; }
+
+        .alert-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-suppress {
+            background: #2ed573;
+            color: #000;
+        }
+
+        .action-investigate {
+            background: #ff4757;
+            color: #fff;
+        }
+
+        .action-review {
+            background: #ffa502;
+            color: #000;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            margin: auto;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .chat-panel {
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: fit-content;
+            max-height: 800px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            border-radius: 15px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .message-ai {
+            background: linear-gradient(135deg, #0099cc, #00d4ff);
+            color: #000;
+            margin-left: 20px;
+        }
+
+        .message-user {
+            background: rgba(255, 255, 255, 0.1);
+            margin-right: 20px;
+        }
+
+        .message-system {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: #fff;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .chat-send {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            border: none;
+            border-radius: 25px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 600px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 15px;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #ff4757;
+        }
+
+        .auth-form {
+            display: grid;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 5px;
+        }
+
+        .form-input {
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-primary {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .system-integration {
+            display: grid;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .integration-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid #00d4ff;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .status-online { background: #2ed573; }
+        .status-offline { background: #ff4757; }
+        .status-pending { background: #ffa502; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🤖 SmartCompute HRM - Operacional</h1>
+        <p><span class="status-indicator status-online"></span>Sistema Integrado Activo</p>
+    </div>
+
+    <div class="container">
+        <div class="main-dashboard">
+            <!-- Métricas principales -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value threat-score" id="threatScore">1.8</div>
+                    <div class="metric-label">Threat Score Avg</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value events-count" id="eventsCount">24</div>
+                    <div class="metric-label">Eventos Procesados</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value false-positive" id="falsePositive">12%</div>
+                    <div class="metric-label">Falsos Positivos</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value incidents" id="incidents">0</div>
+                    <div class="metric-label">Incidentes Críticos</div>
+                </div>
+            </div>
+
+            <!-- Alertas con acciones funcionales -->
+            <div class="alerts-section">
+                <div class="alerts-header">
+                    <h2>🚨 Alertas Operacionales</h2>
+                    <span class="status-online">● Sistemas Conectados</span>
+                </div>
+                <div id="alertsList">
+                    <!-- Las alertas se cargarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de chat mejorado -->
+        <div class="chat-panel">
+            <div class="chat-header">
+                <h2>💬 SmartCompute AI Assistant</h2>
+                <div class="system-integration">
+                    <div class="integration-item">
+                        <span><span class="status-indicator status-online"></span>Active Directory</span>
+                        <span>Conectado</span>
+                    </div>
+                    <div class="integration-item">
+                        <span><span class="status-indicator status-online"></span>Microsoft Intune</span>
+                        <span>Sincronizado</span>
+                    </div>
+                    <div class="integration-item">
+                        <span><span class="status-indicator status-pending"></span>Azure Security Center</span>
+                        <span>Autenticando...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <!-- Los mensajes se cargarán aquí -->
+            </div>
+
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Consulta contextual a SmartCompute..." onkeypress="handleKeyPress(event)">
+                <button class="chat-send" onclick="sendMessage()">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de autenticación -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Autenticación Requerida</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="auth-form">
+                <div class="form-group">
+                    <label for="username">Usuario:</label>
+                    <input type="text" id="username" class="form-input" placeholder="usuario@dominio.com">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" class="form-input" placeholder="••••••••">
+                </div>
+                <div class="form-group">
+                    <label for="system">Sistema:</label>
+                    <select id="system" class="form-input">
+                        <option value="ad">Active Directory</option>
+                        <option value="intune">Microsoft Intune</option>
+                        <option value="azure">Azure Security Center</option>
+                        <option value="sccm">SCCM</option>
+                        <option value="exchange">Exchange Online</option>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="authenticate()">Autenticar y Conectar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Estado global de la aplicación
+        const appState = {
+            authenticatedSystems: new Set(['ad']), // AD ya autenticado
+            currentAlerts: [],
+            chatContext: {
+                lastAlert: null,
+                currentSystem: null,
+                userCredentials: {}
+            }
+        };
+
+        // Datos simulados mejorados con contexto real
+        const enhancedDemoData = {
+            alertsHistory: [
+                {
+                    id: "AD-8175",
+                    time: "05:41:25",
+                    score: 4.4,
+                    fp: 35,
+                    level: "critical",
+                    description: "Suspicious logon pattern detected",
+                    system: "ad",
+                    user: "admin@company.com",
+                    resource: "Domain Controller DC01",
+                    action_needed: "Block user and investigate"
+                },
+                {
+                    id: "INTUNE-4913",
+                    time: "05:41:20",
+                    score: 4.4,
+                    fp: 35,
+                    level: "critical",
+                    description: "Device compliance violation",
+                    system: "intune",
+                    device: "LAPTOP-WIN-001",
+                    policy: "Corporate Security Baseline",
+                    action_needed: "Force compliance update"
+                },
+                {
+                    id: "CHROME-8526",
+                    time: "05:41:15",
+                    score: 0.1,
+                    fp: 90,
+                    level: "low",
+                    description: "Chrome extension normal behavior",
+                    system: "local",
+                    process: "chrome.exe",
+                    action_needed: "Suppress future alerts"
+                }
+            ]
+        };
+
+        // Cargar alertas mejoradas con botones funcionales
+        function loadEnhancedAlerts() {
+            const alertsList = document.getElementById('alertsList');
+            alertsList.innerHTML = '';
+
+            enhancedDemoData.alertsHistory.forEach((alert, index) => {
+                const alertElement = document.createElement('div');
+                alertElement.className = `alert-item alert-${alert.level}`;
+
+                alertElement.innerHTML = `
+                    <div class="alert-info">
+                        <div class="alert-id">${alert.id}</div>
+                        <div style="font-size: 0.9em; opacity: 0.8;">${alert.description}</div>
+                        <div style="font-size: 0.8em; opacity: 0.6;">${alert.time} | Score: ${alert.score} | Sistema: ${alert.system}</div>
+                    </div>
+                    <div class="alert-actions">
+                        ${alert.level === 'critical' ?
+                            `<button class="action-btn action-investigate" onclick="investigateAlert('${alert.id}', '${alert.system}')">🚨 INVESTIGAR</button>`
+                            : ''}
+                        ${alert.fp > 80 ?
+                            `<button class="action-btn action-suppress" onclick="suppressAlert('${alert.id}')">🔇 SUPRIMIR</button>`
+                            : ''}
+                        <button class="action-btn action-review" onclick="reviewAlert('${alert.id}')">📋 REVISAR</button>
+                    </div>
+                `;
+
+                alertsList.appendChild(alertElement);
+            });
+        }
+
+        // Funciones de acción mejoradas
+        async function investigateAlert(alertId, system) {
+            const alert = enhancedDemoData.alertsHistory.find(a => a.id === alertId);
+
+            addMessageToChat(`🚨 Iniciando investigación para alerta ${alertId}`, 'system');
+
+            // Verificar autenticación del sistema
+            if (!appState.authenticatedSystems.has(system)) {
+                addMessageToChat(`⚠️ Autenticación requerida para ${system.toUpperCase()}`, 'ai');
+                showAuthModal(system, alertId);
+                return;
+            }
+
+            // Simular acciones específicas por sistema
+            const btn = event.target;
+            btn.disabled = true;
+            btn.classList.add('loading');
+
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.classList.remove('loading');
+
+                switch(system) {
+                    case 'ad':
+                        executeADInvestigation(alert);
+                        break;
+                    case 'intune':
+                        executeIntuneInvestigation(alert);
+                        break;
+                    default:
+                        executeGenericInvestigation(alert);
+                }
+            }, 2000);
+        }
+
+        function executeADInvestigation(alert) {
+            addMessageToChat(`🔍 Conectando a Active Directory...`, 'ai');
+            setTimeout(() => {
+                addMessageToChat(`📊 Usuario: ${alert.user || 'admin@company.com'}
+📍 Recurso: ${alert.resource || 'Domain Controller'}
+🕒 Último logon: ${new Date().toLocaleString()}
+🔐 Status: Cuenta activa, intentos fallidos: 5
+⚡ Acción recomendada: ${alert.action_needed}
+
+🔧 Opciones disponibles:
+• Bloquear cuenta temporalmente
+• Resetear contraseña y forzar cambio
+• Habilitar autenticación multifactor
+• Revisar logs de auditoría completos`, 'ai');
+
+                // Simular conexión real con AD
+                addMessageToChat(`🌐 Para ejecutar acciones, accede a: https://portal.azure.com/ActiveDirectory/Users`, 'system');
+            }, 1500);
+        }
+
+        function executeIntuneInvestigation(alert) {
+            addMessageToChat(`🔍 Conectando a Microsoft Intune...`, 'ai');
+            setTimeout(() => {
+                addMessageToChat(`💻 Dispositivo: ${alert.device || 'LAPTOP-WIN-001'}
+📋 Política violada: ${alert.policy || 'Corporate Security Baseline'}
+🔄 Estado compliance: No cumple
+📱 Última sincronización: Hace 2 horas
+⚡ Acción recomendada: ${alert.action_needed}
+
+🔧 Opciones disponibles:
+• Forzar sincronización de políticas
+• Ejecutar compliance scan remoto
+• Bloquear acceso a recursos corporativos
+• Iniciar wipe selectivo de datos corporativos`, 'ai');
+
+                addMessageToChat(`🌐 Para gestionar el dispositivo: https://endpoint.microsoft.com/Devices`, 'system');
+            }, 1500);
+        }
+
+        async function suppressAlert(alertId) {
+            addMessageToChat(`🔇 Suprimiendo alerta ${alertId}...`, 'system');
+
+            const btn = event.target;
+            btn.disabled = true;
+            btn.innerHTML = '🔄 Procesando...';
+
+            setTimeout(() => {
+                btn.innerHTML = '✅ Suprimida';
+                btn.style.background = '#2ed573';
+
+                addMessageToChat(`✅ Alerta ${alertId} suprimida exitosamente.
+📝 Regla creada: Suprimir eventos similares de Chrome extensions
+🤖 ML actualizado: Patrón agregado al whitelist
+📊 Impacto: Reducción estimada de 15% en falsos positivos`, 'ai');
+
+                // Actualizar métricas
+                updateMetric('falsePositive', -2);
+            }, 1500);
+        }
+
+        async function reviewAlert(alertId) {
+            const alert = enhancedDemoData.alertsHistory.find(a => a.id === alertId);
+
+            addMessageToChat(`📋 Revisando alerta ${alertId} en detalle...`, 'system');
+
+            setTimeout(() => {
+                addMessageToChat(`📊 ANÁLISIS DETALLADO - ${alertId}
+
+🔍 Información técnica:
+• Evento: ${alert.description}
+• Timestamp: ${alert.time}
+• Sistema origen: ${alert.system.toUpperCase()}
+• Confidence: ${100 - alert.fp}%
+
+🤖 Análisis SmartCompute:
+• Threat Score: ${alert.score}/10
+• Patrón identificado: ${alert.level === 'critical' ? 'Comportamiento anómalo' : 'Actividad normal'}
+• Correlación: ${alert.level === 'critical' ? '3 eventos similares en 24h' : 'Patrón aislado'}
+
+📈 Recomendación:
+${alert.level === 'critical' ?
+  '• Investigación inmediata requerida\n• Posible compromiso de seguridad\n• Escalar a equipo SOC' :
+  '• Evento de baja prioridad\n• Posible falso positivo\n• Monitoreo continuo'
+}`, 'ai');
+            }, 1000);
+        }
+
+        // Mostrar modal de autenticación
+        function showAuthModal(system, alertId) {
+            document.getElementById('modalTitle').textContent = `Autenticación - ${system.toUpperCase()}`;
+            document.getElementById('system').value = system;
+            document.getElementById('authModal').style.display = 'block';
+
+            // Guardar contexto para después de la autenticación
+            appState.chatContext.currentSystem = system;
+            appState.chatContext.lastAlert = alertId;
+        }
+
+        function closeModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        // Función de autenticación mejorada
+        async function authenticate() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const system = document.getElementById('system').value;
+
+            if (!username || !password) {
+                addMessageToChat('❌ Usuario y contraseña requeridos', 'system');
+                return;
+            }
+
+            addMessageToChat(`🔐 Autenticando en ${system.toUpperCase()}...`, 'system');
+
+            // Simular autenticación (en producción sería real)
+            setTimeout(() => {
+                appState.authenticatedSystems.add(system);
+                appState.chatContext.userCredentials[system] = { username, timestamp: Date.now() };
+
+                closeModal();
+
+                addMessageToChat(`✅ Autenticación exitosa en ${system.toUpperCase()}
+👤 Usuario: ${username}
+🕒 Sesión válida hasta: ${new Date(Date.now() + 8*60*60*1000).toLocaleString()}
+🔧 Acceso completo habilitado`, 'ai');
+
+                // Si hay una alerta pendiente, continuar con la investigación
+                if (appState.chatContext.lastAlert) {
+                    setTimeout(() => {
+                        investigateAlert(appState.chatContext.lastAlert, system);
+                    }, 1000);
+                }
+
+                // Limpiar campos
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            }, 2000);
+        }
+
+        // Chat AI mejorado con contexto real
+        function generateEnhancedAIResponse(userMessage) {
+            const msg = userMessage.toLowerCase();
+
+            // Respuestas específicas por sistema
+            if (msg.includes('active directory') || msg.includes('ad')) {
+                return `🏢 ACTIVE DIRECTORY STATUS:
+🟢 Controladores: 3/3 online
+👥 Usuarios activos: 1,247
+🔐 Intentos fallidos últimas 24h: 23
+⚠️ Cuentas bloqueadas: 5
+🕒 Última sincronización: ${new Date().toLocaleTimeString()}
+
+🔧 Acciones disponibles:
+• Desbloquear cuentas específicas
+• Revisar logs de auditoría
+• Gestionar políticas de grupo
+• Analizar patrones de logon`;
+            }
+
+            if (msg.includes('intune') || msg.includes('dispositivos')) {
+                return `📱 MICROSOFT INTUNE STATUS:
+🟢 Dispositivos gestionados: 845
+✅ Compliance: 812 (96%)
+❌ No compliance: 33 (4%)
+🔄 Sincronizando: 12
+📊 Políticas activas: 15
+
+🔧 Dispositivos con problemas:
+• LAPTOP-WIN-001: Antivirus desactualizado
+• PHONE-IOS-045: PIN no configurado
+• TABLET-AND-023: Rooted/Jailbreak detectado`;
+            }
+
+            if (msg.includes('amenaza') || msg.includes('threat')) {
+                return `🎯 THREAT INTELLIGENCE CONTEXTUAL:
+📊 Score promedio últimas 24h: 2.1/10
+🚨 Alertas críticas: 3 (requieren investigación)
+🤖 Falsos positivos identificados: 8 (auto-suprimidos)
+🔗 Eventos correlacionados: 2 campañas detectadas
+
+⚡ Tendencias:
+• ↗️ 15% aumento en phishing targeting
+• ↘️ 25% reducción en malware detections
+• 🎯 APT29 TTPs detectadas en 2 eventos`;
+            }
+
+            if (msg.includes('usuario') || msg.includes('bloquear')) {
+                const users = ['admin@company.com', 'john.doe@company.com', 'service.account@company.com'];
+                const randomUser = users[Math.floor(Math.random() * users.length)];
+
+                return `👤 GESTIÓN DE USUARIOS:
+🔍 Usuario específico: ${randomUser}
+📊 Último logon: ${new Date(Date.now() - Math.random() * 86400000).toLocaleString()}
+🔐 Intentos fallidos: ${Math.floor(Math.random() * 10)}
+🌍 Ubicaciones de acceso: Madrid, Barcelona
+💼 Grupos: Domain Users, VPN_Access, Finance_Team
+
+🔧 Acciones rápidas disponibles:
+• Bloquear cuenta temporalmente
+• Resetear contraseña
+• Forzar logout de todas las sesiones
+• Habilitar MFA obligatorio`;
+            }
+
+            // Respuesta por defecto más contextual
+            return `🤖 SmartCompute AI disponible para:
+
+📊 ANÁLISIS DISPONIBLES:
+• Status de sistemas integrados
+• Análisis de amenazas contextuales
+• Gestión de usuarios y dispositivos
+• Investigación de incidentes específicos
+
+🔧 SISTEMAS CONECTADOS:
+• Active Directory (${appState.authenticatedSystems.has('ad') ? '✅' : '❌'})
+• Microsoft Intune (${appState.authenticatedSystems.has('intune') ? '✅' : '❌'})
+• Azure Security Center (⏳ Pendiente)
+
+💬 Prueba: "estado de AD", "dispositivos problemas", "usuario específico"`;
+        }
+
+        // Función mejorada para agregar mensajes
+        function addMessageToChat(message, type = 'ai', time = null) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageElement = document.createElement('div');
+            messageElement.className = `chat-message message-${type}`;
+
+            const currentTime = time || new Date().toLocaleTimeString();
+
+            messageElement.innerHTML = `
+                <div style="white-space: pre-line;">${message}</div>
+                <div class="message-timestamp">${currentTime}</div>
+            `;
+
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (message) {
+                addMessageToChat(message, 'user');
+                input.value = '';
+
+                setTimeout(() => {
+                    const response = generateEnhancedAIResponse(message);
+                    addMessageToChat(response, 'ai');
+                }, 800);
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function updateMetric(metricId, change) {
+            const element = document.getElementById(metricId);
+            const current = parseFloat(element.textContent.replace('%', ''));
+            const newValue = Math.max(0, current + change);
+            element.textContent = metricId === 'falsePositive' ? `${newValue}%` : newValue.toFixed(1);
+        }
+
+        // Inicializar dashboard mejorado
+        document.addEventListener('DOMContentLoaded', function() {
+            loadEnhancedAlerts();
+
+            // Mensaje de bienvenida con contexto
+            addMessageToChat(`🚀 SmartCompute HRM Operacional iniciado
+🔐 Sistemas integrados detectados
+📊 Análisis contextual activado
+💬 Chat inteligente con acceso a sistemas empresariales`, 'ai');
+
+            setTimeout(() => {
+                addMessageToChat(`ℹ️ Para investigar alertas críticas, usa los botones de acción.
+🔑 Algunos sistemas requieren autenticación adicional.
+💡 Pregúntame sobre usuarios, dispositivos o amenazas específicas.`, 'ai');
+            }, 2000);
+        });
+
+        // Cerrar modal con escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

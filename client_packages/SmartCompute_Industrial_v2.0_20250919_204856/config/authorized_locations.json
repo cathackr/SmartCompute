@@ -1,0 +1,23 @@
+{
+  "planta_principal": {
+    "name": "Planta Principal",
+    "lat": -34.6037,
+    "lng": -58.3816,
+    "radius_meters": 100,
+    "authorized_operators": [
+      "OP001",
+      "OP002"
+    ],
+    "emergency_contact": "+54911234567"
+  },
+  "almacen_a": {
+    "name": "Almac\u00e9n A",
+    "lat": -34.6045,
+    "lng": -58.382,
+    "radius_meters": 50,
+    "authorized_operators": [
+      "OP001"
+    ],
+    "emergency_contact": "+54911234567"
+  }
+}

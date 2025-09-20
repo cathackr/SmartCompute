@@ -1,0 +1,84 @@
+{
+  "ioc_matches": [
+    {
+      "ioc_type": "technique_indicator",
+      "matched_value": "createremotethread",
+      "confidence": 0.7,
+      "associated_threats": [
+        "T1055.002"
+      ],
+      "source": "Pattern Matching"
+    }
+  ],
+  "technique_analysis": {
+    "identified_techniques": [
+      {
+        "technique_id": "T1055.002",
+        "technique_name": "Portable Executable Injection",
+        "confidence": 0.8,
+        "evidence": "CreateRemoteThread API call observed"
+      },
+      {
+        "technique_id": "T1055",
+        "technique_name": "Process Injection",
+        "confidence": 0.9,
+        "evidence": "Process injection behavior detected"
+      }
+    ],
+    "tactic_coverage": [
+      "Defense Evasion",
+      "Privilege Escalation"
+    ],
+    "kill_chain_stage": "Actions on Objectives"
+  },
+  "threat_actor_attribution": [
+    {
+      "threat_actor": "APT29",
+      "aliases": [
+        "Cozy Bear",
+        "The Dukes"
+      ],
+      "confidence": 0.45,
+      "matching_techniques": [
+        "T1055.002",
+        "T1055"
+      ],
+      "target_sectors": [
+        "Government",
+        "Healthcare",
+        "Technology"
+      ]
+    },
+    {
+      "threat_actor": "Cobalt Strike Users",
+      "aliases": [
+        "CS Teams"
+      ],
+      "confidence": 0.2333333333333333,
+      "matching_techniques": [
+        "T1055.002"
+      ],
+      "target_sectors": [
+        "Finance",
+        "Healthcare",
+        "Government"
+      ]
+    }
+  ],
+  "risk_assessment": {
+    "threat_score": 0.6000000000000001,
+    "risk_level": "HIGH",
+    "risk_factors": [
+      "IOC match: technique_indicator",
+      "MITRE technique: T1055.002",
+      "MITRE technique: T1055",
+      "Threat actor attribution: APT29",
+      "Threat actor attribution: Cobalt Strike Users"
+    ],
+    "recommendation": "HIGH_PRIORITY: Likely malicious activity - escalate to security team"
+  },
+  "contextual_indicators": [
+    "browser_targeting",
+    "critical_severity_event"
+  ]
+}

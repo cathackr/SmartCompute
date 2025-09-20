@@ -1,0 +1,209 @@
+{
+  "event_id": 9999,
+  "timestamp": "2025-09-15T02:30:00Z",
+  "analysis_modules": {
+    "advanced_detection": {
+      "detected_techniques": [
+        {
+          "technique": "CreateRemoteThread",
+          "mitre_id": "T1055.002",
+          "severity": "HIGH",
+          "confidence": 0.3333333333333333,
+          "indicators_found": 1
+        },
+        {
+          "technique": "DLL Injection",
+          "mitre_id": "T1055.001",
+          "severity": "MEDIUM",
+          "confidence": 0.3333333333333333,
+          "indicators_found": 1
+        },
+        {
+          "technique": "PE Injection",
+          "mitre_id": "T1055.002",
+          "severity": "HIGH",
+          "confidence": 0.3333333333333333,
+          "indicators_found": 1
+        }
+      ],
+      "risk_score": 4.333333333333333,
+      "context_analysis": {
+        "target_process": null,
+        "is_suspicious_target": false,
+        "is_trusted_source": false,
+        "timestamp_analysis": "suspicious_hours"
+      },
+      "recommended_actions": [
+        "Investigate why process injection occurred outside business hours",
+        "Analyze parent process chain",
+        "Check process digital signatures",
+        "Enable advanced EDR monitoring for CreateRemoteThread API calls"
+      ]
+    },
+    "behavioral_analysis": {
+      "behavioral_score": 0.55,
+      "anomalies_detected": [],
+      "context_insights": {
+        "process": {
+          "process_name": "malware.exe",
+          "is_known_process": false,
+          "parent_chain_anomaly": false,
+          "resource_usage_anomaly": false,
+          "behavioral_anomalies": [
+            "unknown_process"
+          ]
+        },
+        "user": {
+          "user": "unknown@temp.com",
+          "host": "compromised-workstation.local",
+          "is_known_user": false,
+          "location_anomaly": false,
+          "time_anomaly": false,
+          "behavioral_anomalies": [
+            "unknown_user"
+          ]
+        },
+        "network": {
+          "source_ip": "203.0.113.45",
+          "host": "compromised-workstation.local",
+          "is_internal_ip": false,
+          "geolocation_anomaly": false,
+          "behavioral_anomalies": []
+        },
+        "temporal": {
+          "timestamp": "2025-09-15T02:30:00Z",
+          "day_of_week": "Monday",
+          "hour_of_day": 2,
+          "is_business_hours": false,
+          "temporal_anomalies": [
+            "night_time_activity"
+          ]
+        }
+      },
+      "risk_factors": [],
+      "behavioral_recommendation": []
+    },
+    "ml_false_positive": {
+      "false_positive_probability": -0.45,
+      "confidence_level": "HIGH",
+      "evidence": [
+        "suspicious_location_downloads",
+        "suspicious_location_public",
+        "off_hours_activity",
+        "weekday_activity",
+        "legitimate_keywords_found_1",
+        "suspicious_keywords_found_3",
+        "low_behavioral_anomaly"
+      ],
+      "recommendation": "LIKELY_LEGITIMATE_THREAT: Proceed with standard investigation",
+      "detailed_scores": {
+        "process_legitimacy": -4.0,
+        "temporal_legitimacy": 0.0,
+        "description_legitimacy": -2.5,
+        "behavioral_legitimacy": 2.0
+      }
+    },
+    "threat_intelligence": {
+      "ioc_matches": [
+        {
+          "ioc_type": "technique_indicator",
+          "matched_value": "createremotethread",
+          "confidence": 0.7,
+          "associated_threats": [
+            "T1055.002"
+          ],
+          "source": "Pattern Matching"
+        }
+      ],
+      "technique_analysis": {
+        "identified_techniques": [
+          {
+            "technique_id": "T1055.002",
+            "technique_name": "Portable Executable Injection",
+            "confidence": 0.8,
+            "evidence": "CreateRemoteThread API call observed"
+          },
+          {
+            "technique_id": "T1055",
+            "technique_name": "Process Injection",
+            "confidence": 0.9,
+            "evidence": "Process injection behavior detected"
+          }
+        ],
+        "tactic_coverage": [
+          "Defense Evasion",
+          "Privilege Escalation"
+        ],
+        "kill_chain_stage": "Actions on Objectives"
+      },
+      "threat_actor_attribution": [
+        {
+          "threat_actor": "APT29",
+          "aliases": [
+            "Cozy Bear",
+            "The Dukes"
+          ],
+          "confidence": 0.45,
+          "matching_techniques": [
+            "T1055.002",
+            "T1055"
+          ],
+          "target_sectors": [
+            "Government",
+            "Healthcare",
+            "Technology"
+          ]
+        },
+        {
+          "threat_actor": "Cobalt Strike Users",
+          "aliases": [
+            "CS Teams"
+          ],
+          "confidence": 0.2333333333333333,
+          "matching_techniques": [
+            "T1055.002"
+          ],
+          "target_sectors": [
+            "Finance",
+            "Healthcare",
+            "Government"
+          ]
+        }
+      ],
+      "risk_assessment": {
+        "threat_score": 0.6000000000000001,
+        "risk_level": "HIGH",
+        "risk_factors": [
+          "IOC match: technique_indicator",
+          "MITRE technique: T1055.002",
+          "MITRE technique: T1055",
+          "Threat actor attribution: APT29",
+          "Threat actor attribution: Cobalt Strike Users"
+        ],
+        "recommendation": "HIGH_PRIORITY: Likely malicious activity - escalate to security team"
+      },
+      "contextual_indicators": [
+        "off_hours_activity",
+        "critical_severity_event"
+      ]
+    }
+  },
+  "final_assessment": {
+    "final_risk_score": 4.41,
+    "risk_level": "MEDIUM",
+    "confidence_level": "LEGITIMATE_THREAT",
+    "false_positive_probability": -0.45,
+    "requires_response": false,
+    "recommendation": {
+      "action": "IMMEDIATE_INVESTIGATION",
+      "reasoning": "Amenaza leg\u00edtima detectada con posible atribuci\u00f3n a APT29",
+      "next_steps": [
+        "Iniciar investigaci\u00f3n inmediata",
+        "Aislar host afectado",
+        "Recolectar evidencia forense",
+        "Notificar a equipo de respuesta a incidentes"
+      ]
+    },
+    "summary": "Detecci\u00f3n de CreateRemoteThread, DLL Injection, PE Injection en proceso Chrome. \ud83d\udea8 AMENAZA LEG\u00cdTIMA (score: 4.4/10) - Posible atribuci\u00f3n: APT29"
+  }
+}

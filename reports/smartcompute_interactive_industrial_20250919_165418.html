@@ -1,0 +1,2854 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCompute Industrial - Dashboard Interactivo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 50%, #2980b9 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        .metric-card {
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        .process-flow-map {
+            position: relative;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            border-radius: 15px;
+            height: 500px;
+            overflow: auto;
+            padding: 20px;
+        }
+        .process-node {
+            position: absolute;
+            width: 120px;
+            height: 80px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 8px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .process-node:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+            z-index: 10;
+        }
+        .process-node.input {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: #4CAF50;
+        }
+        .process-node.process {
+            background: rgba(33, 150, 243, 0.3);
+            border-color: #2196F3;
+        }
+        .process-node.control {
+            background: rgba(255, 193, 7, 0.3);
+            border-color: #FFC107;
+        }
+        .process-node.utility {
+            background: rgba(156, 39, 176, 0.3);
+            border-color: #9C27B0;
+        }
+        .process-node.storage {
+            background: rgba(255, 87, 34, 0.3);
+            border-color: #FF5722;
+        }
+        .process-node.output {
+            background: rgba(244, 67, 54, 0.3);
+            border-color: #F44336;
+        }
+        .process-node.warning {
+            animation: pulse-warning 2s infinite;
+            border-color: #ff9800;
+        }
+        .process-node.critical {
+            animation: pulse-critical 2s infinite;
+            border-color: #f44336;
+        }
+        .connection-line {
+            position: absolute;
+            height: 4px;
+            background: linear-gradient(90deg, rgba(52,152,219,0.4), rgba(52,152,219,0.9), rgba(52,152,219,0.4));
+            border-radius: 2px;
+            transform-origin: left center;
+            animation: flow 3s infinite;
+            z-index: 1;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .connection-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 10px solid rgba(52,152,219,0.9);
+            border-top: 7px solid transparent;
+            border-bottom: 7px solid transparent;
+            z-index: 2;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+        }
+        .node-icon {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+            color: white;
+        }
+        .node-name {
+            font-size: 0.65rem;
+            line-height: 1.1;
+            margin-bottom: 2px;
+        }
+        .node-status {
+            font-size: 0.6rem;
+            padding: 1px 4px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.3);
+        }
+        .throughput-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 2px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+        .throughput-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+        .sensor-status {
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin: 2px;
+        }
+        .status-normal { background: #28a745; color: white; }
+        .status-warning { background: #ffc107; color: black; }
+        .status-critical { background: #dc3545; color: white; }
+        .ups-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .ups-online { background: #28a745; }
+        .ups-battery { background: #ffc107; animation: pulse 2s infinite; }
+        .ups-charging { background: #17a2b8; }
+        .recommendation-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .recommendation-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .priority-high { border-left: 5px solid #fd7e14; }
+        .priority-critical { border-left: 5px solid #dc3545; }
+        .priority-medium { border-left: 5px solid #ffc107; }
+        .step-list {
+            list-style: none;
+            padding: 0;
+        }
+        .step-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .step-list li:before {
+            content: counter(step-counter);
+            counter-increment: step-counter;
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .step-list {
+            counter-reset: step-counter;
+        }
+        @keyframes pulse-warning {
+            0%, 100% { border-color: #ff9800; box-shadow: 0 0 10px rgba(255, 152, 0, 0.3); }
+            50% { border-color: #ffb74d; box-shadow: 0 0 20px rgba(255, 152, 0, 0.6); }
+        }
+        @keyframes pulse-critical {
+            0%, 100% { border-color: #f44336; box-shadow: 0 0 10px rgba(244, 67, 54, 0.3); }
+            50% { border-color: #ef5350; box-shadow: 0 0 20px rgba(244, 67, 54, 0.6); }
+        }
+        @keyframes flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="glass-card p-4 text-center">
+                    <h1 class="text-white display-4 mb-3">
+                        <i class="fas fa-industry me-3"></i>
+                        SmartCompute Industrial - Dashboard Interactivo
+                    </h1>
+                    <div class="row text-white">
+                        <div class="col-md-3">
+                            <i class="fas fa-clock me-2"></i>
+                            <strong>Actualizado:</strong> 2025-09-19 16:54:18
+                        </div>
+                        <div class="col-md-3">
+                            <i class="fas fa-bolt me-2"></i>
+                            <strong>Sistemas Eléctricos:</strong> 3 niveles
+                        </div>
+                        <div class="col-md-3">
+                            <i class="fas fa-thermometer-half me-2"></i>
+                            <strong>Sensores:</strong> 7
+                        </div>
+                        <div class="col-md-3">
+                            <i class="fas fa-battery-full me-2"></i>
+                            <strong>UPS:</strong> 3 sistemas
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Process Flow Map -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="glass-card p-4">
+                    <h5 class="text-white mb-3">
+                        <i class="fas fa-project-diagram me-2"></i>
+                        Diagrama de Flujo de Procesos Industriales
+                        <button class="btn btn-sm btn-outline-light ms-2" onclick="refreshProcessFlow()">
+                            <i class="fas fa-sync-alt"></i> Actualizar
+                        </button>
+                        <button class="btn btn-sm btn-outline-info ms-2" onclick="toggleConnections()">
+                            <i class="fas fa-route"></i> Mostrar/Ocultar Conexiones
+                        </button>
+                    </h5>
+                    <div class="process-flow-map" id="processFlowMap">
+                        <div class="process-node input operational"
+                             style="left: 50px; top: 100px;"
+                             onclick="showProcessDetails('raw_materials')"
+                             data-node-id="raw_materials">
+                            <div class="node-icon">
+                                <i class="fas fa-boxes"></i>
+                            </div>
+                            <div class="node-name">Materias Primas</div>
+                            <div class="node-status">0 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 94%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node process operational"
+                             style="left: 200px; top: 100px;"
+                             onclick="showProcessDetails('quality_control_in')"
+                             data-node-id="quality_control_in">
+                            <div class="node-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="node-name">Control de Calidad Entrada</div>
+                            <div class="node-status">0 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 96%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node process critical"
+                             style="left: 350px; top: 100px;"
+                             onclick="showProcessDetails('preparation')"
+                             data-node-id="preparation">
+                            <div class="node-icon">
+                                <i class="fas fa-blender"></i>
+                            </div>
+                            <div class="node-name">Preparación y Mezclado</div>
+                            <div class="node-status">3 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 83%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node process critical"
+                             style="left: 500px; top: 50px;"
+                             onclick="showProcessDetails('thermal_treatment')"
+                             data-node-id="thermal_treatment">
+                            <div class="node-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="node-name">Tratamiento Térmico</div>
+                            <div class="node-status">3 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node process warning"
+                             style="left: 650px; top: 50px;"
+                             onclick="showProcessDetails('cooling')"
+                             data-node-id="cooling">
+                            <div class="node-icon">
+                                <i class="fas fa-snowflake"></i>
+                            </div>
+                            <div class="node-name">Sistema de Enfriamiento</div>
+                            <div class="node-status">2 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 89%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node process warning"
+                             style="left: 800px; top: 100px;"
+                             onclick="showProcessDetails('assembly')"
+                             data-node-id="assembly">
+                            <div class="node-icon">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <div class="node-name">Línea de Ensamblaje</div>
+                            <div class="node-status">1 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 89%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node control operational"
+                             style="left: 500px; top: 150px;"
+                             onclick="showProcessDetails('quality_control_process')"
+                             data-node-id="quality_control_process">
+                            <div class="node-icon">
+                                <i class="fas fa-clipboard-check"></i>
+                            </div>
+                            <div class="node-name">Control de Calidad Proceso</div>
+                            <div class="node-status">0 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 99%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node control warning"
+                             style="left: 950px; top: 100px;"
+                             onclick="showProcessDetails('quality_control_out')"
+                             data-node-id="quality_control_out">
+                            <div class="node-icon">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <div class="node-name">Control de Calidad Final</div>
+                            <div class="node-status">1 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 96%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node process warning"
+                             style="left: 1100px; top: 100px;"
+                             onclick="showProcessDetails('packaging')"
+                             data-node-id="packaging">
+                            <div class="node-icon">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="node-name">Empaquetado</div>
+                            <div class="node-status">1 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 86%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node storage warning"
+                             style="left: 1250px; top: 100px;"
+                             onclick="showProcessDetails('warehouse')"
+                             data-node-id="warehouse">
+                            <div class="node-icon">
+                                <i class="fas fa-warehouse"></i>
+                            </div>
+                            <div class="node-name">Almacén Producto Terminado</div>
+                            <div class="node-status">2 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 98%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node output warning"
+                             style="left: 1400px; top: 100px;"
+                             onclick="showProcessDetails('shipping')"
+                             data-node-id="shipping">
+                            <div class="node-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="node-name">Despacho y Logística</div>
+                            <div class="node-status">1 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 91%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node utility operational"
+                             style="left: 650px; top: 200px;"
+                             onclick="showProcessDetails('energy_recovery')"
+                             data-node-id="energy_recovery">
+                            <div class="node-icon">
+                                <i class="fas fa-recycle"></i>
+                            </div>
+                            <div class="node-name">Recuperación de Energía</div>
+                            <div class="node-status">0 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 77%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node utility warning"
+                             style="left: 800px; top: 250px;"
+                             onclick="showProcessDetails('power_distribution')"
+                             data-node-id="power_distribution">
+                            <div class="node-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="node-name">Distribución Eléctrica</div>
+                            <div class="node-status">1 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 93%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node utility warning"
+                             style="left: 950px; top: 250px;"
+                             onclick="showProcessDetails('ups_systems')"
+                             data-node-id="ups_systems">
+                            <div class="node-icon">
+                                <i class="fas fa-battery-full"></i>
+                            </div>
+                            <div class="node-name">Sistemas UPS</div>
+                            <div class="node-status">2 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 86%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node utility operational"
+                             style="left: 350px; top: 200px;"
+                             onclick="showProcessDetails('water_treatment')"
+                             data-node-id="water_treatment">
+                            <div class="node-icon">
+                                <i class="fas fa-tint"></i>
+                            </div>
+                            <div class="node-name">Tratamiento de Agua</div>
+                            <div class="node-status">0 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node utility warning"
+                             style="left: 200px; top: 200px;"
+                             onclick="showProcessDetails('waste_management')"
+                             data-node-id="waste_management">
+                            <div class="node-icon">
+                                <i class="fas fa-trash-alt"></i>
+                            </div>
+                            <div class="node-name">Gestión de Residuos</div>
+                            <div class="node-status">1 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 91%"></div>
+                            </div>
+                        </div>
+                        <div class="process-node control operational"
+                             style="left: 650px; top: 300px;"
+                             onclick="showProcessDetails('control_room')"
+                             data-node-id="control_room">
+                            <div class="node-icon">
+                                <i class="fas fa-desktop"></i>
+                            </div>
+                            <div class="node-name">Sala de Control Central</div>
+                            <div class="node-status">0 alertas</div>
+                            <div class="throughput-bar">
+                                <div class="throughput-fill" style="width: 96%"></div>
+                            </div>
+                        </div>
+                        <div class="connection-line"
+                             style="left: 170px;
+                                    top: 138.5px;
+                                    width: 18.0px;
+                                    transform: rotate(0.0deg);"
+                             data-from="raw_materials" data-to="quality_control_in">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 182.0px;
+                                    top: 134.0px;
+                                    transform: rotate(0.0deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 320px;
+                                    top: 138.5px;
+                                    width: 18.0px;
+                                    transform: rotate(0.0deg);"
+                             data-from="quality_control_in" data-to="preparation">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 332.0px;
+                                    top: 134.0px;
+                                    transform: rotate(0.0deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 470px;
+                                    top: 138.5px;
+                                    width: 46.309518948453004px;
+                                    transform: rotate(-59.03624346792648deg);"
+                             data-from="preparation" data-to="thermal_treatment">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 487.82605093486967px;
+                                    top: 94.28991510855053px;
+                                    transform: rotate(-59.03624346792648deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 470px;
+                                    top: 138.5px;
+                                    width: 46.309518948453004px;
+                                    transform: rotate(59.03624346792648deg);"
+                             data-from="preparation" data-to="quality_control_process">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 487.82605093486967px;
+                                    top: 173.71008489144947px;
+                                    transform: rotate(59.03624346792648deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 620px;
+                                    top: 88.5px;
+                                    width: 18.0px;
+                                    transform: rotate(0.0deg);"
+                             data-from="thermal_treatment" data-to="cooling">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 632.0px;
+                                    top: 84.0px;
+                                    transform: rotate(0.0deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 560px;
+                                    top: 128.5px;
+                                    width: 153.5294535724685px;
+                                    transform: rotate(25.016893478100023deg);"
+                             data-from="thermal_treatment" data-to="energy_recovery">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 693.1258023200568px;
+                                    top: 188.9253744160265px;
+                                    transform: rotate(25.016893478100023deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 770px;
+                                    top: 88.5px;
+                                    width: 46.309518948453004px;
+                                    transform: rotate(59.03624346792648deg);"
+                             data-from="cooling" data-to="assembly">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 787.8260509348697px;
+                                    top: 123.71008489144947px;
+                                    transform: rotate(59.03624346792648deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 920px;
+                                    top: 138.5px;
+                                    width: 18.0px;
+                                    transform: rotate(0.0deg);"
+                             data-from="assembly" data-to="quality_control_out">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 932.0px;
+                                    top: 134.0px;
+                                    transform: rotate(0.0deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 620px;
+                                    top: 188.5px;
+                                    width: 174.81541692269406px;
+                                    transform: rotate(-15.524110996754258deg);"
+                             data-from="quality_control_process" data-to="assembly">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 782.4377850844407px;
+                                    top: 137.21172636543312px;
+                                    transform: rotate(-15.524110996754258deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 1070px;
+                                    top: 138.5px;
+                                    width: 18.0px;
+                                    transform: rotate(0.0deg);"
+                             data-from="quality_control_out" data-to="packaging">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 1082.0px;
+                                    top: 134.0px;
+                                    transform: rotate(0.0deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 1220px;
+                                    top: 138.5px;
+                                    width: 18.0px;
+                                    transform: rotate(0.0deg);"
+                             data-from="packaging" data-to="warehouse">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 1232.0px;
+                                    top: 134.0px;
+                                    transform: rotate(0.0deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 1370px;
+                                    top: 138.5px;
+                                    width: 18.0px;
+                                    transform: rotate(0.0deg);"
+                             data-from="warehouse" data-to="shipping">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 1382.0px;
+                                    top: 134.0px;
+                                    transform: rotate(0.0deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 770px;
+                                    top: 238.5px;
+                                    width: 46.309518948453004px;
+                                    transform: rotate(59.03624346792648deg);"
+                             data-from="energy_recovery" data-to="power_distribution">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 787.8260509348697px;
+                                    top: 273.71008489144947px;
+                                    transform: rotate(59.03624346792648deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 920px;
+                                    top: 288.5px;
+                                    width: 18.0px;
+                                    transform: rotate(0.0deg);"
+                             data-from="power_distribution" data-to="ups_systems">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 932.0px;
+                                    top: 284.0px;
+                                    transform: rotate(0.0deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 470px;
+                                    top: 238.5px;
+                                    width: 222.30749027719963px;
+                                    transform: rotate(-39.80557109226519deg);"
+                             data-from="water_treatment" data-to="cooling">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 634.7813446448315px;
+                                    top: 91.68221279597375px;
+                                    transform: rotate(-39.80557109226519deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 410px;
+                                    top: 198.5px;
+                                    width: 8.0px;
+                                    transform: rotate(-90.0deg);"
+                             data-from="water_treatment" data-to="preparation">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 404.0px;
+                                    top: 186.0px;
+                                    transform: rotate(-90.0deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 650px;
+                                    top: 338.5px;
+                                    width: 257.0724809414742px;
+                                    transform: rotate(-131.98721249581666deg);"
+                             data-from="control_room" data-to="preparation">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 472.02757677946937px;
+                                    top: 142.919529754966px;
+                                    transform: rotate(-131.98721249581666deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 710px;
+                                    top: 298.5px;
+                                    width: 214.71568097509268px;
+                                    transform: rotate(-131.42366562500266deg);"
+                             data-from="control_room" data-to="thermal_treatment">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 561.9394596450421px;
+                                    top: 132.9980542643811px;
+                                    transform: rotate(-131.42366562500266deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 710px;
+                                    top: 298.5px;
+                                    width: 180.09372712298546px;
+                                    transform: rotate(-38.65980825409009deg);"
+                             data-from="control_room" data-to="assembly">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 844.6295742866837px;
+                                    top: 181.4963405706531px;
+                                    transform: rotate(-38.65980825409009deg);">
+                        </div>
+                        <div class="connection-line"
+                             style="left: 770px;
+                                    top: 338.5px;
+                                    width: 46.309518948453004px;
+                                    transform: rotate(-59.03624346792648deg);"
+                             data-from="control_room" data-to="power_distribution">
+                        </div>
+                        <div class="connection-arrow"
+                             style="left: 787.8260509348697px;
+                                    top: 294.28991510855053px;
+                                    transform: rotate(-59.03624346792648deg);">
+                        </div>
+                    </div>
+
+                    <!-- Process Legend -->
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h6 class="text-white mb-2">Leyenda de Procesos:</h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge" style="background: rgba(76, 175, 80, 0.6);">
+                                    <i class="fas fa-circle me-1"></i>Entrada
+                                </span>
+                                <span class="badge" style="background: rgba(33, 150, 243, 0.6);">
+                                    <i class="fas fa-circle me-1"></i>Proceso
+                                </span>
+                                <span class="badge" style="background: rgba(255, 193, 7, 0.6);">
+                                    <i class="fas fa-circle me-1"></i>Control
+                                </span>
+                                <span class="badge" style="background: rgba(156, 39, 176, 0.6);">
+                                    <i class="fas fa-circle me-1"></i>Servicios
+                                </span>
+                                <span class="badge" style="background: rgba(255, 87, 34, 0.6);">
+                                    <i class="fas fa-circle me-1"></i>Almacén
+                                </span>
+                                <span class="badge" style="background: rgba(244, 67, 54, 0.6);">
+                                    <i class="fas fa-circle me-1"></i>Salida
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voltage Systems -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="glass-card p-4">
+                    <h6 class="text-white mb-3">
+                        <i class="fas fa-plug me-2"></i>
+                        Baja Tensión (400V)
+                    </h6>
+                    <div class="text-white">
+                        <div class="row mb-2">
+                            <div class="col-6">Tensión:</div>
+                            <div class="col-6"><strong>398.2V</strong></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">Corriente:</div>
+                            <div class="col-6"><strong>57.0A</strong></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">Potencia:</div>
+                            <div class="col-6"><strong>26.3kW</strong></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">Tipo:</div>
+                            <div class="col-6"><strong>Trifásico AC</strong></div>
+                        </div>
+                        <hr class="border-light">
+                        <h6 class="text-info mb-2">Circuitos:</h6>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>LV-01</span>
+                            <span class="badge bg-success">82%</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>LV-02</span>
+                            <span class="badge bg-success">50%</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>LV-03</span>
+                            <span class="badge bg-warning">83%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4">
+                    <h6 class="text-white mb-3">
+                        <i class="fas fa-bolt me-2"></i>
+                        Media Tensión (13.8kV)
+                    </h6>
+                    <div class="text-white">
+                        <div class="row mb-2">
+                            <div class="col-6">Tensión:</div>
+                            <div class="col-6"><strong>13583V</strong></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">Corriente:</div>
+                            <div class="col-6"><strong>256.7A</strong></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">Potencia:</div>
+                            <div class="col-6"><strong>3388kW</strong></div>
+                        </div>
+                        <hr class="border-light">
+                        <h6 class="text-info mb-2">Transformadores:</h6>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>MT-T01</span>
+                            <span>
+                                <span class="badge bg-info">93%</span>
+                                <span class="badge bg-warning">50°C</span>
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>MT-T02</span>
+                            <span>
+                                <span class="badge bg-info">66%</span>
+                                <span class="badge bg-warning">47°C</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4">
+                    <h6 class="text-white mb-3">
+                        <i class="fas fa-lightning-bolt me-2"></i>
+                        Alta Tensión (138kV)
+                    </h6>
+                    <div class="text-white">
+                        <div class="row mb-2">
+                            <div class="col-6">Tensión:</div>
+                            <div class="col-6"><strong>142034V</strong></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">Corriente:</div>
+                            <div class="col-6"><strong>92.9A</strong></div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">Potencia:</div>
+                            <div class="col-6"><strong>10461kW</strong></div>
+                        </div>
+                        <hr class="border-light">
+                        <h6 class="text-info mb-2">Protecciones:</h6>
+                        <span class="badge bg-success me-1 mb-1">Diferencial</span>
+                        <span class="badge bg-success me-1 mb-1">Sobrecorriente</span>
+                        <span class="badge bg-success me-1 mb-1">Distancia</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Process Monitoring -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="glass-card p-4">
+                    <h5 class="text-white mb-3">
+                        <i class="fas fa-microscope me-2"></i>
+                        <span id="selectedProcessTitle">Monitoreo Contextual de Procesos</span>
+                        <button class="btn btn-sm btn-outline-light ms-2" onclick="resetProcessView()">
+                            <i class="fas fa-home"></i> Vista General
+                        </button>
+                    </h5>
+                    <div id="processMonitoringContent">
+                        <div class="text-center text-light">
+                            <i class="fas fa-mouse-pointer fa-3x mb-3 text-info"></i>
+                            <h6>Seleccione un proceso en el diagrama superior para ver su información detallada</h6>
+                            <p>Cada área mostrará sensores específicos, información de red, alertas MLE Star y detalles técnicos contextuales.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- I/O Modules and UPS Systems -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="glass-card p-4">
+                    <h6 class="text-white mb-3">
+                        <i class="fas fa-microchip me-2"></i>
+                        Módulos I/O
+                    </h6>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong class="text-white">IO-001</strong>
+                            <span class="badge bg-success">OPERATIONAL</span>
+                        </div>
+                        <small class="text-light">Sector A - PLC1</small>
+                        <div class="row mt-2">
+                            <div class="col-3 text-center">
+                                <small class="text-info">DI: 16</small>
+                            </div>
+                            <div class="col-3 text-center">
+                                <small class="text-warning">DO: 12</small>
+                            </div>
+                            <div class="col-3 text-center">
+                                <small class="text-success">AI: 8</small>
+                            </div>
+                            <div class="col-3 text-center">
+                                <small class="text-danger">AO: 4</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong class="text-white">IO-002</strong>
+                            <span class="badge bg-success">OPERATIONAL</span>
+                        </div>
+                        <small class="text-light">Sector B - PLC2</small>
+                        <div class="row mt-2">
+                            <div class="col-3 text-center">
+                                <small class="text-info">DI: 24</small>
+                            </div>
+                            <div class="col-3 text-center">
+                                <small class="text-warning">DO: 16</small>
+                            </div>
+                            <div class="col-3 text-center">
+                                <small class="text-success">AI: 12</small>
+                            </div>
+                            <div class="col-3 text-center">
+                                <small class="text-danger">AO: 6</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong class="text-white">IO-003</strong>
+                            <span class="badge bg-warning">MAINTENANCE</span>
+                        </div>
+                        <small class="text-light">Sector C - PLC3</small>
+                        <div class="row mt-2">
+                            <div class="col-3 text-center">
+                                <small class="text-info">DI: 32</small>
+                            </div>
+                            <div class="col-3 text-center">
+                                <small class="text-warning">DO: 24</small>
+                            </div>
+                            <div class="col-3 text-center">
+                                <small class="text-success">AI: 16</small>
+                            </div>
+                            <div class="col-3 text-center">
+                                <small class="text-danger">AO: 8</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="glass-card p-4">
+                    <h6 class="text-white mb-3">
+                        <i class="fas fa-battery-full me-2"></i>
+                        Sistemas UPS
+                    </h6>
+                    <div class="mb-3 p-2 border border-secondary rounded">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="ups-indicator ups-battery"></span>
+                            <strong class="text-white">UPS-001</strong>
+                        </div>
+                        <small class="text-light">Sala de Control Principal</small><br>
+                        <small class="text-info">APC Symmetra PX 100kVA</small>
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <small class="text-white">Carga: <strong>72%</strong></small>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-white">Autonomía: <strong>105min</strong></small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-white">Load: <strong>74%</strong></small>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-battery">En batería</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 p-2 border border-secondary rounded">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="ups-indicator ups-online"></span>
+                            <strong class="text-white">UPS-002</strong>
+                        </div>
+                        <small class="text-light">Sector A - Control Local</small><br>
+                        <small class="text-info">Schneider Galaxy VX 40kVA</small>
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <small class="text-white">Carga: <strong>98%</strong></small>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-white">Autonomía: <strong>233min</strong></small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-white">Load: <strong>60%</strong></small>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-online">En línea</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 p-2 border border-secondary rounded">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="ups-indicator ups-charging"></span>
+                            <strong class="text-white">UPS-003</strong>
+                        </div>
+                        <small class="text-light">Sector B - Refrigeración</small><br>
+                        <small class="text-info">Eaton 9PX 20kVA</small>
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <small class="text-white">Carga: <strong>88%</strong></small>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-white">Autonomía: <strong>91min</strong></small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-white">Load: <strong>75%</strong></small>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-charging">Cargando</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Recommendations -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="glass-card p-4">
+                    <h5 class="text-white mb-3">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        Recomendaciones de Seguridad - Acciones Detalladas
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="glass-card p-3 recommendation-card priority-high" onclick="showRecommendationDetails('SEC-001')">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="text-white">Implementar Autenticación Multifactor</h6>
+                                    <span class="badge bg-high">HIGH</span>
+                                </div>
+                                <p class="text-light small">Los operadores acceden solo con usuario/contraseña</p>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small class="text-info">Riesgo: 8.5/10</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-warning">Tiempo: 2-3 semanas</small>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-success">Costo: $15,000 - $25,000</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="glass-card p-3 recommendation-card priority-critical" onclick="showRecommendationDetails('SEC-002')">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="text-white">Segmentación de Red Industrial</h6>
+                                    <span class="badge bg-critical">CRITICAL</span>
+                                </div>
+                                <p class="text-light small">Red industrial no está segmentada adecuadamente</p>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small class="text-info">Riesgo: 9.2/10</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-warning">Tiempo: 4-6 semanas</small>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-success">Costo: $50,000 - $80,000</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="glass-card p-3 recommendation-card priority-medium" onclick="showRecommendationDetails('SEC-003')">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="text-white">Actualización de Firmware SCADA</h6>
+                                    <span class="badge bg-medium">MEDIUM</span>
+                                </div>
+                                <p class="text-light small">Sistemas SCADA con firmware desactualizado</p>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small class="text-info">Riesgo: 6.8/10</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-warning">Tiempo: 1-2 semanas</small>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-success">Costo: $8,000 - $15,000</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HRM and MLE Star Analysis -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="glass-card p-4">
+                    <h6 class="text-white mb-3">
+                        <i class="fas fa-users me-2"></i>
+                        Análisis HRM (Human Resource Management)
+                    </h6>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-white">Eficiencia de Personal:</span>
+                            <span class="text-success h6">89.4%</span>
+                        </div>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-success" style="width: 89%"></div>
+                        </div>
+                    </div>
+                    <h6 class="text-info mb-2">Brechas de Habilidades:</h6>
+                    <ul class="text-light"><li>Ciberseguridad industrial avanzada</li><li>Mantenimiento predictivo con IoT</li><li>Análisis de datos industriales</li>
+                    </ul>
+                    <h6 class="text-warning mb-2">Personal Recomendado:</h6>
+                    <div class="text-white">
+                        Actual: <strong>52</strong> |
+                        Recomendado: <strong>58</strong> |
+                        Déficit: <strong class="text-danger">6</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="glass-card p-4">
+                    <h6 class="text-white mb-3">
+                        <i class="fas fa-robot me-2"></i>
+                        Análisis MLE Star (Machine Learning Engine)
+                    </h6>
+                    <div class="mb-3">
+                        <h6 class="text-warning mb-2">Predicciones de Falla:</h6>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-white">Compresor A-001</span>
+                            <div>
+                                <span class="badge bg-success">23%</span>
+                                <small class="text-light">(45 días)</small>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-white">Bomba B-003</span>
+                            <div>
+                                <span class="badge bg-danger">67%</span>
+                                <small class="text-light">(12 días)</small>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-white">Motor C-002</span>
+                            <div>
+                                <span class="badge bg-success">15%</span>
+                                <small class="text-light">(89 días)</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-white">Eficiencia Energética:</span>
+                            <span class="text-info h6">86.3%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" style="width: 86%"></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-success h5">Ahorro Proyectado: $127,500 anuales</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Export with User Selection -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="glass-card p-4">
+                    <h5 class="text-white mb-3">
+                        <i class="fas fa-share-alt me-2"></i>
+                        Envío de Informes a Usuarios Autorizados
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h6 class="text-info mb-2">Seleccionar Destinatarios:</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="USR-001" id="user_USR-001" name="selected_users">
+                                        <label class="form-check-label text-white" for="user_USR-001">
+                                            <strong>Juan Pérez</strong> - Plant Manager<br>
+                                            <small class="text-light">j.perez@company.com</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="USR-002" id="user_USR-002" name="selected_users">
+                                        <label class="form-check-label text-white" for="user_USR-002">
+                                            <strong>María González</strong> - Production Supervisor<br>
+                                            <small class="text-light">m.gonzalez@company.com</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="USR-003" id="user_USR-003" name="selected_users">
+                                        <label class="form-check-label text-white" for="user_USR-003">
+                                            <strong>Carlos Rodríguez</strong> - Maintenance Chief<br>
+                                            <small class="text-light">c.rodriguez@company.com</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="USR-004" id="user_USR-004" name="selected_users">
+                                        <label class="form-check-label text-white" for="user_USR-004">
+                                            <strong>Ana Martínez</strong> - Quality Manager<br>
+                                            <small class="text-light">a.martinez@company.com</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="USR-005" id="user_USR-005" name="selected_users">
+                                        <label class="form-check-label text-white" for="user_USR-005">
+                                            <strong>Roberto Silva</strong> - Safety Engineer<br>
+                                            <small class="text-light">r.silva@company.com</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-info mb-2">Tipo de Informe:</h6>
+                            <select class="form-select mb-3" id="reportType">
+                                <option value="complete">Informe Completo</option>
+                                <option value="summary">Resumen Ejecutivo</option>
+                                <option value="security">Solo Seguridad</option>
+                                <option value="production">Solo Producción</option>
+                            </select>
+                            <button class="btn btn-success w-100 mb-2" onclick="sendReport()">
+                                <i class="fas fa-paper-plane me-2"></i>Enviar Informe
+                            </button>
+                            <button class="btn btn-info w-100" onclick="saveReportLog()">
+                                <i class="fas fa-save me-2"></i>Guardar Log
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="row">
+            <div class="col-12">
+                <div class="glass-card p-3 text-center">
+                    <div class="text-white">
+                        <small>
+                            Dashboard actualizado automáticamente cada 10 segundos |
+                            <a href="mailto:ggwre04p0@mozmail.com" class="text-info">ggwre04p0@mozmail.com</a> |
+                            <a href="https://www.linkedin.com/in/martín-iribarne-swtf/" class="text-info" target="_blank">LinkedIn</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals for detailed information -->
+    <!-- Recommendation Details Modal -->
+    <div class="modal fade" id="recommendationModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recommendationTitle">Detalles de Recomendación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="recommendationBody">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sector Details Modal -->
+    <div class="modal fade" id="sectorModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sectorTitle">Detalles del Sector</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="sectorBody">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos del sistema
+        const systemData = {
+        "timestamp": "2025-09-19 16:54:18.075827",
+        "system_health": {
+                "overall_score": 87.28787414475515,
+                "cpu_usage": 13.321567718801607,
+                "memory_usage": 51.635846937030806,
+                "temperature": 42.45630187608957,
+                "uptime_hours": 1951
+        },
+        "voltage_systems": {
+                "low_voltage": {
+                        "name": "Baja Tensi\u00f3n (400V)",
+                        "voltage": 398.1773443593245,
+                        "current": 57.01449953367665,
+                        "power": 26.327085991289493,
+                        "phase_type": "Trif\u00e1sico",
+                        "ac_dc": "AC",
+                        "status": "NORMAL",
+                        "circuits": [
+                                {
+                                        "id": "LV-01",
+                                        "load": 81.74180470713335,
+                                        "status": "NORMAL"
+                                },
+                                {
+                                        "id": "LV-02",
+                                        "load": 49.6957124205047,
+                                        "status": "NORMAL"
+                                },
+                                {
+                                        "id": "LV-03",
+                                        "load": 83.31790845654498,
+                                        "status": "WARNING"
+                                }
+                        ]
+                },
+                "medium_voltage": {
+                        "name": "Media Tensi\u00f3n (13.8kV)",
+                        "voltage": 13583.173680002204,
+                        "current": 256.6947723603111,
+                        "power": 3388.369972241624,
+                        "phase_type": "Trif\u00e1sico",
+                        "ac_dc": "AC",
+                        "status": "NORMAL",
+                        "transformers": [
+                                {
+                                        "id": "MT-T01",
+                                        "load": 93.06122085478518,
+                                        "temp": 49.55165928683127
+                                },
+                                {
+                                        "id": "MT-T02",
+                                        "load": 66.2362360843407,
+                                        "temp": 46.959916785359965
+                                }
+                        ]
+                },
+                "high_voltage": {
+                        "name": "Alta Tensi\u00f3n (138kV)",
+                        "voltage": 142033.53018494384,
+                        "current": 92.89140248296536,
+                        "power": 10460.80871198638,
+                        "phase_type": "Trif\u00e1sico",
+                        "ac_dc": "AC",
+                        "status": "NORMAL",
+                        "protection_systems": [
+                                "Diferencial",
+                                "Sobrecorriente",
+                                "Distancia"
+                        ]
+                }
+        },
+        "sensors": {
+                "temperature": [
+                        {
+                                "id": "TEMP-001",
+                                "location": "Sector A - L\u00ednea 1",
+                                "value": 20.577429997059156,
+                                "unit": "\u00b0C",
+                                "status": "NORMAL",
+                                "min": 15,
+                                "max": 30
+                        },
+                        {
+                                "id": "TEMP-002",
+                                "location": "Sector B - Almac\u00e9n Fr\u00edo",
+                                "value": 3.1315902329058574,
+                                "unit": "\u00b0C",
+                                "status": "NORMAL",
+                                "min": -5,
+                                "max": 5
+                        },
+                        {
+                                "id": "TEMP-003",
+                                "location": "Sector C - Hornos",
+                                "value": 947.9443342730568,
+                                "unit": "\u00b0C",
+                                "status": "NORMAL",
+                                "min": 800,
+                                "max": 1000
+                        },
+                        {
+                                "id": "TEMP-004",
+                                "location": "Sector D - Calderas",
+                                "value": 187.63337437747964,
+                                "unit": "\u00b0C",
+                                "status": "WARNING",
+                                "min": 150,
+                                "max": 200
+                        }
+                ],
+                "humidity": [
+                        {
+                                "id": "HUM-001",
+                                "location": "Sector A - L\u00ednea 1",
+                                "value": 51.60519115184115,
+                                "unit": "%RH",
+                                "status": "NORMAL",
+                                "min": 40,
+                                "max": 60
+                        },
+                        {
+                                "id": "HUM-002",
+                                "location": "Sector B - Almac\u00e9n",
+                                "value": 37.309414900625285,
+                                "unit": "%RH",
+                                "status": "NORMAL",
+                                "min": 30,
+                                "max": 50
+                        },
+                        {
+                                "id": "HUM-003",
+                                "location": "Sala de Control",
+                                "value": 43.33169408175514,
+                                "unit": "%RH",
+                                "status": "NORMAL",
+                                "min": 40,
+                                "max": 50
+                        }
+                ],
+                "io_modules": [
+                        {
+                                "id": "IO-001",
+                                "location": "Sector A - PLC1",
+                                "digital_inputs": 16,
+                                "digital_outputs": 12,
+                                "analog_inputs": 8,
+                                "analog_outputs": 4,
+                                "status": "OPERATIONAL"
+                        },
+                        {
+                                "id": "IO-002",
+                                "location": "Sector B - PLC2",
+                                "digital_inputs": 24,
+                                "digital_outputs": 16,
+                                "analog_inputs": 12,
+                                "analog_outputs": 6,
+                                "status": "OPERATIONAL"
+                        },
+                        {
+                                "id": "IO-003",
+                                "location": "Sector C - PLC3",
+                                "digital_inputs": 32,
+                                "digital_outputs": 24,
+                                "analog_inputs": 16,
+                                "analog_outputs": 8,
+                                "status": "MAINTENANCE"
+                        }
+                ]
+        },
+        "ups_systems": [
+                {
+                        "id": "UPS-001",
+                        "location": "Sala de Control Principal",
+                        "model": "APC Symmetra PX 100kVA",
+                        "status": "ON_BATTERY",
+                        "battery_charge": 71.58582508231437,
+                        "runtime_remaining": 105,
+                        "load_percentage": 74.42367705288424,
+                        "input_voltage": 403.89158416665487,
+                        "output_voltage": 401.24839151586883,
+                        "last_test": "2025-09-15 14:30:00"
+                },
+                {
+                        "id": "UPS-002",
+                        "location": "Sector A - Control Local",
+                        "model": "Schneider Galaxy VX 40kVA",
+                        "status": "ON_LINE",
+                        "battery_charge": 98.49133298110897,
+                        "runtime_remaining": 233,
+                        "load_percentage": 59.73325316146995,
+                        "input_voltage": 416.15527293928443,
+                        "output_voltage": 389.2027280655165,
+                        "last_test": "2025-09-18 09:15:00"
+                },
+                {
+                        "id": "UPS-003",
+                        "location": "Sector B - Refrigeraci\u00f3n",
+                        "model": "Eaton 9PX 20kVA",
+                        "status": "CHARGING",
+                        "battery_charge": 87.85663146873232,
+                        "runtime_remaining": 91,
+                        "load_percentage": 74.92897254277887,
+                        "input_voltage": 391.2684084345406,
+                        "output_voltage": 407.886607368632,
+                        "last_test": "2025-09-17 16:45:00"
+                }
+        ],
+        "process_flow": {
+                "raw_materials": {
+                        "id": "raw_materials",
+                        "name": "Materias Primas",
+                        "type": "input",
+                        "icon": "fas fa-boxes",
+                        "status": "operational",
+                        "alerts": 0,
+                        "personnel": 4,
+                        "throughput": 94.13650206179707,
+                        "connections": [
+                                "quality_control_in"
+                        ],
+                        "position": {
+                                "x": 50,
+                                "y": 100
+                        },
+                        "sensors": {
+                                "weight_scales": [
+                                        {
+                                                "id": "WS-001",
+                                                "type": "B\u00e1scula Industrial",
+                                                "value": 10.44042050463338,
+                                                "unit": "Ton",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "WS-002",
+                                                "type": "B\u00e1scula de Precisi\u00f3n",
+                                                "value": 1837.5304915880372,
+                                                "unit": "kg",
+                                                "status": "NORMAL"
+                                        }
+                                ],
+                                "inventory": [
+                                        {
+                                                "id": "INV-001",
+                                                "material": "Acero Inoxidable 316L",
+                                                "quantity": 87.49349352784216,
+                                                "unit": "%",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "INV-002",
+                                                "material": "Pol\u00edmero PET",
+                                                "quantity": 72.04516838717409,
+                                                "unit": "%",
+                                                "status": "WARNING"
+                                        }
+                                ]
+                        },
+                        "network": {
+                                "vlan": "VLAN-100-RAW",
+                                "subnet": "192.168.100.0/24",
+                                "devices": 12,
+                                "bandwidth_usage": 30.339387427648546,
+                                "security_level": "HIGH"
+                        }
+                },
+                "quality_control_in": {
+                        "id": "quality_control_in",
+                        "name": "Control de Calidad Entrada",
+                        "type": "process",
+                        "icon": "fas fa-search",
+                        "status": "operational",
+                        "alerts": 0,
+                        "personnel": 4,
+                        "throughput": 96.01216413260065,
+                        "connections": [
+                                "preparation"
+                        ],
+                        "position": {
+                                "x": 200,
+                                "y": 100
+                        },
+                        "sensors": {
+                                "sampling": [
+                                        {
+                                                "id": "SAMP-001",
+                                                "type": "Muestreador Autom\u00e1tico",
+                                                "samples_hour": 21,
+                                                "status": "OPERATIONAL"
+                                        },
+                                        {
+                                                "id": "SAMP-002",
+                                                "type": "Analizador Espectral",
+                                                "accuracy": 99.81878941893258,
+                                                "unit": "%",
+                                                "status": "OPERATIONAL"
+                                        }
+                                ],
+                                "compliance": [
+                                        {
+                                                "standard": "ISO 9001:2015",
+                                                "compliance": 95.90312859167226,
+                                                "last_audit": "2025-09-15"
+                                        },
+                                        {
+                                                "standard": "FDA 21 CFR 11",
+                                                "compliance": 97.60094408094476,
+                                                "incidents": 2
+                                        }
+                                ],
+                                "safety_alerts": [
+                                        {
+                                                "type": "Contaminaci\u00f3n detectada",
+                                                "level": "LOW",
+                                                "timestamp": "2025-09-19 14:23:00"
+                                        },
+                                        {
+                                                "type": "Desviaci\u00f3n de especificaci\u00f3n",
+                                                "level": "MEDIUM",
+                                                "timestamp": "2025-09-19 12:15:00"
+                                        }
+                                ]
+                        },
+                        "network": {
+                                "vlan": "VLAN-110-QC",
+                                "subnet": "192.168.110.0/24",
+                                "devices": 18,
+                                "bandwidth_usage": 64.89277869932565,
+                                "security_level": "CRITICAL"
+                        }
+                },
+                "preparation": {
+                        "id": "preparation",
+                        "name": "Preparaci\u00f3n y Mezclado",
+                        "type": "process",
+                        "icon": "fas fa-blender",
+                        "status": "operational",
+                        "alerts": 3,
+                        "personnel": 7,
+                        "throughput": 82.92625783171698,
+                        "connections": [
+                                "thermal_treatment",
+                                "quality_control_process"
+                        ],
+                        "position": {
+                                "x": 350,
+                                "y": 100
+                        },
+                        "sensors": {
+                                "weight_flow": [
+                                        {
+                                                "id": "WF-001",
+                                                "type": "Sensor de Peso Din\u00e1mico",
+                                                "value": 1327.395742198502,
+                                                "unit": "kg/h",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "WF-002",
+                                                "type": "Caudal\u00edmetro M\u00e1sico",
+                                                "value": 994.2591660050407,
+                                                "unit": "L/min",
+                                                "status": "NORMAL"
+                                        }
+                                ],
+                                "mixing_parameters": [
+                                        {
+                                                "id": "MIX-001",
+                                                "parameter": "Velocidad de Mezclado",
+                                                "value": 218.49988202211586,
+                                                "unit": "RPM",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "MIX-002",
+                                                "parameter": "Presi\u00f3n de Mezclado",
+                                                "value": 3.4100815527693067,
+                                                "unit": "bar",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "MIX-003",
+                                                "parameter": "Temperatura de Mezcla",
+                                                "value": 71.49358364439026,
+                                                "unit": "\u00b0C",
+                                                "status": "WARNING"
+                                        }
+                                ],
+                                "fluid_sensors": [
+                                        {
+                                                "id": "FL-001",
+                                                "type": "Sensor de Viscosidad",
+                                                "value": 464.6025073255257,
+                                                "unit": "cP",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "FL-002",
+                                                "type": "Dens\u00edmetro",
+                                                "value": 0.8557415949819495,
+                                                "unit": "g/cm\u00b3",
+                                                "status": "NORMAL"
+                                        }
+                                ]
+                        },
+                        "network": {
+                                "vlan": "VLAN-120-PREP",
+                                "subnet": "192.168.120.0/24",
+                                "devices": 25,
+                                "bandwidth_usage": 67.91419176018931,
+                                "security_level": "HIGH"
+                        }
+                },
+                "thermal_treatment": {
+                        "id": "thermal_treatment",
+                        "name": "Tratamiento T\u00e9rmico",
+                        "type": "process",
+                        "icon": "fas fa-fire",
+                        "status": "warning",
+                        "alerts": 3,
+                        "personnel": 11,
+                        "throughput": 80.23829657521937,
+                        "connections": [
+                                "cooling",
+                                "energy_recovery"
+                        ],
+                        "position": {
+                                "x": 500,
+                                "y": 50
+                        },
+                        "sensors": {
+                                "thermal_monitoring": [
+                                        {
+                                                "id": "TEMP-001",
+                                                "type": "Horno Principal",
+                                                "value": 916.5376992069359,
+                                                "unit": "\u00b0C",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "TEMP-002",
+                                                "type": "C\u00e1mara de Enfriamiento",
+                                                "value": 209.5453589847024,
+                                                "unit": "\u00b0C",
+                                                "status": "WARNING"
+                                        },
+                                        {
+                                                "id": "TEMP-003",
+                                                "type": "Detector de Fugas T\u00e9rmica",
+                                                "value": 4.838493998525117,
+                                                "unit": "kW perdidos",
+                                                "status": "WARNING"
+                                        }
+                                ],
+                                "gas_monitoring": [
+                                        {
+                                                "id": "GAS-001",
+                                                "type": "Detector CO",
+                                                "value": 5.460537373381214,
+                                                "unit": "ppm",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "GAS-002",
+                                                "type": "Detector NH3",
+                                                "value": 7.1378980538431005,
+                                                "unit": "ppm",
+                                                "status": "CRITICAL"
+                                        },
+                                        {
+                                                "id": "GAS-003",
+                                                "type": "Analizador O2",
+                                                "value": 20.77197149975529,
+                                                "unit": "%",
+                                                "status": "NORMAL"
+                                        }
+                                ],
+                                "emergency_systems": [
+                                        {
+                                                "id": "EMG-001",
+                                                "system": "Sistema de Extinci\u00f3n",
+                                                "status": "ARMED",
+                                                "last_test": "2025-09-18"
+                                        },
+                                        {
+                                                "id": "EMG-002",
+                                                "system": "Evacuaci\u00f3n de Humos",
+                                                "status": "OPERATIONAL",
+                                                "capacity": "85%"
+                                        },
+                                        {
+                                                "id": "EMG-003",
+                                                "system": "Duchas de Emergencia",
+                                                "status": "READY",
+                                                "pressure": "3.2 bar"
+                                        }
+                                ]
+                        },
+                        "network": {
+                                "vlan": "VLAN-130-THERMAL",
+                                "subnet": "192.168.130.0/24",
+                                "devices": 32,
+                                "bandwidth_usage": 70.54040756742087,
+                                "security_level": "CRITICAL"
+                        }
+                },
+                "cooling": {
+                        "id": "cooling",
+                        "name": "Sistema de Enfriamiento",
+                        "type": "process",
+                        "icon": "fas fa-snowflake",
+                        "status": "operational",
+                        "alerts": 2,
+                        "personnel": 2,
+                        "throughput": 89.3611226722999,
+                        "connections": [
+                                "assembly"
+                        ],
+                        "position": {
+                                "x": 650,
+                                "y": 50
+                        }
+                },
+                "assembly": {
+                        "id": "assembly",
+                        "name": "L\u00ednea de Ensamblaje",
+                        "type": "process",
+                        "icon": "fas fa-cogs",
+                        "status": "operational",
+                        "alerts": 1,
+                        "personnel": 25,
+                        "throughput": 88.92022254967846,
+                        "connections": [
+                                "quality_control_out"
+                        ],
+                        "position": {
+                                "x": 800,
+                                "y": 100
+                        }
+                },
+                "quality_control_process": {
+                        "id": "quality_control_process",
+                        "name": "Control de Calidad Proceso",
+                        "type": "control",
+                        "icon": "fas fa-clipboard-check",
+                        "status": "operational",
+                        "alerts": 0,
+                        "personnel": 3,
+                        "throughput": 98.57525381380407,
+                        "connections": [
+                                "assembly"
+                        ],
+                        "position": {
+                                "x": 500,
+                                "y": 150
+                        }
+                },
+                "quality_control_out": {
+                        "id": "quality_control_out",
+                        "name": "Control de Calidad Final",
+                        "type": "control",
+                        "icon": "fas fa-award",
+                        "status": "operational",
+                        "alerts": 1,
+                        "personnel": 8,
+                        "throughput": 96.0027180858761,
+                        "connections": [
+                                "packaging"
+                        ],
+                        "position": {
+                                "x": 950,
+                                "y": 100
+                        }
+                },
+                "packaging": {
+                        "id": "packaging",
+                        "name": "Empaquetado",
+                        "type": "process",
+                        "icon": "fas fa-box",
+                        "status": "operational",
+                        "alerts": 1,
+                        "personnel": 12,
+                        "throughput": 86.43003183227226,
+                        "connections": [
+                                "warehouse"
+                        ],
+                        "position": {
+                                "x": 1100,
+                                "y": 100
+                        },
+                        "sensors": {
+                                "production_flow": [
+                                        {
+                                                "id": "FLOW-001",
+                                                "type": "Contador de Productos",
+                                                "value": 1884,
+                                                "unit": "unid/h",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "FLOW-002",
+                                                "type": "Sensor de Atascos",
+                                                "events": 2,
+                                                "unit": "eventos/h",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "FLOW-003",
+                                                "type": "Detector de Productos Defectuosos",
+                                                "rate": 2.016993884056938,
+                                                "unit": "%",
+                                                "status": "NORMAL"
+                                        }
+                                ],
+                                "printing_systems": [
+                                        {
+                                                "id": "PRINT-001",
+                                                "type": "Impresora Etiquetas A",
+                                                "status": "OPERATIONAL",
+                                                "queue": 32
+                                        },
+                                        {
+                                                "id": "PRINT-002",
+                                                "type": "Impresora C\u00f3digos QR",
+                                                "status": "MAINTENANCE",
+                                                "last_maintenance": "2025-09-18"
+                                        },
+                                        {
+                                                "id": "PRINT-003",
+                                                "type": "Sistema Colores",
+                                                "ink_levels": {
+                                                        "cyan": 75,
+                                                        "magenta": 60,
+                                                        "yellow": 85,
+                                                        "black": 45
+                                                }
+                                        }
+                                ],
+                                "it_integration": [
+                                        {
+                                                "system": "VLAN Seguridad Acceso",
+                                                "status": "MONITORING",
+                                                "last_event": "2025-09-19 15:23:00"
+                                        },
+                                        {
+                                                "system": "Configuraci\u00f3n Impresoras",
+                                                "status": "NEEDS_ATTENTION",
+                                                "issue": "Driver desactualizado"
+                                        },
+                                        {
+                                                "system": "Base de Datos Trazabilidad",
+                                                "status": "OPERATIONAL",
+                                                "records": 27370
+                                        }
+                                ],
+                                "maintenance_schedule": [
+                                        {
+                                                "equipment": "L\u00ednea de Empaque A",
+                                                "next_maintenance": "2025-09-25",
+                                                "type": "PREVENTIVO"
+                                        },
+                                        {
+                                                "equipment": "Robot Paletizador",
+                                                "next_maintenance": "2025-09-22",
+                                                "type": "CORRECTIVO"
+                                        },
+                                        {
+                                                "equipment": "Sistema Visi\u00f3n",
+                                                "next_maintenance": "2025-10-01",
+                                                "type": "CALIBRACI\u00d3N"
+                                        }
+                                ]
+                        },
+                        "network": {
+                                "vlan": "VLAN-150-PACK",
+                                "subnet": "192.168.150.0/24",
+                                "devices": 38,
+                                "bandwidth_usage": 80.80192234453241,
+                                "security_level": "HIGH"
+                        }
+                },
+                "warehouse": {
+                        "id": "warehouse",
+                        "name": "Almac\u00e9n Producto Terminado",
+                        "type": "storage",
+                        "icon": "fas fa-warehouse",
+                        "status": "operational",
+                        "alerts": 2,
+                        "personnel": 9,
+                        "throughput": 97.964969074924,
+                        "connections": [
+                                "shipping"
+                        ],
+                        "position": {
+                                "x": 1250,
+                                "y": 100
+                        }
+                },
+                "shipping": {
+                        "id": "shipping",
+                        "name": "Despacho y Log\u00edstica",
+                        "type": "output",
+                        "icon": "fas fa-truck",
+                        "status": "operational",
+                        "alerts": 1,
+                        "personnel": 8,
+                        "throughput": 91.45715882200162,
+                        "connections": [],
+                        "position": {
+                                "x": 1400,
+                                "y": 100
+                        }
+                },
+                "energy_recovery": {
+                        "id": "energy_recovery",
+                        "name": "Recuperaci\u00f3n de Energ\u00eda",
+                        "type": "utility",
+                        "icon": "fas fa-recycle",
+                        "status": "operational",
+                        "alerts": 0,
+                        "personnel": 3,
+                        "throughput": 76.7009771570323,
+                        "connections": [
+                                "power_distribution"
+                        ],
+                        "position": {
+                                "x": 650,
+                                "y": 200
+                        }
+                },
+                "power_distribution": {
+                        "id": "power_distribution",
+                        "name": "Distribuci\u00f3n El\u00e9ctrica",
+                        "type": "utility",
+                        "icon": "fas fa-bolt",
+                        "status": "operational",
+                        "alerts": 1,
+                        "personnel": 6,
+                        "throughput": 93.35652509058038,
+                        "connections": [
+                                "ups_systems"
+                        ],
+                        "position": {
+                                "x": 800,
+                                "y": 250
+                        },
+                        "sensors": {
+                                "electrical_monitoring": [
+                                        {
+                                                "id": "POW-001",
+                                                "type": "L\u00ednea Principal A",
+                                                "load": 84.74997271817391,
+                                                "unit": "%",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "POW-002",
+                                                "type": "L\u00ednea Principal B",
+                                                "load": 82.79533129920182,
+                                                "unit": "%",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "POW-003",
+                                                "type": "L\u00ednea de Emergencia",
+                                                "load": 9.513939089291178,
+                                                "unit": "%",
+                                                "status": "STANDBY"
+                                        },
+                                        {
+                                                "id": "POW-004",
+                                                "type": "Potencia Total Consumida",
+                                                "value": 3151.0226356960375,
+                                                "unit": "kW",
+                                                "status": "NORMAL"
+                                        }
+                                ],
+                                "grid_status": [
+                                        {
+                                                "id": "GRID-001",
+                                                "parameter": "Frecuencia de Red",
+                                                "value": 50.0776880663001,
+                                                "unit": "Hz",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "GRID-002",
+                                                "parameter": "Factor de Potencia",
+                                                "value": 0.9763265298621396,
+                                                "unit": "",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "GRID-003",
+                                                "parameter": "Distorsi\u00f3n Arm\u00f3nica",
+                                                "value": 2.3648165797323966,
+                                                "unit": "%THD",
+                                                "status": "WARNING"
+                                        }
+                                ],
+                                "mle_recommendations": [
+                                        {
+                                                "priority": "HIGH",
+                                                "action": "Optimizar carga en L\u00ednea Principal A",
+                                                "savings": "12.5 kW/h"
+                                        },
+                                        {
+                                                "priority": "MEDIUM",
+                                                "action": "Revisar filtros arm\u00f3nicos",
+                                                "cost_avoidance": "$8,500"
+                                        },
+                                        {
+                                                "priority": "LOW",
+                                                "action": "Programar mantenimiento preventivo",
+                                                "efficiency_gain": "3.2%"
+                                        }
+                                ]
+                        },
+                        "network": {
+                                "vlan": "VLAN-200-POWER",
+                                "subnet": "192.168.200.0/24",
+                                "devices": 28,
+                                "bandwidth_usage": 45.857035401424106,
+                                "security_level": "CRITICAL"
+                        }
+                },
+                "ups_systems": {
+                        "id": "ups_systems",
+                        "name": "Sistemas UPS",
+                        "type": "utility",
+                        "icon": "fas fa-battery-full",
+                        "status": "warning",
+                        "alerts": 2,
+                        "personnel": 2,
+                        "throughput": 86.2408952782453,
+                        "connections": [],
+                        "position": {
+                                "x": 950,
+                                "y": 250
+                        }
+                },
+                "water_treatment": {
+                        "id": "water_treatment",
+                        "name": "Tratamiento de Agua",
+                        "type": "utility",
+                        "icon": "fas fa-tint",
+                        "status": "operational",
+                        "alerts": 0,
+                        "personnel": 3,
+                        "throughput": 92.24090160633126,
+                        "connections": [
+                                "cooling",
+                                "preparation"
+                        ],
+                        "position": {
+                                "x": 350,
+                                "y": 200
+                        },
+                        "sensors": {
+                                "pump_stations": [
+                                        {
+                                                "id": "PUMP-001",
+                                                "type": "Bomba Principal",
+                                                "flow": 1279.7629185755056,
+                                                "unit": "L/min",
+                                                "status": "OPERATIONAL"
+                                        },
+                                        {
+                                                "id": "PUMP-002",
+                                                "type": "Bomba Secundaria",
+                                                "flow": 969.6491894741846,
+                                                "unit": "L/min",
+                                                "status": "STANDBY"
+                                        },
+                                        {
+                                                "id": "PUMP-003",
+                                                "type": "Bomba de Emergencia",
+                                                "pressure": 3.985631010750951,
+                                                "unit": "bar",
+                                                "status": "READY"
+                                        }
+                                ],
+                                "water_quality": [
+                                        {
+                                                "id": "WQ-001",
+                                                "parameter": "pH",
+                                                "value": 7.302647968231648,
+                                                "unit": "",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "WQ-002",
+                                                "parameter": "Conductividad",
+                                                "value": 200.5846745234074,
+                                                "unit": "\u00b5S/cm",
+                                                "status": "NORMAL"
+                                        },
+                                        {
+                                                "id": "WQ-003",
+                                                "parameter": "Turbidez",
+                                                "value": 0.7021810268923959,
+                                                "unit": "NTU",
+                                                "status": "WARNING"
+                                        },
+                                        {
+                                                "id": "WQ-004",
+                                                "parameter": "Cloro Residual",
+                                                "value": 0.701179672553832,
+                                                "unit": "mg/L",
+                                                "status": "NORMAL"
+                                        }
+                                ],
+                                "maintenance_alerts": [
+                                        {
+                                                "component": "Filtro Principal",
+                                                "status": "MAINTENANCE_DUE",
+                                                "days_remaining": 3
+                                        },
+                                        {
+                                                "component": "Bomba-001",
+                                                "status": "VIBRATION_HIGH",
+                                                "value": "12.5 mm/s"
+                                        },
+                                        {
+                                                "component": "Sensor pH",
+                                                "status": "CALIBRATION_DUE",
+                                                "last_cal": "2025-08-15"
+                                        }
+                                ]
+                        },
+                        "network": {
+                                "vlan": "VLAN-180-WATER",
+                                "subnet": "192.168.180.0/24",
+                                "devices": 22,
+                                "bandwidth_usage": 27.778353454871045,
+                                "security_level": "HIGH"
+                        }
+                },
+                "waste_management": {
+                        "id": "waste_management",
+                        "name": "Gesti\u00f3n de Residuos",
+                        "type": "utility",
+                        "icon": "fas fa-trash-alt",
+                        "status": "operational",
+                        "alerts": 1,
+                        "personnel": 5,
+                        "throughput": 90.8492920146207,
+                        "connections": [],
+                        "position": {
+                                "x": 200,
+                                "y": 200
+                        }
+                },
+                "control_room": {
+                        "id": "control_room",
+                        "name": "Sala de Control Central",
+                        "type": "control",
+                        "icon": "fas fa-desktop",
+                        "status": "operational",
+                        "alerts": 0,
+                        "personnel": 6,
+                        "throughput": 95.56339552236375,
+                        "connections": [
+                                "preparation",
+                                "thermal_treatment",
+                                "assembly",
+                                "power_distribution"
+                        ],
+                        "position": {
+                                "x": 650,
+                                "y": 300
+                        }
+                }
+        },
+        "security_recommendations": [
+                {
+                        "id": "SEC-001",
+                        "title": "Implementar Autenticaci\u00f3n Multifactor",
+                        "priority": "HIGH",
+                        "category": "Access Control",
+                        "description": "Los operadores acceden solo con usuario/contrase\u00f1a",
+                        "risk_level": 8.5,
+                        "affected_systems": [
+                                "SCADA",
+                                "HMI",
+                                "Engineering Station"
+                        ],
+                        "steps": [
+                                "Evaluar soluciones MFA compatibles con sistemas industriales",
+                                "Implementar token f\u00edsico o aplicaci\u00f3n m\u00f3vil para operadores",
+                                "Configurar pol\u00edticas de autenticaci\u00f3n en Active Directory",
+                                "Capacitar personal en uso de MFA",
+                                "Realizar pruebas de funcionalidad"
+                        ],
+                        "estimated_time": "2-3 semanas",
+                        "cost_estimate": "$15,000 - $25,000",
+                        "compliance_standards": [
+                                "ISA/IEC 62443-3-3",
+                                "NIST CSF"
+                        ]
+                },
+                {
+                        "id": "SEC-002",
+                        "title": "Segmentaci\u00f3n de Red Industrial",
+                        "priority": "CRITICAL",
+                        "category": "Network Security",
+                        "description": "Red industrial no est\u00e1 segmentada adecuadamente",
+                        "risk_level": 9.2,
+                        "affected_systems": [
+                                "Toda la red industrial"
+                        ],
+                        "steps": [
+                                "Realizar mapeo completo de la red actual",
+                                "Dise\u00f1ar arquitectura de segmentaci\u00f3n por zonas",
+                                "Implementar firewalls industriales en puntos clave",
+                                "Configurar VLANs y pol\u00edticas de acceso",
+                                "Instalar sistemas de monitoreo de tr\u00e1fico",
+                                "Validar segmentaci\u00f3n con pruebas de penetraci\u00f3n"
+                        ],
+                        "estimated_time": "4-6 semanas",
+                        "cost_estimate": "$50,000 - $80,000",
+                        "compliance_standards": [
+                                "ISA/IEC 62443-3-3",
+                                "ISA/IEC 62443-3-2"
+                        ]
+                },
+                {
+                        "id": "SEC-003",
+                        "title": "Actualizaci\u00f3n de Firmware SCADA",
+                        "priority": "MEDIUM",
+                        "category": "Patch Management",
+                        "description": "Sistemas SCADA con firmware desactualizado",
+                        "risk_level": 6.8,
+                        "affected_systems": [
+                                "Wonderware",
+                                "DeltaV HMI",
+                                "PLC Siemens S7-1500"
+                        ],
+                        "steps": [
+                                "Inventariar versiones actuales de firmware",
+                                "Identificar actualizaciones cr\u00edticas de seguridad",
+                                "Planificar ventana de mantenimiento",
+                                "Realizar backup completo antes de actualizar",
+                                "Ejecutar actualizaciones en entorno de pruebas",
+                                "Aplicar actualizaciones en producci\u00f3n"
+                        ],
+                        "estimated_time": "1-2 semanas",
+                        "cost_estimate": "$8,000 - $15,000",
+                        "compliance_standards": [
+                                "ISA/IEC 62443-2-3"
+                        ]
+                }
+        ],
+        "hrm_mle_analysis": {
+                "hrm_insights": {
+                        "workforce_efficiency": 89.37453475706575,
+                        "skill_gaps": [
+                                "Ciberseguridad industrial avanzada",
+                                "Mantenimiento predictivo con IoT",
+                                "An\u00e1lisis de datos industriales"
+                        ],
+                        "training_recommendations": [
+                                "Certificaci\u00f3n en ISA/IEC 62443 para equipo de TI",
+                                "Curso de mantenimiento predictivo con Machine Learning",
+                                "Capacitaci\u00f3n en respuesta a incidentes de ciberseguridad"
+                        ],
+                        "optimal_staffing": {
+                                "current": 52,
+                                "recommended": 58,
+                                "gap": 6
+                        }
+                },
+                "mle_star_predictions": {
+                        "equipment_failure_probability": [
+                                {
+                                        "equipment": "Compresor A-001",
+                                        "probability": 0.23,
+                                        "days_to_failure": 45
+                                },
+                                {
+                                        "equipment": "Bomba B-003",
+                                        "probability": 0.67,
+                                        "days_to_failure": 12
+                                },
+                                {
+                                        "equipment": "Motor C-002",
+                                        "probability": 0.15,
+                                        "days_to_failure": 89
+                                }
+                        ],
+                        "optimization_recommendations": [
+                                "Incrementar frecuencia de monitoreo en Bomba B-003",
+                                "Programar mantenimiento preventivo en Compresor A-001",
+                                "Optimizar par\u00e1metros de operaci\u00f3n en Motor C-002"
+                        ],
+                        "energy_efficiency_score": 86.2527441785272,
+                        "predicted_savings": "$127,500 anuales"
+                }
+        },
+        "authorized_users": [
+                {
+                        "id": "USR-001",
+                        "name": "Juan P\u00e9rez",
+                        "role": "Plant Manager",
+                        "email": "j.perez@company.com",
+                        "phone": "+54-11-1234-5678"
+                },
+                {
+                        "id": "USR-002",
+                        "name": "Mar\u00eda Gonz\u00e1lez",
+                        "role": "Production Supervisor",
+                        "email": "m.gonzalez@company.com",
+                        "phone": "+54-11-2345-6789"
+                },
+                {
+                        "id": "USR-003",
+                        "name": "Carlos Rodr\u00edguez",
+                        "role": "Maintenance Chief",
+                        "email": "c.rodriguez@company.com",
+                        "phone": "+54-11-3456-7890"
+                },
+                {
+                        "id": "USR-004",
+                        "name": "Ana Mart\u00ednez",
+                        "role": "Quality Manager",
+                        "email": "a.martinez@company.com",
+                        "phone": "+54-11-4567-8901"
+                },
+                {
+                        "id": "USR-005",
+                        "name": "Roberto Silva",
+                        "role": "Safety Engineer",
+                        "email": "r.silva@company.com",
+                        "phone": "+54-11-5678-9012"
+                }
+        ]
+};
+
+        // Mostrar detalles de recomendación de seguridad
+        function showRecommendationDetails(recId) {
+            const rec = systemData.security_recommendations.find(r => r.id === recId);
+            if (!rec) return;
+
+            document.getElementById('recommendationTitle').textContent = rec.title;
+
+            let stepsHtml = '<ol class="step-list">';
+            rec.steps.forEach(step => {
+                stepsHtml += `<li class="text-light">${step}</li>`;
+            });
+            stepsHtml += '</ol>';
+
+            let affectedSystemsHtml = '';
+            rec.affected_systems.forEach(system => {
+                affectedSystemsHtml += `<span class="badge bg-warning me-1">${system}</span>`;
+            });
+
+            let complianceHtml = '';
+            rec.compliance_standards.forEach(standard => {
+                complianceHtml += `<span class="badge bg-info me-1">${standard}</span>`;
+            });
+
+            document.getElementById('recommendationBody').innerHTML = `
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Categoría:</strong> ${rec.category}<br>
+                        <strong>Prioridad:</strong> <span class="badge bg-${rec.priority.toLowerCase()}">${rec.priority}</span><br>
+                        <strong>Nivel de Riesgo:</strong> ${rec.risk_level}/10
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Tiempo Estimado:</strong> ${rec.estimated_time}<br>
+                        <strong>Costo Estimado:</strong> ${rec.cost_estimate}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <strong>Descripción:</strong><br>
+                    <p class="text-light">${rec.description}</p>
+                </div>
+                <div class="mb-3">
+                    <strong>Sistemas Afectados:</strong><br>
+                    ${affectedSystemsHtml}
+                </div>
+                <div class="mb-3">
+                    <strong>Pasos de Implementación:</strong>
+                    ${stepsHtml}
+                </div>
+                <div class="mb-3">
+                    <strong>Estándares de Cumplimiento:</strong><br>
+                    ${complianceHtml}
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-success me-2" onclick="startImplementation('${recId}')">
+                        <i class="fas fa-play me-1"></i>Iniciar Implementación
+                    </button>
+                    <button class="btn btn-info me-2" onclick="scheduleImplementation('${recId}')">
+                        <i class="fas fa-calendar me-1"></i>Programar
+                    </button>
+                    <button class="btn btn-warning" onclick="requestQuote('${recId}')">
+                        <i class="fas fa-dollar-sign me-1"></i>Solicitar Cotización
+                    </button>
+                </div>
+            `;
+
+            new bootstrap.Modal(document.getElementById('recommendationModal')).show();
+        }
+
+        // Mostrar detalles del proceso
+        function showProcessDetails(processId) {
+            const process = systemData.process_flow[processId];
+            if (!process) return;
+
+            // Actualizar el título del área de monitoreo
+            document.getElementById('selectedProcessTitle').textContent = `Monitoreo: ${process.name}`;
+
+            // Generar contenido dinámico basado en el proceso seleccionado
+            let contentHtml = generateProcessContent(process);
+            document.getElementById('processMonitoringContent').innerHTML = contentHtml;
+
+            // También mostrar modal con información adicional
+            document.getElementById('sectorTitle').textContent = process.name;
+
+            let connectionsHtml = '';
+            if (process.connections.length > 0) {
+                connectionsHtml = '<strong>Conectado a:</strong><br>';
+                process.connections.forEach(connId => {
+                    const connProcess = systemData.process_flow[connId];
+                    if (connProcess) {
+                        connectionsHtml += `<span class="badge bg-info me-1 mb-1">${connProcess.name}</span>`;
+                    }
+                });
+            } else {
+                connectionsHtml = '<strong>Punto final del proceso</strong>';
+            }
+
+            let statusColor = 'success';
+            if (process.alerts > 2) statusColor = 'danger';
+            else if (process.alerts > 0) statusColor = 'warning';
+
+            document.getElementById('sectorBody').innerHTML = `
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Tipo:</strong> ${process.type}<br>
+                        <strong>Personal:</strong> ${process.personnel} personas<br>
+                        <strong>Rendimiento:</strong> ${process.throughput.toFixed(1)}%
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Estado:</strong> <span class="badge bg-${statusColor}">${process.status}</span><br>
+                        <strong>Alertas Activas:</strong> <span class="badge bg-warning">${process.alerts}</span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    ${connectionsHtml}
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary me-2" onclick="optimizeProcess('${processId}')">
+                        <i class="fas fa-cogs me-1"></i>Optimizar Proceso
+                    </button>
+                    <button class="btn btn-info me-2" onclick="viewProcessMetrics('${processId}')">
+                        <i class="fas fa-chart-line me-1"></i>Ver Métricas
+                    </button>
+                    <button class="btn btn-warning" onclick="stopProcess('${processId}')">
+                        <i class="fas fa-stop me-1"></i>Detener Proceso
+                    </button>
+                </div>
+            `;
+
+            new bootstrap.Modal(document.getElementById('sectorModal')).show();
+        }
+
+        // Generar contenido dinámico para cada proceso
+        function generateProcessContent(process) {
+            if (!process.sensors) {
+                return `<div class="text-center text-warning">
+                    <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                    <h6>Información de sensores no disponible para este proceso</h6>
+                </div>`;
+            }
+
+            let html = '';
+
+            // Información de red
+            if (process.network) {
+                html += `
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h6 class="text-info mb-3">
+                            <i class="fas fa-network-wired me-2"></i>Información de Red
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="p-3 bg-dark rounded">
+                                    <strong class="text-white">VLAN:</strong><br>
+                                    <span class="text-info">${process.network.vlan}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="p-3 bg-dark rounded">
+                                    <strong class="text-white">Subred:</strong><br>
+                                    <span class="text-light">${process.network.subnet}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="p-3 bg-dark rounded">
+                                    <strong class="text-white">Dispositivos:</strong><br>
+                                    <span class="text-success">${process.network.devices}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="p-3 bg-dark rounded">
+                                    <strong class="text-white">Uso BW:</strong><br>
+                                    <span class="text-warning">${process.network.bandwidth_usage.toFixed(1)}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            // Generar secciones de sensores dinámicamente
+            Object.keys(process.sensors).forEach(sensorCategory => {
+                const sensors = process.sensors[sensorCategory];
+                const categoryTitle = sensorCategory.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+                html += `
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h6 class="text-warning mb-3">
+                            <i class="fas fa-sensors me-2"></i>${categoryTitle}
+                        </h6>
+                        <div class="row">`;
+
+                sensors.forEach((sensor, index) => {
+                    if (index > 0 && index % 2 === 0) {
+                        html += '</div><div class="row">';
+                    }
+
+                    html += `<div class="col-md-6 mb-3">`;
+
+                    // Contenido específico por tipo de sensor
+                    if (sensor.type) {
+                        // Sensores con tipo y valor
+                        const statusClass = sensor.status === 'NORMAL' || sensor.status === 'OPERATIONAL' ? 'success' :
+                                          sensor.status === 'WARNING' ? 'warning' : 'danger';
+                        html += `
+                        <div class="p-3 border border-secondary rounded">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong class="text-white">${sensor.id || sensor.type}</strong><br>
+                                    <small class="text-light">${sensor.type || sensor.parameter || 'Sensor'}</small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="text-white h6">${sensor.value || sensor.flow || sensor.load || 'N/A'} ${sensor.unit || ''}</span><br>
+                                    <span class="badge bg-${statusClass}">${sensor.status}</span>
+                                </div>
+                            </div>
+                        </div>`;
+                    } else if (sensor.standard) {
+                        // Información de cumplimiento
+                        html += `
+                        <div class="p-3 border border-info rounded">
+                            <strong class="text-info">${sensor.standard}</strong><br>
+                            <span class="text-white">Cumplimiento: ${sensor.compliance.toFixed(1)}%</span><br>
+                            <small class="text-light">Última auditoría: ${sensor.last_audit || 'N/A'}</small>
+                        </div>`;
+                    } else if (sensor.system) {
+                        // Sistemas de emergencia
+                        const statusClass = sensor.status === 'ARMED' || sensor.status === 'READY' || sensor.status === 'OPERATIONAL' ? 'success' : 'warning';
+                        html += `
+                        <div class="p-3 border border-danger rounded">
+                            <strong class="text-danger">${sensor.system}</strong><br>
+                            <span class="badge bg-${statusClass}">${sensor.status}</span><br>
+                            <small class="text-light">${sensor.last_test || sensor.capacity || sensor.pressure || ''}</small>
+                        </div>`;
+                    } else if (sensor.priority) {
+                        // Recomendaciones MLE Star
+                        const priorityClass = sensor.priority === 'HIGH' ? 'danger' : sensor.priority === 'MEDIUM' ? 'warning' : 'info';
+                        html += `
+                        <div class="p-3 border border-${priorityClass} rounded">
+                            <span class="badge bg-${priorityClass} mb-2">${sensor.priority}</span><br>
+                            <strong class="text-white">${sensor.action}</strong><br>
+                            <small class="text-success">${sensor.savings || sensor.cost_avoidance || sensor.efficiency_gain || ''}</small>
+                        </div>`;
+                    } else {
+                        // Formato genérico
+                        html += `
+                        <div class="p-3 border border-light rounded">
+                            <div class="text-white">
+                                <pre class="text-light" style="font-size: 0.8rem;">${JSON.stringify(sensor, null, 2)}</pre>
+                            </div>
+                        </div>`;
+                    }
+
+                    html += '</div>';
+                });
+
+                html += '</div></div></div>';
+            });
+
+            return html;
+        }
+
+        // Resetear vista de proceso
+        function resetProcessView() {
+            document.getElementById('selectedProcessTitle').textContent = 'Monitoreo Contextual de Procesos';
+            document.getElementById('processMonitoringContent').innerHTML = `
+                <div class="text-center text-light">
+                    <i class="fas fa-mouse-pointer fa-3x mb-3 text-info"></i>
+                    <h6>Seleccione un proceso en el diagrama superior para ver su información detallada</h6>
+                    <p>Cada área mostrará sensores específicos, información de red, alertas MLE Star y detalles técnicos contextuales.</p>
+                </div>`;
+        }
+
+        // Función para enviar informe
+        function sendReport() {
+            const selectedUsers = Array.from(document.querySelectorAll('input[name="selected_users"]:checked')).map(cb => cb.value);
+            const reportType = document.getElementById('reportType').value;
+
+            if (selectedUsers.length === 0) {
+                alert('Por favor seleccione al menos un destinatario');
+                return;
+            }
+
+            // Simular envío
+            const timestamp = new Date().toISOString();
+            const logEntry = {
+                timestamp: timestamp,
+                action: 'report_sent',
+                report_type: reportType,
+                recipients: selectedUsers.map(userId => {
+                    const user = systemData.authorized_users.find(u => u.id === userId);
+                    return {id: userId, name: user.name, email: user.email};
+                }),
+                data_snapshot: JSON.stringify(systemData, null, 2)
+            };
+
+            // Guardar en localStorage para simular log
+            let logs = JSON.parse(localStorage.getItem('smartcompute_logs') || '[]');
+            logs.push(logEntry);
+            localStorage.setItem('smartcompute_logs', JSON.stringify(logs));
+
+            alert(`✅ Informe ${reportType} enviado exitosamente a ${selectedUsers.length} destinatario(s)\n\nLog guardado: ${timestamp}`);
+
+            // Limpiar selección
+            document.querySelectorAll('input[name="selected_users"]').forEach(cb => cb.checked = false);
+        }
+
+        // Función para guardar log del estado actual
+        function saveReportLog() {
+            const timestamp = new Date().toISOString();
+            const logEntry = {
+                timestamp: timestamp,
+                action: 'manual_log_save',
+                system_snapshot: JSON.stringify(systemData, null, 2)
+            };
+
+            let logs = JSON.parse(localStorage.getItem('smartcompute_logs') || '[]');
+            logs.push(logEntry);
+            localStorage.setItem('smartcompute_logs', JSON.stringify(logs));
+
+            alert(`✅ Log del sistema guardado exitosamente\n\nTimestamp: ${timestamp}`);
+        }
+
+        // Funciones de acción para recomendaciones
+        function startImplementation(recId) {
+            alert(`🚀 Iniciando implementación de recomendación ${recId}\n\nSe creará un ticket de trabajo automáticamente.`);
+        }
+
+        function scheduleImplementation(recId) {
+            const date = prompt('Ingrese fecha para programar (YYYY-MM-DD):');
+            if (date) {
+                alert(`📅 Implementación de ${recId} programada para ${date}`);
+            }
+        }
+
+        function requestQuote(recId) {
+            alert(`💰 Solicitud de cotización enviada para ${recId}\n\nRecibirá una respuesta en 24-48 horas.`);
+        }
+
+        // Funciones para sectores
+        function viewSensorDetails(sectorId) {
+            alert(`🌡️ Mostrando detalles de sensores para sector ${sectorId}`);
+        }
+
+        function viewEquipmentList(sectorId) {
+            alert(`⚙️ Lista de equipos para sector ${sectorId}`);
+        }
+
+        function evacuateSector(sectorId) {
+            if (confirm('¿Está seguro de activar el protocolo de emergencia?')) {
+                alert(`🚨 PROTOCOLO DE EMERGENCIA ACTIVADO PARA SECTOR ${sectorId}\n\n- Personal siendo evacuado\n- Sistemas de emergencia activados\n- Notificación enviada a brigada`);
+            }
+        }
+
+        // Funciones para el nuevo mapa de procesos
+        function refreshProcessFlow() {
+            alert('🔄 Diagrama de flujo actualizado con datos en tiempo real');
+            // Aquí se actualizarían las métricas de rendimiento en tiempo real
+        }
+
+        function toggleConnections() {
+            const connections = document.querySelectorAll('.connection-line, .connection-arrow');
+            connections.forEach(conn => {
+                conn.style.display = conn.style.display === 'none' ? 'block' : 'none';
+            });
+        }
+
+        // Funciones de acciones para procesos
+        function optimizeProcess(processId) {
+            const process = systemData.process_flow[processId];
+            alert(`⚙️ Iniciando optimización del proceso: ${process.name}\n\nParametros a optimizar:\n- Rendimiento: ${process.throughput.toFixed(1)}%\n- Reducción de alertas\n- Eficiencia energética`);
+        }
+
+        function viewProcessMetrics(processId) {
+            const process = systemData.process_flow[processId];
+            alert(`📊 Métricas detalladas de: ${process.name}\n\nRendimiento: ${process.throughput.toFixed(1)}%\nPersonal: ${process.personnel} personas\nAlertas: ${process.alerts}\nTipo: ${process.type}`);
+        }
+
+        function stopProcess(processId) {
+            const process = systemData.process_flow[processId];
+            if (confirm(`⚠️ ¿Está seguro de detener el proceso: ${process.name}?\n\nEsto puede afectar procesos conectados.`)) {
+                alert(`🛑 PROCESO DETENIDO: ${process.name}\n\n- Personal notificado\n- Procesos dependientes en modo seguro\n- Registrando en log de operaciones`);
+            }
+        }
+
+        // Actualización automática cada 10 segundos
+        setInterval(() => {
+            console.log('🔄 Dashboard actualizado:', new Date().toLocaleTimeString());
+            // Aquí se actualizarían los datos en tiempo real
+        }, 10000);
+
+        console.log('✅ SmartCompute Industrial Dashboard Interactivo iniciado');
+    </script>
+</body>
+</html>

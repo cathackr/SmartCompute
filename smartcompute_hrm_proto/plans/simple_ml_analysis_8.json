@@ -1,0 +1,18 @@
+{
+  "false_positive_probability": 0.85,
+  "confidence_level": "HIGH",
+  "evidence": [
+    "chrome_in_legitimate_location",
+    "legitimate_keywords_found_1",
+    "chrome_createremotethread_pattern",
+    "low_behavioral_anomaly",
+    "known_process"
+  ],
+  "recommendation": "LIKELY_FALSE_POSITIVE: Consider suppressing or lowering priority",
+  "detailed_scores": {
+    "process_legitimacy": 3.0,
+    "temporal_legitimacy": 0.0,
+    "description_legitimacy": 2.5,
+    "behavioral_legitimacy": 3.0
+  }
+}

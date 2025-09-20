@@ -1,0 +1,41 @@
+{
+  "incident_id": "INC-20250915-051451",
+  "timestamp": "2025-09-15T05:14:51.062921",
+  "risk_score": 4.333333333333333,
+  "actions_executed": [
+    {
+      "action_type": "isolate_host",
+      "command": "netsh advfirewall set allprofiles firewallpolicy blockinbound,blockoutbound",
+      "status": "simulated",
+      "output": "Host isolation command simulated - firewall rules would be applied",
+      "error": "",
+      "execution_time": 2e-06
+    },
+    {
+      "action_type": "collect_memory",
+      "command": "python3 collect_memory_dump.py --host unknown --output ../logs/",
+      "status": "simulated",
+      "output": "Memory collection command simulated - dump would be created",
+      "error": "",
+      "execution_time": 1e-06
+    },
+    {
+      "action_type": "block_process",
+      "command": "taskkill /f /im chrome.exe",
+      "status": "simulated",
+      "output": "Process termination command simulated",
+      "error": "",
+      "execution_time": 1e-06
+    },
+    {
+      "action_type": "alert_soc",
+      "command": "python3 soc_alert.py --severity CRITICAL --event 8",
+      "status": "success",
+      "output": "SOC alert sent successfully",
+      "error": "",
+      "execution_time": 1e-06
+    }
+  ],
+  "actions_pending": [],
+  "status": "processing"
+}

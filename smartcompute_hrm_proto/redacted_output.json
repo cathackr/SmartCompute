@@ -1,0 +1,18 @@
+{
+  "scan_id": "scan123",
+  "timestamp": "2025-09-15T10:23:00Z",
+  "findings": [
+    {
+      "severity": "CRITICAL",
+      "event_id": 8,
+      "description": "CreateRemoteThread observed targeting chrome.exe",
+      "process_path": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+      "raw_payload": "CreateRemoteThread to process pid=456 using CreateRemoteThread..."
+    }
+  ],
+  "source_meta": {
+    "host": "admin-workstation-1.local",
+    "ip": "<IP_REDACTED>",
+    "user": "<EMAIL_REDACTED>"
+  }
+}

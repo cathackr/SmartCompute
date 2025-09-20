@@ -1,0 +1,42 @@
+{
+  "operators": {
+    "OP001": {
+      "name": "Operador Ejemplo",
+      "role": "technician",
+      "level": 2,
+      "certifications": [
+        "electrical",
+        "mechanical"
+      ],
+      "phone": "+54911111111",
+      "email": "operador@empresa.com",
+      "totp_secret": "GENERATE_UNIQUE_SECRET_PER_OPERATOR",
+      "authorized_locations": [
+        "planta_principal"
+      ]
+    }
+  },
+  "roles": {
+    "technician": {
+      "level": 1,
+      "permissions": [
+        "analyze",
+        "execute_low_risk"
+      ]
+    },
+    "supervisor": {
+      "level": 2,
+      "permissions": [
+        "analyze",
+        "execute_medium_risk",
+        "approve"
+      ]
+    },
+    "manager": {
+      "level": 3,
+      "permissions": [
+        "all"
+      ]
+    }
+  }
+}

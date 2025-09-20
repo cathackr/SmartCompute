@@ -1,0 +1,52 @@
+# SmartCompute Industrial - Archivos excluidos por seguridad
+
+# Datos sensibles
+*.log
+*.key
+*.pem
+config_real.ini
+operators_real.json
+secrets.json
+
+# Datos de producción
+/data/
+/reports/*.json
+production_session_*
+hrm_analysis_*
+
+# Credenciales y tokens
+auth_data/
+vault_test/
+admin_auth_data/
+
+# Archivos temporales
+*.tmp
+*.temp
+__pycache__/
+node_modules/
+.env
+
+# Archivos de prueba con datos reales
+*_demo.py
+*_test.py
+test_*
+
+# Backups locales
+*.bak
+*.backup
+
+# Directorios de desarrollo
+hrm_test/
+mitre_test/
+nodejs_test/
+vault_test/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema
+.DS_Store
+Thumbs.db

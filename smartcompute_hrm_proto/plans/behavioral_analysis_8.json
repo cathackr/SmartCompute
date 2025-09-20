@@ -1,0 +1,39 @@
+{
+  "behavioral_score": 0.25,
+  "anomalies_detected": [],
+  "context_insights": {
+    "process": {
+      "process_name": "chrome.exe",
+      "is_known_process": true,
+      "parent_chain_anomaly": false,
+      "resource_usage_anomaly": false,
+      "behavioral_anomalies": []
+    },
+    "user": {
+      "user": "unknown",
+      "host": "unknown",
+      "is_known_user": false,
+      "location_anomaly": false,
+      "time_anomaly": false,
+      "behavioral_anomalies": [
+        "unknown_user"
+      ]
+    },
+    "network": {
+      "source_ip": "unknown",
+      "host": "unknown",
+      "is_internal_ip": true,
+      "geolocation_anomaly": false,
+      "behavioral_anomalies": []
+    },
+    "temporal": {
+      "timestamp": "",
+      "day_of_week": null,
+      "hour_of_day": null,
+      "is_business_hours": false,
+      "temporal_anomalies": []
+    }
+  },
+  "risk_factors": [],
+  "behavioral_recommendation": []
+}

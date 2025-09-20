@@ -1,0 +1,58 @@
+
+INSTRUCCIONES PARA GENERAR PDF DEL INFORME SMARTCOMPUTE ENTERPRISE
+================================================================
+
+El informe HTML ha sido generado en:
+/home/gatux/smartcompute/enterprise/informe_evaluacion_completa.html
+
+Para convertirlo a PDF, puede usar una de estas opciones:
+
+OPCIÓN 1: Navegador Web (Más Fácil)
+-----------------------------------
+1. Abra el archivo HTML en cualquier navegador web:
+   - Firefox: firefox "/home/gatux/smartcompute/enterprise/informe_evaluacion_completa.html"
+   - Chrome: google-chrome "/home/gatux/smartcompute/enterprise/informe_evaluacion_completa.html"
+   - Edge: microsoft-edge "/home/gatux/smartcompute/enterprise/informe_evaluacion_completa.html"
+
+2. Presione Ctrl+P (Cmd+P en Mac) para imprimir
+
+3. Seleccione "Guardar como PDF" como destino
+
+4. Configure:
+   - Tamaño: A4
+   - Márgenes: Normales
+   - Escala: 100%
+   - Incluir gráficos de fondo: SÍ
+
+5. Guarde como: SmartCompute_Enterprise_Evaluacion_Completa.pdf
+
+OPCIÓN 2: Instalar herramientas de línea de comandos
+---------------------------------------------------
+# Ubuntu/Debian:
+sudo apt-get install wkhtmltopdf
+
+# CentOS/RHEL/Fedora:
+sudo yum install wkhtmltopdf
+# o
+sudo dnf install wkhtmltopdf
+
+# macOS:
+brew install wkhtmltopdf
+
+Luego ejecute:
+wkhtmltopdf --page-size A4 --margin-top 0.75in --margin-right 0.75in \
+  --margin-bottom 0.75in --margin-left 0.75in --encoding UTF-8 \
+  --print-media-type --enable-local-file-access \
+  "/home/gatux/smartcompute/enterprise/informe_evaluacion_completa.html" "SmartCompute_Enterprise_Evaluacion_Completa.pdf"
+
+OPCIÓN 3: Herramientas online
+-----------------------------
+1. Suba el archivo HTML a un convertidor online como:
+   - https://www.ilovepdf.com/html-to-pdf
+   - https://smallpdf.com/html-to-pdf
+   - https://www.pdf24.org/html-to-pdf.html
+
+2. Descargue el PDF generado
+
+NOTA: El informe está completamente autocontenido en el HTML,
+      con todos los estilos CSS embebidos.
