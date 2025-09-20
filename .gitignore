@@ -1,125 +1,52 @@
-# SmartCompute - Archivos que NO deben subirse a GitHub
+# SmartCompute Industrial - Archivos excluidos por seguridad
 
-# Dashboards generados (pueden contener info real del sistema)
-*dashboard*.html
-*dashboard*.png
-smartcompute_*_dashboard.*
-*_analysis.png
-
-# Entornos virtuales Python
-venv/
-env/
-.venv/
-.env/
-
-# Cache Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.so
-
-# Logs y archivos temporales
+# Datos sensibles
 *.log
-*.tmp
-*.temp
-*.cache
-
-# Archivos de configuración local
-config.local.*
-settings.local.*
-.env
-
-# Resultados de análisis con datos reales
-results/
-output/
-analysis_results/
-
-# Certificados y claves
-*.pfx
-*.p12
 *.key
 *.pem
-*.crt
+config_real.ini
+operators_real.json
+secrets.json
 
-# Archivos de backup
+# Datos de producción
+/data/
+/reports/*.json
+production_session_*
+hrm_analysis_*
+
+# Credenciales y tokens
+auth_data/
+vault_test/
+admin_auth_data/
+
+# Archivos temporales
+*.tmp
+*.temp
+__pycache__/
+node_modules/
+.env
+
+# Archivos de prueba con datos reales
+*_demo.py
+*_test.py
+test_*
+
+# Backups locales
 *.bak
 *.backup
-*~
 
-# Archivos del sistema
-.DS_Store
-Thumbs.db
+# Directorios de desarrollo
+hrm_test/
+mitre_test/
+nodejs_test/
+vault_test/
 
-# IDEs
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Datos sensibles de testing
-test_data_real/
-real_network_data/
-
-# ============================================
-# SmartCompute Enterprise - Local Security & Testing Files
-# IMPORTANTE: Estos archivos NO deben subirse a GitHub por seguridad
-# ============================================
-
-# Archivos de análisis y monitoreo local
-system_health_check.sh
-apply_improvements.sh
-apply_user_improvements.sh
-smartcompute_live_analysis.py
-launch_smartcompute_analysis.sh
-comprehensive_integration_test.py
-generate_pdf_report.py
-
-# Reportes y logs de análisis (pueden contener info real del sistema)
-*_analysis_report.json
-*_test_results.json
-informe_evaluacion_completa.html
-INSTRUCCIONES_PDF.txt
-ver_informe.sh
-quick_start_guide.md
-
-# Scripts de monitoreo personal
-smartcompute_monitor.sh
-smartcompute_cleanup.sh
-
-# Logs y archivos temporales con datos reales
-/tmp/smartcompute_*
-/tmp/health_check*
-/var/log/smartcompute/
-health_check*.log
-
-# Enterprise security files (sensibles)
-enterprise/system_health_check.sh
-enterprise/apply_improvements.sh
-enterprise/apply_user_improvements.sh
-enterprise/smartcompute_live_analysis.py
-enterprise/launch_smartcompute_analysis.sh
-enterprise/comprehensive_integration_test.py
-enterprise/generate_pdf_report.py
-enterprise/informe_evaluacion_completa.html
-enterprise/INSTRUCCIONES_PDF.txt
-enterprise/ver_informe.sh
-enterprise/quick_start_guide.md
-
-# Configuraciones locales sensibles
-*_config.yml
-*_credentials.json
-response_config.yml
-local_config.*
-production_config.*
-
-# Claude Code - Estados de sesión local (NO subir a git)
-claude_inc
-
-# Archivos de testing con datos reales del sistema
-local_analysis/
-test_reports/
-security_scans/
-performance_tests/
-real_system_data/
+# Sistema
+.DS_Store
+Thumbs.db

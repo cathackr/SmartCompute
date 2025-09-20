@@ -1,0 +1,17 @@
+{
+  "planta_principal": {
+    "name": "Planta Principal",
+    "lat": -34.6037,
+    "lng": -58.3816,
+    "radius_meters": 100,
+    "authorized_operators": [
+      "OP001",
+      "OP002"
+    ],
+    "emergency_contact": "+54911234567",
+    "safety_requirements": [
+      "safety_equipment",
+      "authorized_personnel"
+    ]
+  }
+}
