@@ -1,52 +1,127 @@
-# SmartCompute Industrial - Archivos excluidos por seguridad
+# SmartCompute - GITIGNORE SEGURO para repositorio público
 
-# Datos sensibles
+# ==========================================
+# ARCHIVOS CRÍTICOS - NUNCA SUBIR
+# ==========================================
+
+# Estado de desarrollo y arquitectura interna
+claude_inc
+*_inc
+development_notes/
+session_state/
+
+# Bases de datos con información procesada
+*.db
+*.sqlite
+*.sqlite3
+
+# Entornos virtuales y dependencias
+venv/
+env/
+.venv/
+.env/
+node_modules/
+
+# Sistema completo de pagos
+payments/
+payment_server/
+secure_payment*/
+*payment*
+
+# Código empresarial confidencial
+enterprise/
+industrial_reports/
+secure-files/
+client_packages/
+
+# Datasets y datos de prueba
+datasets/
+synthetic/
+test_data/
+sample_data/
+
+# Reportes generados con datos reales
+reports/
+*.html
+industrial_reports/
+*_reports/
+
+# Scripts de deployment y configuración
+deploy_*/
+installer/
+*_deployment*
+server_config*
+deployment_config*
+
+# Archivos de configuración con datos reales
+config*.ini
+config*.json
+operators*.json
+authorized_locations*.json
+*_config.*
+*_credentials*
+
+# Scripts de mantenimiento y administración
+system_health_check*
+apply_improvements*
+apply_user_improvements*
+cleanup_sensitive_data*
+migration_strategy*
+
+# Logs y archivos temporales
 *.log
-*.key
-*.pem
-config_real.ini
-operators_real.json
-secrets.json
-
-# Datos de producción
-/data/
-/reports/*.json
-production_session_*
-hrm_analysis_*
-
-# Credenciales y tokens
-auth_data/
-vault_test/
-admin_auth_data/
-
-# Archivos temporales
 *.tmp
 *.temp
+*.cache
 __pycache__/
-node_modules/
+
+# Credenciales y claves
+*.key
+*.pem
+*.p12
+*.pfx
+secrets*
+auth_data/
+vault_test/
 .env
 
-# Archivos de prueba con datos reales
-*_demo.py
-*_test.py
-test_*
-
-# Backups locales
+# Archivos de backup
 *.bak
 *.backup
+backups/
 
-# Directorios de desarrollo
-hrm_test/
-mitre_test/
-nodejs_test/
-vault_test/
-
-# IDE
+# IDEs y editores
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Sistema
+# Sistema operativo
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# ==========================================
+# SOLO PERMITIR ARCHIVOS PÚBLICOS SEGUROS
+# ==========================================
+
+# Documentación pública (whitelist)
+!README.md
+!README_EN.md
+!LICENSE
+!SECURITY.md
+!CONTRIBUTING.md
+
+# Ejemplos seguros sin datos reales
+!*_example.*
+!*_template.*
+!*_sample.*
+
+# Código core sin credenciales
+!smartcompute_express.py
+!smartcompute_showcase.py
+
+# Archivos de instalación básica
+!requirements-public.txt
+!Dockerfile.public
+!quick_start.sh
