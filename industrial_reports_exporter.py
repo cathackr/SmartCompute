@@ -149,8 +149,32 @@ class IndustrialReportsExporter:
 
     def _generate_encryption_key(self) -> bytes:
         """Genera clave de cifrado para reportes sensibles"""
-        password = os.getenv('REPORTS_ENCRYPTION_PASSWORD', '***REMOVED***').encode()
-        salt = b'***REMOVED***'
+        password_env = os.getenv('REPORTS_ENCRYPTION_PASSWORD')
+
+        if not password_env:
+            logging.error("❌ REPORTS_ENCRYPTION_PASSWORD no configurado!")
+            logging.error("⚠️  Los reportes industriales contienen información sensible y DEBEN estar cifrados.")
+            logging.error("💡 Configure REPORTS_ENCRYPTION_PASSWORD en .env con una contraseña fuerte (mínimo 32 caracteres)")
+            raise ValueError(
+                "REPORTS_ENCRYPTION_PASSWORD es requerido para cifrado de reportes industriales. "
+                "Configure esta variable en .env antes de continuar."
+            )
+
+        password = password_env.encode()
+
+        # Usar salt desde variable de entorno o generar uno aleatorio (no hardcodeado)
+        salt_env = os.getenv('REPORTS_ENCRYPTION_SALT')
+        if salt_env:
+            salt = salt_env.encode()
+        else:
+            # Generar salt aleatorio y advertir que debe guardarse
+            import secrets
+            salt = secrets.token_bytes(32)
+            salt_hex = salt.hex()
+            logging.warning("⚠️  REPORTS_ENCRYPTION_SALT no configurado. Se generó uno aleatorio.")
+            logging.warning(f"💾 Guarde este salt en .env: REPORTS_ENCRYPTION_SALT={salt_hex}")
+            logging.warning("⚠️  Sin este salt, los reportes cifrados previamente NO podrán descifrarse!")
+
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,

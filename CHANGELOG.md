@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.2] - 2026-02-09
+
+### Security - CRITICAL
+- **CRITICAL**: Removed hardcoded admin password `'***REMOVED***'` from `smartcompute_central_bridge_server.py`
+- **CRITICAL**: Removed hardcoded operator password `'***REMOVED***'` from central bridge server
+- **CRITICAL**: Removed hardcoded Flask SECRET_KEY from central bridge server
+- **CRITICAL**: Removed weak default encryption password from `industrial_reports_exporter.py`
+- **CRITICAL**: Removed hardcoded encryption salt from industrial reports
+
+### Changed
+- Admin/operator users now ONLY created if environment variables are set (`SMARTCOMPUTE_ADMIN_PASSWORD`, `SMARTCOMPUTE_OPERATOR_PASSWORD`)
+- Flask SECRET_KEY now loaded from `SMARTCOMPUTE_FLASK_SECRET_KEY` or generated randomly
+- Industrial reports encryption now REQUIRES `REPORTS_ENCRYPTION_PASSWORD` and `REPORTS_ENCRYPTION_SALT`
+- Added clear warning messages when security-critical environment variables are not configured
+- Updated `.env.example` with new required variables and generation instructions
+
+### Added
+- Automatic generation of Flask SECRET_KEY if not configured (with warning about non-persistence)
+- Automatic generation of encryption salt with instructions to save it
+- Comprehensive logging when security configurations are missing or insecure
+
 ## [2.0.1] - 2026-02-09
 
 ### Security

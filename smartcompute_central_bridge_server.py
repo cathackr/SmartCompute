@@ -29,11 +29,16 @@ import logging
 from typing import Dict, List, Optional
 import asyncio
 import websockets
+import os
+import secrets
 
 class SmartComputeCentralServer:
     def __init__(self):
         self.app = Flask(__name__)
-        self.app.config['SECRET_KEY'] = '***REMOVED***'
+        # SECRET_KEY desde variable de entorno o generar una aleatoria (NUNCA hardcoded)
+        self.app.config['SECRET_KEY'] = os.getenv('SMARTCOMPUTE_FLASK_SECRET_KEY') or secrets.token_hex(32)
+        if not os.getenv('SMARTCOMPUTE_FLASK_SECRET_KEY'):
+            logging.warning("⚠️  SMARTCOMPUTE_FLASK_SECRET_KEY no está configurado. Se generó una clave aleatoria (no persistirá entre reinicios)")
         self.socketio = SocketIO(self.app, cors_allowed_origins="*")
 
         # Base de datos
@@ -128,35 +133,46 @@ class SmartComputeCentralServer:
             )
         ''')
 
-        # Crear usuario administrador por defecto
-        admin_password = hashlib.sha256('***REMOVED***'.encode()).hexdigest()
-        cursor.execute('''
-            INSERT OR IGNORE INTO users
-            (username, password_hash, role, permissions, enterprise_access, industrial_access, admin_access, location_access)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            'admin',
-            admin_password,
-            'super_admin',
-            json.dumps(['all']),
-            True, True, True,
-            json.dumps(['all_locations'])
-        ))
+        # Crear usuario administrador por defecto SOLO si existe variable de entorno
+        admin_password_env = os.getenv('SMARTCOMPUTE_ADMIN_PASSWORD')
+        if admin_password_env:
+            admin_password = hashlib.sha256(admin_password_env.encode()).hexdigest()
+            cursor.execute('''
+                INSERT OR IGNORE INTO users
+                (username, password_hash, role, permissions, enterprise_access, industrial_access, admin_access, location_access)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                'admin',
+                admin_password,
+                'super_admin',
+                json.dumps(['all']),
+                True, True, True,
+                json.dumps(['all_locations'])
+            ))
+            logging.info("✅ Usuario admin creado desde SMARTCOMPUTE_ADMIN_PASSWORD")
+        else:
+            logging.warning("⚠️  SMARTCOMPUTE_ADMIN_PASSWORD no configurado. No se creó usuario admin por defecto.")
+            logging.warning("💡 Configure SMARTCOMPUTE_ADMIN_PASSWORD en .env para crear usuario admin")
 
-        # Crear usuarios de prueba
-        operator_password = hashlib.sha256('***REMOVED***'.encode()).hexdigest()
-        cursor.execute('''
-            INSERT OR IGNORE INTO users
-            (username, password_hash, role, permissions, enterprise_access, industrial_access, admin_access, location_access)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            'operator_industrial',
-            operator_password,
-            'operator',
-            json.dumps(['read', 'control_plc']),
-            False, True, False,
-            json.dumps(['planta_a', 'sector_produccion'])
-        ))
+        # Crear usuario operator SOLO si existe variable de entorno (para desarrollo/testing)
+        operator_password_env = os.getenv('SMARTCOMPUTE_OPERATOR_PASSWORD')
+        if operator_password_env:
+            operator_password = hashlib.sha256(operator_password_env.encode()).hexdigest()
+            cursor.execute('''
+                INSERT OR IGNORE INTO users
+                (username, password_hash, role, permissions, enterprise_access, industrial_access, admin_access, location_access)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                'operator_industrial',
+                operator_password,
+                'operator',
+                json.dumps(['read', 'control_plc']),
+                False, True, False,
+                json.dumps(['planta_a', 'sector_produccion'])
+            ))
+            logging.info("✅ Usuario operator_industrial creado desde SMARTCOMPUTE_OPERATOR_PASSWORD")
+        else:
+            logging.info("ℹ️  SMARTCOMPUTE_OPERATOR_PASSWORD no configurado (opcional)")
 
         conn.commit()
         conn.close()
