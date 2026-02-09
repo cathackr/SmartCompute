@@ -1249,39 +1249,39 @@ class SmartComputeHTMLReportGenerator:
 
             # Método 2: xdg-open (Linux)
             try:
-                subprocess.run(['xdg-open', html_path], check=True,
+                subprocess.run(['xdg-open', html_path], check=True, timeout=5,
                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 print(f"   🌐 Abriendo con xdg-open: {Path(html_path).name}")
                 return True
-            except (subprocess.CalledProcessError, FileNotFoundError):
+            except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
                 pass
 
             # Método 3: gnome-open (GNOME)
             try:
-                subprocess.run(['gnome-open', html_path], check=True,
+                subprocess.run(['gnome-open', html_path], check=True, timeout=5,
                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 print(f"   🌐 Abriendo con gnome-open: {Path(html_path).name}")
                 return True
-            except (subprocess.CalledProcessError, FileNotFoundError):
+            except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
                 pass
 
             # Método 4: firefox directo (fallback)
             try:
-                subprocess.run(['firefox', html_path], check=True,
+                subprocess.run(['firefox', html_path], check=True, timeout=5,
                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 print(f"   🌐 Abriendo con Firefox: {Path(html_path).name}")
                 return True
-            except (subprocess.CalledProcessError, FileNotFoundError):
+            except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
                 pass
 
             # Método 5: chrome/chromium (fallback)
             for browser in ['google-chrome', 'chromium-browser', 'chromium']:
                 try:
-                    subprocess.run([browser, html_path], check=True,
+                    subprocess.run([browser, html_path], check=True, timeout=5,
                                  stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                     print(f"   🌐 Abriendo con {browser}: {Path(html_path).name}")
                     return True
-                except (subprocess.CalledProcessError, FileNotFoundError):
+                except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
                     continue
 
             # Si todo falla, mostrar instrucciones manuales

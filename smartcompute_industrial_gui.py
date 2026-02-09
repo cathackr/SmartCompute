@@ -592,12 +592,31 @@ class SmartComputeIndustrialGUI:
             # Mostrar resultado
             self.show_analysis_results()
 
+        except tk.TclError as e:
+            # Error de tkinter (ventana destruida prematuramente)
+            print(f"GUI Error: {e}")
+            messagebox.showerror("Error de Interfaz", "La ventana se cerró inesperadamente")
+        except AttributeError as e:
+            # Error de atributo faltante
+            print(f"Attribute Error en análisis: {e}")
+            messagebox.showerror("Error", "Error interno en el análisis. Revise la configuración.")
+        except OSError as e:
+            # Errores de I/O (archivo, permisos, etc.)
+            print(f"I/O Error: {e}")
+            messagebox.showerror("Error de Sistema", f"Error de archivo o permisos: {e}")
         except Exception as e:
-            messagebox.showerror("Error", f"Error en análisis: {str(e)}")
+            # Captura última instancia con logging detallado
+            import traceback
+            print(f"Error inesperado en análisis: {e}")
+            print(traceback.format_exc())
+            messagebox.showerror("Error", f"Error inesperado: {str(e)}\nRevise los logs para más detalles.")
         finally:
             self.analysis_running = False
             if hasattr(self, 'progress_window'):
-                self.progress_window.destroy()
+                try:
+                    self.progress_window.destroy()
+                except tk.TclError:
+                    pass  # Ventana ya destruida
 
     def show_analysis_results(self):
         """Mostrar resultados del análisis"""
@@ -615,8 +634,14 @@ class SmartComputeIndustrialGUI:
             if config_file.exists():
                 with open(config_file, 'r') as f:
                     return json.load(f)
+        except json.JSONDecodeError as e:
+            print(f"Error: Archivo de configuración inválido (JSON corrupto): {e}")
+        except (OSError, IOError) as e:
+            print(f"Error de I/O cargando configuración: {e}")
         except Exception as e:
-            print(f"Error cargando configuración: {e}")
+            import traceback
+            print(f"Error inesperado cargando configuración: {e}")
+            print(traceback.format_exc())
 
         # Configuración por defecto
         return {
@@ -633,8 +658,17 @@ class SmartComputeIndustrialGUI:
         try:
             with open(config_file, 'w') as f:
                 json.dump(self.config, f, indent=2)
+        except (OSError, IOError, PermissionError) as e:
+            print(f"Error de sistema guardando configuración: {e}")
+            messagebox.showerror("Error", f"No se pudo guardar la configuración: {e}")
+        except TypeError as e:
+            print(f"Error: Configuración no serializable a JSON: {e}")
+            messagebox.showerror("Error", "Error interno en los datos de configuración")
         except Exception as e:
-            print(f"Error guardando configuración: {e}")
+            import traceback
+            print(f"Error inesperado guardando configuración: {e}")
+            print(traceback.format_exc())
+            messagebox.showerror("Error", f"Error inesperado: {e}")
 
     def load_botconf_integration(self):
         """Cargar configuración BotConf"""

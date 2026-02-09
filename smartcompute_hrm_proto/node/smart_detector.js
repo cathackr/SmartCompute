@@ -5,6 +5,7 @@
  */
 
 import fs from 'fs';
+import { promises as fsPromises } from 'fs';
 import path from 'path';
 import os from 'os';
 import { spawn, exec } from 'child_process';
@@ -308,7 +309,7 @@ class SmartSystemDetector {
 
     async readSystemLog(source) {
         try {
-            const data = fs.readFileSync(source.path, 'utf8');
+            const data = await fsPromises.readFile(source.path, 'utf8');
             const lines = data.split('\n').slice(-100); // Últimas 100 líneas
 
             const events = lines
@@ -416,10 +417,9 @@ class SmartSystemDetector {
 
         // Intentar leer temperatura de CPU
         try {
-            if (fs.existsSync('/sys/class/thermal/thermal_zone0/temp')) {
-                const temp = fs.readFileSync('/sys/class/thermal/thermal_zone0/temp', 'utf8');
-                sensorData.cpu_temperature = parseInt(temp) / 1000; // Convertir a Celsius
-            }
+            await fsPromises.access('/sys/class/thermal/thermal_zone0/temp');
+            const temp = await fsPromises.readFile('/sys/class/thermal/thermal_zone0/temp', 'utf8');
+            sensorData.cpu_temperature = parseInt(temp) / 1000; // Convertir a Celsius
         } catch (error) {
             sensorData.cpu_temperature_error = error.message;
         }
@@ -601,13 +601,12 @@ class SmartSystemDetector {
     async loadHRMModels() {
         const modelsPath = path.join(__dirname, '..', 'models', 'hrm_models.json');
         try {
-            if (fs.existsSync(modelsPath)) {
-                const modelsData = JSON.parse(fs.readFileSync(modelsPath, 'utf8'));
-                Object.keys(modelsData).forEach(key => {
-                    this.hrmModels.set(key, modelsData[key]);
-                });
-                console.log(`📚 Cargados ${this.hrmModels.size} modelos HRM existentes`);
-            }
+            await fsPromises.access(modelsPath);
+            const modelsData = JSON.parse(await fsPromises.readFile(modelsPath, 'utf8'));
+            Object.keys(modelsData).forEach(key => {
+                this.hrmModels.set(key, modelsData[key]);
+            });
+            console.log(`📚 Cargados ${this.hrmModels.size} modelos HRM existentes`);
         } catch (error) {
             console.log('📚 No hay modelos HRM previos, iniciando entrenamiento desde cero');
         }
@@ -615,8 +614,10 @@ class SmartSystemDetector {
 
     async saveHRMModels() {
         const modelsPath = path.join(__dirname, '..', 'models');
-        if (!fs.existsSync(modelsPath)) {
-            fs.mkdirSync(modelsPath, { recursive: true });
+        try {
+            await fsPromises.access(modelsPath);
+        } catch {
+            await fsPromises.mkdir(modelsPath, { recursive: true });
         }
 
         const modelsData = {};
@@ -624,7 +625,7 @@ class SmartSystemDetector {
             modelsData[key] = value;
         });
 
-        fs.writeFileSync(
+        await fsPromises.writeFile(
             path.join(modelsPath, 'hrm_models.json'),
             JSON.stringify(modelsData, null, 2)
         );

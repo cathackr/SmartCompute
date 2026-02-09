@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-02-09
+
+### Security
+- **CRITICAL**: Moved hardcoded API credentials to environment variables
+- Created secure configuration loader (`secure_config_loader.py`) with environment variable expansion
+- Added `.env.example` and `client_config.json.example` templates for secure setup
+- Protected credentials from accidental exposure in version control
+
+### Fixed
+- Added timeout parameter (5s) to all subprocess calls in `generate_html_reports.py` to prevent indefinite hangs
+- Replaced generic exception handling with specific exception types in `smartcompute_industrial_gui.py`
+  - Now catches: `tk.TclError`, `AttributeError`, `OSError`, `json.JSONDecodeError`, `PermissionError`, `TypeError`
+  - Added detailed traceback logging for better debugging
+- Converted blocking I/O to async operations in `smartcompute_hrm_proto/node/smart_detector.js`
+  - Migrated `fs.readFileSync` → `fsPromises.readFile`
+  - Migrated `fs.writeFileSync` → `fsPromises.writeFile`
+  - Migrated `fs.existsSync` → `fsPromises.access`
+  - Migrated `fs.mkdirSync` → `fsPromises.mkdir`
+- Added comprehensive error handling to `quick_migration.sh` deployment script
+  - Enabled bash strict mode (`set -e`, `set -u`, `set -o pipefail`)
+  - Added logging function with timestamps
+  - Added error_exit function for controlled failure
+  - Added trap for automatic error capture
+  - Added pre-flight checks (Python3 installation, file existence, permissions)
+
+### Changed
+- Client configuration now uses `${SMARTCOMPUTE_API_KEY}` placeholder instead of hardcoded values
+- Improved error messages to be more descriptive without exposing sensitive information
+
+## [2.0.0] - Previous Release
+
 ### Added
 - Comprehensive security framework with TLS/mTLS support
 - Mutual authentication system for service-to-service communication
