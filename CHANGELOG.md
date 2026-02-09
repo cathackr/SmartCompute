@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.3] - 2026-02-09
+
+### Marketing & Documentation
+- **ENHANCED**: README improvements preserving bilingual structure
+  - Added badges at top (Python 3.8+, Docker, MIT License, Grafana 10.1)
+  - Added link to English version (README_EN.md)
+  - Added "Demo Rápido (30 segundos)" section highlighting smartcompute_express.py
+  - Integrated 3 existing screenshots:
+    - Grafana dashboard in Description section
+    - Docker deployment stack in Architecture section
+    - Benchmark results in Benefits section
+  - Maintained Spanish-primary, bilingual documentation structure
+
+### Added
+- `QUICKSTART.md` - 30-second and 2-minute quick start guides
+- `MARKETING_POSTS.md` - Ready-to-use posts for Reddit, LinkedIn, Twitter, HN, Dev.to
+- `GOOD_FIRST_ISSUES.md` - 22 beginner-friendly contribution opportunities
+- `tools/capture_screenshots.py` - Automated screenshot capture tool
+- GitHub issue templates (bug report, feature request)
+
+### Changed
+- Updated package.json description to highlight observability features
+- README now showcases Express demo prominently (no hardware required)
+- README emphasizes Docker Compose quickstart (2 minutes)
+- Documentation now targets self-hosted/DevOps audience in addition to industrial
+
+### Documentation
+- Added detailed API documentation structure
+- Added security configuration guide
+- Added Docker build instructions
+- Added testing guide
+- Added contribution guidelines
+
 ## [2.0.2] - 2026-02-09
 
 ### Security - CRITICAL

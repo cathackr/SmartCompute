@@ -1,7 +1,7 @@
 {
   "name": "smartcompute-industrial",
-  "version": "2.0.2",
-  "description": "SmartCompute Industrial - Sistema de aprobaciones y procesamiento asíncrono",
+  "version": "2.0.3",
+  "description": "SmartCompute - Industrial Monitoring & Observability Platform with Grafana/Prometheus",
   "main": "smartcompute_approval_workflow.js",
   "scripts": {
     "start": "node smartcompute_approval_workflow.js",

@@ -1,15 +1,25 @@
 # 🏭 SmartCompute Industrial v2.0
 
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Docker](https://img.shields.io/badge/docker-ready-brightgreen.svg)](https://www.docker.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Grafana](https://img.shields.io/badge/Grafana-10.1-orange.svg)](https://grafana.com/)
+
 ## Sistema Inteligente de Diagnóstico Industrial con IA
 
 **Desarrollado por:** ggwre04p0@mozmail.com
 **LinkedIn:** https://www.linkedin.com/in/martín-iribarne-swtf/
+
+> **English version:** [README_EN.md](README_EN.md)
 
 ---
 
 ## 🎯 Descripción
 
 SmartCompute Industrial es una plataforma completa de diagnóstico inteligente que revoluciona el mantenimiento industrial mediante:
+
+![SmartCompute Grafana Dashboard](assets/grafana_smartcompute_overview.png)
+*Dashboard en tiempo real con Grafana + Prometheus*
 
 - **🔐 Seguridad militar**: Autenticación 2FA + verificación GPS + túneles VPN
 - **🤖 IA avanzada**: Análisis visual automático de equipos industriales
@@ -31,12 +41,27 @@ SmartCompute Industrial es una plataforma completa de diagnóstico inteligente q
 
 ## 🚀 Instalación Rápida
 
+### ⚡ Demo Rápido (30 segundos)
+
+¿Quieres probar SmartCompute sin instalación compleja? Ejecuta el demo Express:
+
+```bash
+# Clonar repositorio
+git clone https://github.com/cathackr/SmartCompute.git
+cd SmartCompute
+
+# Ejecutar demo (no requiere dependencias)
+python3 smartcompute_express.py --duration 30
+```
+
+Se abrirá automáticamente un dashboard HTML con métricas en tiempo real de tu sistema.
+
 ### ⚡ Instalación Automática (Recomendada)
 
 ```bash
 # Descargar repositorio
-git clone https://github.com/usuario/smartcompute-industrial.git
-cd smartcompute-industrial
+git clone https://github.com/cathackr/SmartCompute.git
+cd SmartCompute
 
 # Ejecutar instalador seguro
 sudo chmod +x install_secure.sh
@@ -189,6 +214,11 @@ sudo nano /etc/smartcompute/authorized_locations.json
 └─────────────────────────────────────────────────┘
 ```
 
+### 🐳 Stack Docker Completo
+
+![Docker Deployment](assets/docker_deployment_screenshot.png)
+*Stack completo con 14 servicios: Grafana, Prometheus, Jaeger, Redis, PostgreSQL, MinIO, y más*
+
 ---
 
 ## 📊 Equipos Soportados
@@ -213,6 +243,9 @@ sudo nano /etc/smartcompute/authorized_locations.json
 ---
 
 ## 📈 Beneficios Comprobados
+
+![Benchmark Results](assets/benchmark_results.png)
+*Resultados de rendimiento y métricas del sistema*
 
 ### ⏱️ Reducción de Tiempo
 - **60-80%** menos tiempo de diagnóstico
