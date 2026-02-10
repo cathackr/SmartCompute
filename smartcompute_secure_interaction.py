@@ -105,9 +105,9 @@ class SmartComputeSecureInteraction:
 
         # Configuración GPS/Geofencing
         self.authorized_locations = {
-            "planta_principal": {"lat = -34.603700  # Coordenada de ejemplo, "lng = -58.381600  # Coordenada de ejemplo, "radius": 100},
-            "almacen_a": {"lat = -34.603700  # Coordenada de ejemplo, "lng = -58.381600  # Coordenada de ejemplo, "radius": 50},
-            "oficina_mantenimiento": {"lat = -34.603700  # Coordenada de ejemplo, "lng = -58.381600  # Coordenada de ejemplo, "radius": 30}
+            "planta_principal": {"lat": -34.603700, "lng": -58.381600, "radius": 100},
+            "almacen_a": {"lat": -34.603700, "lng": -58.381600, "radius": 50},
+            "oficina_mantenimiento": {"lat": -34.603700, "lng": -58.381600, "radius": 30}
         }
 
         # Configuración de IA visual

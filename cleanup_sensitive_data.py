@@ -233,8 +233,8 @@ slack_enabled = false
     locations_example = {
         "planta_principal": {
             "name": "Planta Principal",
-            "lat = -34.603700  # Coordenada de ejemplo,
-            "lng = -58.381600  # Coordenada de ejemplo,
+            "lat": -34.603700,
+            "lng": -58.381600,
             "radius_meters": 100,
             "authorized_operators": ["OP001", "OP002"],
             "emergency_contact": "+54911234567",
