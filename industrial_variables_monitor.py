@@ -52,15 +52,11 @@ import hashlib
 import hmac
 
 # Simulación de bibliotecas industriales
-try:
-    # En producción usar bibliotecas reales como:
-    # import snap7  # Para Siemens PLCs
-    # import pycomm3  # Para Allen-Bradley PLCs
-    # import pymodbus  # Para Modbus devices
-    # import opcua  # Para OPC-UA servers
-    pass
-except ImportError:
-    pass
+# En producción usar bibliotecas reales como:
+# import snap7  # Para Siemens PLCs
+# import pycomm3  # Para Allen-Bradley PLCs
+# import pymodbus  # Para Modbus devices
+# import opcua  # Para OPC-UA servers
 
 
 class VariableType(Enum):

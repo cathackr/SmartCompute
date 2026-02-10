@@ -53,15 +53,11 @@ import subprocess
 import tempfile
 
 # Simulación de conectores industriales
-try:
-    # En producción usar bibliotecas especializadas:
-    # import snap7  # Para TIA Portal/STEP 7
-    # import openopc  # Para sistemas OPC
-    # import pyads  # Para TwinCAT
-    # import pymqi  # Para MQ integration
-    pass
-except ImportError:
-    pass
+# En producción usar bibliotecas especializadas:
+# import snap7  # Para TIA Portal/STEP 7
+# import openopc  # Para sistemas OPC
+# import pyads  # Para TwinCAT
+# import pymqi  # Para MQ integration
 
 
 class IndustrialSystem(Enum):
@@ -461,7 +457,7 @@ class COLOSConnector:
         """Autenticar usuario en COLOS"""
         credentials = self.config.credentials
         # Simulación de autenticación
-        pass
+        return
 
     async def read_historian_data(self, tag_names: List[str],
                                 start_time: datetime, end_time: datetime) -> Dict:
