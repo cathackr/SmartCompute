@@ -1,127 +1,101 @@
-# SmartCompute - GITIGNORE SEGURO para repositorio público
+# SmartCompute v3.0.0 - .gitignore
+# ==============================================
 
-# ==========================================
-# ARCHIVOS CRÍTICOS - NUNCA SUBIR
-# ==========================================
+# ── Python ──────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
 
-# Estado de desarrollo y arquitectura interna
-claude_inc
-*_inc
-development_notes/
-session_state/
-
-# Bases de datos con información procesada
-*.db
-*.sqlite
-*.sqlite3
-
-# Entornos virtuales y dependencias
+# ── Virtual environments ────────────────────────
 venv/
 env/
 .venv/
 .env/
 node_modules/
 
-# Sistema completo de pagos
-payments/
-payment_server/
-secure_payment*/
-*payment*
-
-# Código empresarial confidencial
-enterprise/
-industrial_reports/
-secure-files/
-client_packages/
-
-# Datasets y datos de prueba
-datasets/
-synthetic/
-test_data/
-sample_data/
-
-# Reportes generados con datos reales
-reports/
-*.html
-industrial_reports/
-*_reports/
-
-# Scripts de deployment y configuración
-deploy_*/
-installer/
-*_deployment*
-server_config*
-deployment_config*
-
-# Archivos de configuración con datos reales
-config*.ini
-config*.json
-operators*.json
-authorized_locations*.json
-*_config.*
-*_credentials*
-
-# Scripts de mantenimiento y administración
-system_health_check*
-apply_improvements*
-apply_user_improvements*
-cleanup_sensitive_data*
-migration_strategy*
-
-# Logs y archivos temporales
-*.log
-*.tmp
-*.temp
-*.cache
-__pycache__/
-
-# Credenciales y claves
+# ── Environment and secrets ─────────────────────
+.env
 *.key
 *.pem
 *.p12
 *.pfx
 secrets*
+*_credentials*
 auth_data/
+admin_auth_data/
 vault_test/
-.env
 
-# Archivos de backup
+# ── Admin tools (NEVER distribute) ─────────────
+tools/admin/
+private_key.pem
+
+# ── Databases ───────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Logs and temp files ─────────────────────────
+*.log
+*.tmp
+*.temp
+*.cache
+logs/
+
+# ── Generated reports ───────────────────────────
+reports/
+industrial_reports/
+*_reports/
+
+# ── Test / coverage artifacts ───────────────────
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+coverage.xml
+safety-report.json
+bandit-report.json
+
+# ── Build artifacts ─────────────────────────────
 *.bak
 *.backup
 backups/
 
-# IDEs y editores
+# ── IDEs ────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Sistema operativo
+# ── OS ──────────────────────────────────────────
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# ==========================================
-# SOLO PERMITIR ARCHIVOS PÚBLICOS SEGUROS
-# ==========================================
+# ── Legacy root files (kept for reference) ──────
+# These are now under src/smartcompute/
+datasets/
+synthetic/
+test_data/
+sample_data/
+secure-files/
+client_packages/
+session_state/
+development_notes/
+claude_inc
+*_inc
 
-# Documentación pública (whitelist)
+# ── Whitelisted files ───────────────────────────
 !README.md
 !README_EN.md
 !LICENSE
+!LICENSE-COMMERCIAL
 !SECURITY.md
 !CONTRIBUTING.md
-
-# Ejemplos seguros sin datos reales
-!*_example.*
-!*_template.*
-!*_sample.*
-
-# Código core sin credenciales
-!smartcompute_express.py
-!smartcompute_showcase.py
-
-# Archivos de instalación básica
-!requirements-public.txt
-!Dockerfile.public
-!quick_start.sh
+!CHANGELOG.md
+!pyproject.toml
+!src/
+!tests/

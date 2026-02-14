@@ -1,0 +1,1 @@
+"""SmartCompute FastAPI application."""

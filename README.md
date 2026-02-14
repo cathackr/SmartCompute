@@ -1,69 +1,158 @@
-# 🏭 SmartCompute Industrial v2.0
+# SmartCompute v3.0.0
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![PyPI](https://img.shields.io/badge/pypi-smartcompute-blue.svg)](https://pypi.org/project/smartcompute/)
 [![Docker](https://img.shields.io/badge/docker-ready-brightgreen.svg)](https://www.docker.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Grafana](https://img.shields.io/badge/Grafana-10.1-orange.svg)](https://grafana.com/)
+[![License: MIT](https://img.shields.io/badge/core-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](.github/workflows/ci.yml)
 
-## Sistema Inteligente de Diagnóstico Industrial con IA
+## Industrial Cybersecurity & Monitoring Platform
 
-**Desarrollado por:** ggwre04p0@mozmail.com
-**LinkedIn:** https://www.linkedin.com/in/martín-iribarne-swtf/
+**By:** Martin Iribarne — [LinkedIn](https://www.linkedin.com/in/mart%C3%ADn-iribarne-swtf/) | ggwre04p0@mozmail.com
 
-> **English version:** [README_EN.md](README_EN.md)
-
----
-
-## 🎯 Descripción
-
-SmartCompute Industrial es una plataforma completa de diagnóstico inteligente que revoluciona el mantenimiento industrial mediante:
-
-![SmartCompute Grafana Dashboard](assets/grafana_smartcompute_overview.png)
-*Dashboard en tiempo real con Grafana + Prometheus*
-
-- **🔐 Seguridad militar**: Autenticación 2FA + verificación GPS + túneles VPN
-- **🤖 IA avanzada**: Análisis visual automático de equipos industriales
-- **🧠 Razonamiento inteligente**: Sistema HRM para generación de soluciones
-- **⚡ Flujo automatizado**: Aprobaciones multi-nivel y notificaciones
-- **📱 Interfaz móvil**: PWA optimizada para técnicos de campo
-
-### ✨ Características Principales
-
-| 🔥 Característica | 📋 Descripción | 💰 Beneficio |
-|-------------------|----------------|--------------|
-| **Autenticación 2FA** | Códigos TOTP + GPS + VPN | Acceso 100% seguro |
-| **Análisis Visual IA** | Reconoce equipos y estados | Diagnóstico automático |
-| **Razonamiento HRM** | Genera soluciones inteligentes | Recomendaciones precisas |
-| **Flujo de Aprobaciones** | Sistema multi-nivel | Control total |
-| **Aprendizaje Continuo** | IA que mejora con uso | Precisión creciente |
+> **Spanish docs:** See below | **English version:** [README_EN.md](README_EN.md)
 
 ---
 
-## 🚀 Instalación Rápida
-
-### ⚡ Demo Rápido (30 segundos)
-
-¿Quieres probar SmartCompute sin instalación compleja? Ejecuta el demo Express:
+## Quick Start
 
 ```bash
-# Clonar repositorio
+# Install (Starter tier, free)
+pip install smartcompute
+
+# Run an OSI layer analysis
+smartcompute scan --duration 30
+
+# Check system status
+smartcompute status
+
+# Real-time process monitoring
+smartcompute monitor
+```
+
+### Enterprise / Industrial
+
+```bash
+# Install enterprise features
+pip install smartcompute[enterprise]
+
+# Activate your license
+smartcompute activate <your-license-token>
+
+# Start the API server
+smartcompute serve
+```
+
+---
+
+## Pricing
+
+| Tier | Price | Features |
+|------|-------|----------|
+| **Starter** | Free (MIT) | OSI analysis, process monitoring, system resources, HTML reports |
+| **Enterprise** | $200-750/year | XDR, SIEM, ML threat detection, MCP orchestration, auth, compliance |
+| **Industrial** | $5,000/3 years | All Enterprise + SCADA, industrial protocols (Modbus, OPC-UA, S7comm), industrial compliance |
+
+Contact: ggwre04p0@mozmail.com
+
+---
+
+## Installation
+
+```bash
+# Starter (free) — only psutil + netifaces
+pip install smartcompute
+
+# Enterprise — adds cryptography, fastapi, numpy, etc.
+pip install smartcompute[enterprise]
+
+# Industrial — adds scapy + all enterprise deps
+pip install smartcompute[industrial]
+
+# Development
+pip install smartcompute[dev]
+```
+
+### From source
+
+```bash
 git clone https://github.com/cathackr/SmartCompute.git
 cd SmartCompute
+pip install -e ".[dev]"
+```
 
-# Ejecutar demo (no requiere dependencias)
+### Docker
+
+```bash
+docker build -t smartcompute:3.0.0 .
+docker run -p 5000:5000 smartcompute:3.0.0
+```
+
+---
+
+## CLI Commands
+
+```
+smartcompute scan          # OSI layer analysis
+smartcompute monitor       # Process monitoring
+smartcompute report <json> # Generate HTML report
+smartcompute activate <t>  # Activate license
+smartcompute status        # License & system info
+smartcompute serve         # Start FastAPI server
+smartcompute enterprise    # Enterprise features
+smartcompute industrial    # Industrial features
+smartcompute --version     # Show version
+```
+
+---
+
+## Project Structure
+
+```
+src/smartcompute/
+  __init__.py, __main__.py, cli.py, _version.py
+  core/          # Starter (free, MIT) — monitor, OSI, reports, config
+  enterprise/    # Enterprise (licensed) — xdr/, siem/, ml/, mcp/, auth/, compliance/, ops/
+  industrial/    # Industrial (licensed) — protocols/, scada/, compliance/, variables/
+  licensing/     # RSA-based offline license validation
+  api/           # FastAPI endpoints
+  payments/      # Payment integration
+  network/       # Network bridge, central server
+  utils/         # Credentials, security recommendations
+```
+
+---
+
+## Description
+
+SmartCompute is a comprehensive industrial cybersecurity and monitoring platform:
+
+![SmartCompute Grafana Dashboard](assets/grafana_smartcompute_overview.png)
+*Real-time dashboard with Grafana + Prometheus*
+
+- **Security**: 2FA + GPS verification + VPN tunnels
+- **AI/ML**: Visual analysis of industrial equipment, threat detection
+- **HRM reasoning**: Intelligent solution generation
+- **Industrial protocols**: Modbus TCP, EtherNet/IP, PROFINET, S7comm, OPC-UA
+- **Supported equipment**: Siemens, Allen-Bradley, Schneider Electric, Mitsubishi
+
+---
+
+## Legacy Installation
+
+### Demo Express (30 seconds)
+
+```bash
+git clone https://github.com/cathackr/SmartCompute.git
+cd SmartCompute
 python3 smartcompute_express.py --duration 30
 ```
 
-Se abrirá automáticamente un dashboard HTML con métricas en tiempo real de tu sistema.
-
-### ⚡ Instalación Automática (Recomendada)
+### Automated Install (Legacy)
 
 ```bash
-# Descargar repositorio
 git clone https://github.com/cathackr/SmartCompute.git
 cd SmartCompute
-
-# Ejecutar instalador seguro
 sudo chmod +x install_secure.sh
 sudo ./install_secure.sh
 ```

@@ -1,0 +1,109 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "smartcompute"
+dynamic = ["version"]
+description = "Industrial Cybersecurity & Monitoring Platform"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [
+    { name = "Martín Iribarne", email = "ggwre04p0@mozmail.com" },
+]
+keywords = ["cybersecurity", "monitoring", "industrial", "scada", "osi", "xdr", "siem"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: System :: Monitoring",
+    "Topic :: System :: Networking :: Monitoring",
+]
+dependencies = [
+    "psutil>=5.8.0",
+    "netifaces>=0.11.0",
+]
+
+[project.optional-dependencies]
+enterprise = [
+    "cryptography>=41.0.0",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.31.0",
+    "pydantic>=2.8.0",
+    "python-dotenv>=1.0.0",
+    "requests>=2.32.0",
+    "numpy>=1.21.0",
+]
+industrial = [
+    "smartcompute[enterprise]",
+    "scapy>=2.4.5",
+]
+dev = [
+    "smartcompute[enterprise]",
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.11.0",
+    "httpx>=0.24.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "isort>=5.12.0",
+    "mypy>=1.5.0",
+    "bandit>=1.7.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/cathackr/smartcompute"
+Documentation = "https://github.com/cathackr/smartcompute#readme"
+Repository = "https://github.com/cathackr/smartcompute"
+Issues = "https://github.com/cathackr/smartcompute/issues"
+
+[project.scripts]
+smartcompute = "smartcompute.cli:main"
+
+[tool.hatch.version]
+path = "src/smartcompute/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/smartcompute"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/smartcompute/",
+    "LICENSE",
+    "LICENSE-COMMERCIAL",
+    "README.md",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.black]
+line-length = 100
+target-version = ["py39"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.9"
+ignore_missing_imports = true
+no_strict_optional = true
+
+[tool.coverage.run]
+source = ["smartcompute"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 0

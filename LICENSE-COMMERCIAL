@@ -1,0 +1,74 @@
+SmartCompute Commercial License
+================================
+
+Copyright (c) 2025-2026 Martín Iribarne / cathackr
+All rights reserved.
+
+This license governs use of the SmartCompute Enterprise and Industrial
+modules (all files under src/smartcompute/enterprise/ and
+src/smartcompute/industrial/).
+
+1. GRANT OF LICENSE
+
+   Upon purchase of a valid license key, the Licensee is granted a
+   non-exclusive, non-transferable, revocable license to:
+
+   a) Install and use the Software on the number of machines ("nodes")
+      specified in the license key.
+   b) Use the Software for internal business purposes within the
+      Licensee's organization.
+
+2. RESTRICTIONS
+
+   The Licensee SHALL NOT:
+
+   a) Redistribute, sublicense, sell, or make the Software available
+      to third parties, in whole or in part.
+   b) Reverse engineer, decompile, or disassemble the Software beyond
+      what is permitted by applicable law.
+   c) Remove or alter any proprietary notices, labels, or marks.
+   d) Use the Software after the license expiration date.
+   e) Transfer the license to another organization without prior
+      written consent.
+
+3. TIERS
+
+   - Enterprise ($200-750/year): Includes XDR, SIEM, ML threat
+     detection, MCP orchestration, authentication, compliance
+     workflows, and operations tooling.
+   - Industrial ($5,000/3 years): Includes all Enterprise features
+     plus SCADA monitoring, industrial protocol analysis, and
+     industrial compliance standards.
+
+4. SUPPORT
+
+   Licensed customers receive email support at the address provided
+   during purchase.  Response times depend on the license tier.
+
+5. WARRANTY DISCLAIMER
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY.
+
+6. TERMINATION
+
+   This license terminates automatically upon:
+   a) Expiration of the license period.
+   b) Breach of any term of this license.
+   c) Written notice by either party.
+
+   Upon termination the Licensee must destroy all copies of the
+   licensed modules.
+
+7. GOVERNING LAW
+
+   This license shall be governed by and construed in accordance with
+   the laws of Argentina.
+
+---
+
+The SmartCompute core modules (src/smartcompute/core/) remain available
+under the MIT License.  See the LICENSE file for details.
+
+For licensing inquiries: ggwre04p0@mozmail.com

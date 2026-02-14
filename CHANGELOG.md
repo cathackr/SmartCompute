@@ -7,6 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-02-14
+
+### Breaking Changes
+- Complete project restructure from flat files to `src/smartcompute/` Python package
+- Entry point changed from `python main.py` to `smartcompute` CLI or `python -m smartcompute`
+- Docker entry point changed from `app.api.main:app` to `smartcompute.api.main:app`
+- All imports now use `smartcompute.*` package namespace
+
+### Added
+- **Licensing system**: Offline RSA-based license validation with `@requires_tier()` decorators
+  - `smartcompute activate <token>` to activate paid tiers
+  - `smartcompute status` to check license and hardware ID
+  - Hardware fingerprinting for machine-bound licenses
+  - Tier hierarchy: starter (free) < enterprise < industrial
+- **Unified CLI** with subcommands: `scan`, `monitor`, `report`, `activate`, `status`, `serve`, `enterprise`, `industrial`
+- **pyproject.toml** with hatchling build backend and optional dependency groups:
+  - `pip install smartcompute` (Starter, free)
+  - `pip install smartcompute[enterprise]` (Enterprise features)
+  - `pip install smartcompute[industrial]` (Industrial features)
+  - `pip install smartcompute[dev]` (Development tools)
+- **LICENSE-COMMERCIAL** for enterprise/industrial modules
+- **FastAPI application** at `smartcompute.api.main:app` with health, status, activate, and webhook endpoints
+- Comprehensive test suite: `tests/unit/test_licensing.py`, `tests/unit/test_core_monitor.py`, `tests/unit/test_core_osi.py`, `tests/unit/test_cli.py`
+- Test fixtures with RSA keypair generation for license testing
+
+### Changed
+- **Project structure**: Reorganized 60+ root Python files into categorized package:
+  - `core/` — Starter features (monitor, OSI analysis, system resources, reports, config, dashboard)
+  - `enterprise/` — Enterprise features organized into xdr/, siem/, ml/, mcp/, auth/, compliance/, ops/
+  - `industrial/` — Industrial features organized into protocols/, scada/, compliance/, variables/
+  - `licensing/` — License validation, decorators, hardware ID
+  - `api/` — FastAPI endpoints
+  - `payments/`, `network/`, `utils/` — Supporting modules
+- Updated Dockerfile for `src/` layout and pyproject.toml-based installation
+- Updated Makefile with new paths and `install-dev` target
+- Updated CI workflow (`.github/workflows/ci.yml`) for Python 3.9-3.12 matrix with new package structure
+- Updated `.gitignore` for new project structure
+- **Pricing**: Updated from $15k/$25k to $200-750/year (Enterprise) and $5,000/3 years (Industrial)
+
+### Removed
+- Legacy flat file structure (files remain in root for reference during migration)
+- Direct `requirements.txt` usage for installation (now use pyproject.toml)
+
 ## [2.0.3] - 2026-02-09
 
 ### Marketing & Documentation
