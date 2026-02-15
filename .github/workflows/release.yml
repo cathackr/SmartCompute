@@ -1,46 +1,30 @@
 name: SmartCompute Release Pipeline
-# Automated release workflow with security, installers, and distribution
 
 on:
   push:
     tags:
-      - 'v*.*.*'  # Semantic versioning tags (v1.0.0, v2.1.3-beta, etc.)
+      - 'v*.*.*'
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (e.g., v1.0.0)'
+        description: 'Release version (e.g., v3.0.1)'
         required: true
         type: string
-      prerelease:
-        description: 'Mark as pre-release'
-        required: false
-        type: boolean
-        default: false
-      draft:
-        description: 'Create draft release'
-        required: false
-        type: boolean
-        default: false
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-  GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
 jobs:
-  # Security and Quality Checks
-  security-checks:
-    name: Security & Quality Validation
+  # ── Tests & validation ────────────────────────────────────────
+  validate:
+    name: Validate
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
       clean_version: ${{ steps.version.outputs.clean_version }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
       - name: Extract version
         id: version
@@ -53,325 +37,81 @@ jobs:
           CLEAN_VERSION=${VERSION#v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "clean_version=$CLEAN_VERSION" >> $GITHUB_OUTPUT
-          echo "Release version: $VERSION"
-
-      - name: Validate version format
-        run: |
-          if [[ ! "${{ steps.version.outputs.version }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9\.\-]+)?$ ]]; then
-            echo "❌ Invalid version format: ${{ steps.version.outputs.version }}"
-            echo "Expected format: vMAJOR.MINOR.PATCH[-PRERELEASE]"
-            exit 1
-          fi
-          echo "✅ Version format is valid"
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install security tools
-        run: |
-          pip install bandit safety semgrep
-          # Install additional security scanners
-          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
-
-      - name: Run security scans
-        run: |
-          echo "🔍 Running security scans..."
-          
-          # Python security scan
-          bandit -r . -f json -o bandit-report.json || true
-          
-          # Vulnerability scan
-          safety check --json --output safety-report.json || true
-          
-          # SAST scan
-          semgrep --config=auto --json --output=semgrep-report.json || true
-          
-          # Container scan
-          docker build -t temp-scan:latest .
-          grype temp-scan:latest --output json --file grype-report.json || true
-          
-          echo "✅ Security scans completed"
-
-      - name: Upload security reports
-        uses: actions/upload-artifact@v3
-        with:
-          name: security-reports
-          path: '*-report.json'
-
-  # Build Multi-Platform Binaries
-  build-binaries:
-    name: Build Installers
-    needs: security-checks
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            platform: linux
-            arch: x86_64
-            python_version: '3.11'
-          - os: ubuntu-latest
-            platform: linux
-            arch: aarch64
-            python_version: '3.11'
-          - os: windows-latest
-            platform: windows
-            arch: x86_64
-            python_version: '3.11'
-          - os: macos-latest
-            platform: macos
-            arch: x86_64
-            python_version: '3.11'
-          - os: macos-latest
-            platform: macos
-            arch: arm64
-            python_version: '3.11'
-    
-    runs-on: ${{ matrix.os }}
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python_version }}
-
-      - name: Setup cross-compilation (Linux ARM64)
-        if: matrix.platform == 'linux' && matrix.arch == 'aarch64'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-aarch64-linux-gnu
-          echo "CC=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
-
-      - name: Install dependencies
+      - name: Install and test
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyinstaller nuitka cx_Freeze
+          pip install -e ".[dev]"
+          pytest tests/ -v
+          smartcompute --version
 
-      - name: Build with PyInstaller
-        run: |
-          # Create optimized binary
-          pyinstaller --onefile \
-            --name "smartcompute-${{ matrix.platform }}-${{ matrix.arch }}" \
-            --distpath "dist/${{ matrix.platform }}-${{ matrix.arch }}" \
-            --add-data "templates:templates" \
-            --add-data "static:static" \
-            --hidden-import "uvicorn" \
-            --hidden-import "fastapi" \
-            main.py
+  # ── Build Python package ──────────────────────────────────────
+  build:
+    name: Build package
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Create installer (Linux)
-        if: matrix.platform == 'linux'
-        run: |
-          mkdir -p installers/${{ matrix.platform }}-${{ matrix.arch }}
-          
-          # Create self-extracting installer script
-          cat > installers/${{ matrix.platform }}-${{ matrix.arch }}/install.sh << 'EOF'
-          #!/bin/bash
-          set -e
-          
-          INSTALL_DIR="/opt/smartcompute"
-          BINARY_NAME="smartcompute-${{ matrix.platform }}-${{ matrix.arch }}"
-          VERSION="${{ needs.security-checks.outputs.clean_version }}"
-          
-          echo "🚀 Installing SmartCompute v$VERSION..."
-          
-          # Check permissions
-          if [[ $EUID -ne 0 ]]; then
-             echo "This installer must be run as root (use sudo)"
-             exit 1
-          fi
-          
-          # Create directories
-          mkdir -p "$INSTALL_DIR"
-          mkdir -p "/usr/local/bin"
-          mkdir -p "/etc/systemd/system"
-          
-          # Extract and install binary
-          tail -n +50 "$0" | tar -xz -C "$INSTALL_DIR"
-          chmod +x "$INSTALL_DIR/$BINARY_NAME"
-          ln -sf "$INSTALL_DIR/$BINARY_NAME" "/usr/local/bin/smartcompute"
-          
-          # Create systemd service
-          cat > /etc/systemd/system/smartcompute.service << 'SERVICE_EOF'
-          [Unit]
-          Description=SmartCompute Service
-          After=network.target
-          
-          [Service]
-          Type=simple
-          User=smartcompute
-          Group=smartcompute
-          ExecStart=/usr/local/bin/smartcompute
-          Restart=always
-          RestartSec=10
-          
-          [Install]
-          WantedBy=multi-user.target
-          SERVICE_EOF
-          
-          # Create user
-          if ! id "smartcompute" &>/dev/null; then
-              useradd -r -s /bin/false smartcompute
-          fi
-          
-          # Set permissions
-          chown -R smartcompute:smartcompute "$INSTALL_DIR"
-          
-          echo "✅ SmartCompute installed successfully!"
-          echo "📋 To start: sudo systemctl start smartcompute"
-          echo "📋 To enable at boot: sudo systemctl enable smartcompute"
-          
-          exit 0
-          EOF
-          
-          # Bundle installer with binary
-          tar -czf - -C "dist/${{ matrix.platform }}-${{ matrix.arch }}" . >> installers/${{ matrix.platform }}-${{ matrix.arch }}/install.sh
-          
-          chmod +x installers/${{ matrix.platform }}-${{ matrix.arch }}/install.sh
-
-      - name: Create installer (Windows)
-        if: matrix.platform == 'windows'
-        run: |
-          mkdir -p installers/${{ matrix.platform }}-${{ matrix.arch }}
-          
-          # Create PowerShell installer
-          $installer = @"
-          # SmartCompute Windows Installer v${{ needs.security-checks.outputs.clean_version }}
-          
-          Write-Host "🚀 Installing SmartCompute..." -ForegroundColor Green
-          
-          `$InstallDir = "`$env:ProgramFiles\SmartCompute"
-          `$BinaryName = "smartcompute-${{ matrix.platform }}-${{ matrix.arch }}.exe"
-          
-          # Create directories
-          New-Item -ItemType Directory -Force -Path `$InstallDir | Out-Null
-          
-          # Copy binary
-          Copy-Item "dist\${{ matrix.platform }}-${{ matrix.arch }}\*" `$InstallDir -Force -Recurse
-          
-          # Add to PATH
-          `$CurrentPath = [Environment]::GetEnvironmentVariable("Path", "Machine")
-          if (`$CurrentPath -notlike "*`$InstallDir*") {
-              [Environment]::SetEnvironmentVariable("Path", "`$CurrentPath;`$InstallDir", "Machine")
-          }
-          
-          # Create Windows Service
-          if (Get-Command "nssm" -ErrorAction SilentlyContinue) {
-              nssm install SmartCompute "`$InstallDir\`$BinaryName"
-              nssm set SmartCompute Description "SmartCompute Service"
-              nssm set SmartCompute Start SERVICE_AUTO_START
-          }
-          
-          Write-Host "✅ SmartCompute installed successfully!" -ForegroundColor Green
-          Write-Host "📋 Binary location: `$InstallDir" -ForegroundColor Cyan
-          Write-Host "📋 Added to PATH - restart terminal to use 'smartcompute' command" -ForegroundColor Cyan
-          "@
-          
-          $installer | Out-File -FilePath "installers/${{ matrix.platform }}-${{ matrix.arch }}/install.ps1" -Encoding UTF8
-          
-          # Create batch installer wrapper
-          @"
-          @echo off
-          echo 🚀 SmartCompute Windows Installer
-          echo.
-          powershell -ExecutionPolicy Bypass -File "%~dp0install.ps1"
-          pause
-          "@ | Out-File -FilePath "installers/${{ matrix.platform }}-${{ matrix.arch }}/install.bat" -Encoding ASCII
-
-      - name: Create installer (macOS)
-        if: matrix.platform == 'macos'
-        run: |
-          mkdir -p installers/${{ matrix.platform }}-${{ matrix.arch }}
-          
-          # Create macOS installer script
-          cat > installers/${{ matrix.platform }}-${{ matrix.arch }}/install.sh << 'EOF'
-          #!/bin/bash
-          set -e
-          
-          INSTALL_DIR="/usr/local/bin"
-          BINARY_NAME="smartcompute-${{ matrix.platform }}-${{ matrix.arch }}"
-          VERSION="${{ needs.security-checks.outputs.clean_version }}"
-          
-          echo "🚀 Installing SmartCompute v$VERSION for macOS..."
-          
-          # Check if running with sufficient privileges
-          if [[ ! -w "$INSTALL_DIR" ]]; then
-             echo "🔐 This installer needs admin privileges"
-             sudo -v
-             SUDO="sudo"
-          fi
-          
-          # Extract binary (from end of this script)
-          BINARY_START=$(awk '/^__BINARY_START__/ {print NR + 1; exit 0; }' "$0")
-          tail -n +$BINARY_START "$0" | base64 -d > "/tmp/$BINARY_NAME"
-          
-          # Install binary
-          $SUDO mv "/tmp/$BINARY_NAME" "$INSTALL_DIR/smartcompute"
-          $SUDO chmod +x "$INSTALL_DIR/smartcompute"
-          
-          # Create launchd plist for service
-          PLIST="/Library/LaunchDaemons/com.smartcompute.service.plist"
-          $SUDO tee "$PLIST" > /dev/null << 'PLIST_EOF'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-              <key>Label</key>
-              <string>com.smartcompute.service</string>
-              <key>ProgramArguments</key>
-              <array>
-                  <string>/usr/local/bin/smartcompute</string>
-              </array>
-              <key>RunAtLoad</key>
-              <true/>
-              <key>KeepAlive</key>
-              <true/>
-          </dict>
-          </plist>
-          PLIST_EOF
-          
-          echo "✅ SmartCompute installed successfully!"
-          echo "📋 To start service: sudo launchctl load $PLIST"
-          echo "📋 To run manually: smartcompute"
-          
-          exit 0
-          
-          __BINARY_START__
-          EOF
-          
-          # Append base64-encoded binary
-          base64 "dist/${{ matrix.platform }}-${{ matrix.arch }}/smartcompute-${{ matrix.platform }}-${{ matrix.arch }}" >> installers/${{ matrix.platform }}-${{ matrix.arch }}/install.sh
-          
-          chmod +x installers/${{ matrix.platform }}-${{ matrix.arch }}/install.sh
-
-      - name: Upload installers
-        uses: actions/upload-artifact@v3
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          name: installers-${{ matrix.platform }}-${{ matrix.arch }}
-          path: installers/${{ matrix.platform }}-${{ matrix.arch }}/*
+          python-version: '3.11'
 
-  # Build Docker Images
-  build-containers:
-    name: Build Container Images
-    needs: security-checks
+      - name: Build sdist and wheel
+        run: |
+          pip install build
+          python -m build
+
+      - name: Verify package
+        run: |
+          pip install twine
+          twine check dist/*
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-package
+          path: dist/
+
+  # ── Publish to PyPI (trusted publishing) ──────────────────────
+  publish-pypi:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write  # Required for trusted publishing
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  # ── Build & push Docker image ─────────────────────────────────
+  build-docker:
+    name: Build Docker image
+    needs: validate
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to GitHub Container Registry
+      - name: Login to GHCR
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
@@ -384,313 +124,35 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=sha
 
-      - name: Build and push container images
+      - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args: |
-            VERSION=${{ needs.security-checks.outputs.clean_version }}
 
-  # Generate Release Artifacts
-  prepare-release:
-    name: Prepare Release Artifacts
-    needs: [security-checks, build-binaries, build-containers]
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download all installers
-        uses: actions/download-artifact@v3
-        with:
-          path: release-artifacts
-
-      - name: Setup GPG
-        run: |
-          echo "$GPG_PRIVATE_KEY" | base64 -d | gpg --batch --import
-          echo "GPG key imported successfully"
-
-      - name: Generate checksums and signatures
-        run: |
-          cd release-artifacts
-          
-          # Create checksums file
-          echo "# SmartCompute v${{ needs.security-checks.outputs.clean_version }} - File Checksums" > checksums.txt
-          echo "Generated on: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> checksums.txt
-          echo "" >> checksums.txt
-          
-          # Generate checksums for all installer files
-          find . -name "install.*" -type f | while read file; do
-            echo "Processing: $file"
-            
-            # Generate multiple hash types
-            sha256sum "$file" >> checksums.txt
-            sha512sum "$file" >> checksums.txt
-            md5sum "$file" >> checksums.txt
-            echo "" >> checksums.txt
-          done
-          
-          # Sign the checksums file
-          gpg --batch --yes --passphrase "$GPG_PASSPHRASE" --pinentry-mode loopback \
-              --detach-sign --armor checksums.txt
-          
-          echo "✅ Checksums and signatures generated"
-
-      - name: Generate release notes
-        run: |
-          cat > release-notes.md << EOF
-          # SmartCompute ${{ needs.security-checks.outputs.version }} Release
-          
-          ## 🎉 What's New
-          
-          This release includes comprehensive security enhancements and production-ready features:
-          
-          ### 🔐 Security Features
-          - **TLS Everywhere**: End-to-end encryption for all connections
-          - **Mutual Authentication**: mTLS for service-to-service communication
-          - **Advanced Rate Limiting**: Multi-strategy rate limiting with Redis backend
-          - **Circuit Breakers**: Fault tolerance for external API calls
-          - **Defense in Depth**: Multiple security layers and validation
-          
-          ### 📦 Installation Options
-          
-          #### Quick Install (Linux/macOS)
-          \`\`\`bash
-          curl -fsSL https://github.com/${{ github.repository }}/releases/download/${{ needs.security-checks.outputs.version }}/install.sh | sudo bash
-          \`\`\`
-          
-          #### Manual Download
-          Choose your platform from the assets below:
-          - **Linux x86_64**: [install.sh](./install.sh) 
-          - **Linux ARM64**: [install.sh](./install.sh)
-          - **Windows x86_64**: [install.bat](./install.bat)
-          - **macOS Intel**: [install.sh](./install.sh)
-          - **macOS Apple Silicon**: [install.sh](./install.sh)
-          
-          #### Container Images
-          \`\`\`bash
-          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.security-checks.outputs.clean_version }}
-          \`\`\`
-          
-          ### ✅ Verification
-          
-          All release artifacts are signed with GPG. Verify integrity:
-          
-          \`\`\`bash
-          # Download checksums and signature
-          wget https://github.com/${{ github.repository }}/releases/download/${{ needs.security-checks.outputs.version }}/checksums.txt
-          wget https://github.com/${{ github.repository }}/releases/download/${{ needs.security-checks.outputs.version }}/checksums.txt.asc
-          
-          # Import public key
-          curl -fsSL https://github.com/${{ github.actor }}.gpg | gpg --import
-          
-          # Verify signature
-          gpg --verify checksums.txt.asc checksums.txt
-          
-          # Verify file integrity
-          sha256sum -c checksums.txt
-          \`\`\`
-          
-          ### 🚀 Deployment
-          
-          For production deployment with full security:
-          
-          \`\`\`bash
-          # Clone repository
-          git clone https://github.com/${{ github.repository }}.git
-          cd smartcompute
-          
-          # Run secure deployment
-          ./scripts/deploy-secure.sh
-          \`\`\`
-          
-          ### 📊 Security Validation
-          
-          This release has been validated with:
-          - Static Application Security Testing (SAST)
-          - Dependency vulnerability scanning
-          - Container security scanning
-          - Infrastructure security validation
-          
-          ### 🔗 Documentation
-          
-          - [Security Documentation](./docs/security.md)
-          - [Deployment Guide](./docs/deployment.md)
-          - [API Documentation](./docs/api.md)
-          
-          ---
-          
-          **Full Changelog**: https://github.com/${{ github.repository }}/compare/v$(git describe --tags --abbrev=0 HEAD^)...${{ needs.security-checks.outputs.version }}
-          EOF
-
-      - name: Create universal installer script
-        run: |
-          cat > release-artifacts/install.sh << 'EOF'
-          #!/bin/bash
-          # SmartCompute Universal Installer
-          # Automatically detects platform and downloads appropriate installer
-          
-          set -e
-          
-          REPO="${{ github.repository }}"
-          VERSION="${{ needs.security-checks.outputs.version }}"
-          BASE_URL="https://github.com/$REPO/releases/download/$VERSION"
-          
-          echo "🚀 SmartCompute Universal Installer"
-          echo "Version: $VERSION"
-          echo ""
-          
-          # Detect platform and architecture
-          OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-          ARCH=$(uname -m)
-          
-          case $ARCH in
-              x86_64|amd64) ARCH="x86_64" ;;
-              aarch64|arm64) ARCH="aarch64" ;;
-              armv7l) ARCH="armv7" ;;
-              *) echo "❌ Unsupported architecture: $ARCH"; exit 1 ;;
-          esac
-          
-          case $OS in
-              linux) PLATFORM="linux" ;;
-              darwin) PLATFORM="macos" ;;
-              *) echo "❌ Unsupported OS: $OS"; exit 1 ;;
-          esac
-          
-          INSTALLER_URL="$BASE_URL/installers-$PLATFORM-$ARCH.tar.gz"
-          
-          echo "📥 Downloading installer for $PLATFORM-$ARCH..."
-          
-          # Download and extract installer
-          curl -fsSL "$INSTALLER_URL" | tar -xz
-          
-          # Run platform-specific installer
-          if [[ -f "install.sh" ]]; then
-              chmod +x install.sh
-              ./install.sh
-          else
-              echo "❌ No installer found for $PLATFORM-$ARCH"
-              exit 1
-          fi
-          EOF
-          
-          chmod +x release-artifacts/install.sh
-
-      - name: Package installers
-        run: |
-          cd release-artifacts
-          
-          # Package each platform's installers
-          for dir in installers-*; do
-            if [[ -d "$dir" ]]; then
-              tar -czf "${dir}.tar.gz" -C "$dir" .
-              rm -rf "$dir"
-            fi
-          done
-
-      - name: Upload release artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: release-assets
-          path: release-artifacts/*
-
-  # Create GitHub Release
-  create-release:
-    name: Create GitHub Release
-    needs: [security-checks, build-binaries, build-containers, prepare-release]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Download release artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: release-assets
-          path: release-assets
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ needs.security-checks.outputs.version }}
-          name: "SmartCompute ${{ needs.security-checks.outputs.version }}"
-          body_path: release-assets/release-notes.md
-          draft: ${{ github.event.inputs.draft == 'true' }}
-          prerelease: ${{ github.event.inputs.prerelease == 'true' || contains(needs.security-checks.outputs.version, '-') }}
-          files: |
-            release-assets/checksums.txt
-            release-assets/checksums.txt.asc
-            release-assets/install.sh
-            release-assets/installers-*.tar.gz
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-  # Post-Release Tasks
+  # ── Post-release summary ──────────────────────────────────────
   post-release:
-    name: Post-Release Tasks
-    needs: [security-checks, create-release]
+    name: Post-release
+    needs: [validate, publish-pypi, build-docker]
     runs-on: ubuntu-latest
     if: success()
-    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
-
-      - name: Update CHANGELOG.md
+      - name: Summary
         run: |
-          # Generate changelog entry
-          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^)
-          CURRENT_TAG="${{ needs.security-checks.outputs.version }}"
-          
-          # Create new changelog entry
-          echo "# Changelog" > CHANGELOG_NEW.md
-          echo "" >> CHANGELOG_NEW.md
-          echo "## [$CURRENT_TAG] - $(date +%Y-%m-%d)" >> CHANGELOG_NEW.md
-          echo "" >> CHANGELOG_NEW.md
-          
-          # Add commit messages as changelog items
-          git log --oneline --pretty=format:"- %s (%h)" $PREV_TAG..HEAD >> CHANGELOG_NEW.md
-          echo "" >> CHANGELOG_NEW.md
-          echo "" >> CHANGELOG_NEW.md
-          
-          # Merge with existing changelog
-          if [[ -f "CHANGELOG.md" ]]; then
-              tail -n +2 CHANGELOG.md >> CHANGELOG_NEW.md
-          fi
-          
-          mv CHANGELOG_NEW.md CHANGELOG.md
-
-      - name: Commit changelog update
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add CHANGELOG.md
-          git commit -m "chore: update CHANGELOG.md for ${{ needs.security-checks.outputs.version }}" || exit 0
-          git push origin main || true
-
-      - name: Notify deployment systems
-        run: |
-          echo "🚀 Release ${{ needs.security-checks.outputs.version }} completed successfully!"
-          echo "📦 Installers are available at: https://github.com/${{ github.repository }}/releases/tag/${{ needs.security-checks.outputs.version }}"
-          echo "🐳 Container image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.security-checks.outputs.clean_version }}"
+          VERSION="${{ needs.validate.outputs.version }}"
+          CLEAN="${{ needs.validate.outputs.clean_version }}"
+          echo "## Release $VERSION published" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- PyPI: https://pypi.org/project/smartcompute/$CLEAN/" >> $GITHUB_STEP_SUMMARY
+          echo "- Docker: \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$CLEAN\`" >> $GITHUB_STEP_SUMMARY
+          echo "- GitHub: https://github.com/${{ github.repository }}/releases/tag/$VERSION" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Install: \`pip install smartcompute==$CLEAN\`" >> $GITHUB_STEP_SUMMARY
