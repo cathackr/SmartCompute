@@ -124,8 +124,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.validate.outputs.clean_version }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ghcr.io/cathackr/smartcompute:${{ needs.validate.outputs.clean_version }}
+            ghcr.io/cathackr/smartcompute:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
