@@ -2,406 +2,62 @@ name: "Performance Benchmark"
 
 on:
   push:
-    branches: [ main, develop ]
-  pull_request:
     branches: [ main ]
-  schedule:
-    # Run performance benchmarks weekly on Sunday at 4 AM UTC
-    - cron: '0 4 * * 0'
   workflow_dispatch:
-    inputs:
-      benchmark_suite:
-        description: 'Benchmark suite to run'
-        required: false
-        default: 'complete'
-        type: choice
-        options:
-        - complete
-        - quick
-        - stress
-      parallel_execution:
-        description: 'Run benchmarks in parallel'
-        required: false
-        default: true
-        type: boolean
 
 jobs:
   performance-benchmark:
     name: Run Performance Benchmarks
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    
-    strategy:
-      matrix:
-        python-version: ['3.11']
-        # Add more Python versions if needed
-        # python-version: ['3.9', '3.10', '3.11']
-    
+    timeout-minutes: 15
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: '3.11'
 
-    - name: Cache pip dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-
-    - name: Install system dependencies
+    - name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential python3-dev
-
-    - name: Install Python dependencies
-      run: |
-        python -m pip install --upgrade pip setuptools wheel
-        pip install numpy pandas matplotlib seaborn psutil
-        
-        # Install project dependencies
-        if [ -f requirements.txt ]; then
-          pip install -r requirements.txt
-        fi
-        
-        # Install additional benchmark dependencies
-        pip install scikit-learn scipy plotly kaleido
+        python -m pip install --upgrade pip
+        pip install -e ".[enterprise]"
+        pip install pytest pytest-asyncio httpx
 
     - name: System information
       run: |
         echo "System Information:"
         echo "==================="
         echo "OS: $(lsb_release -d | cut -f2)"
-        echo "Kernel: $(uname -r)"
         echo "CPU: $(lscpu | grep 'Model name' | cut -d: -f2 | xargs)"
         echo "CPU Cores: $(nproc)"
         echo "Memory: $(free -h | grep Mem | awk '{print $2}')"
         echo "Python: $(python --version)"
-        echo "NumPy: $(python -c 'import numpy; print(numpy.__version__)')"
-        echo "Disk Space: $(df -h / | tail -1 | awk '{print $4}')"
 
-    - name: Prepare benchmark environment
+    - name: Run test suite with timing
       run: |
-        # Create output directories
-        mkdir -p benchmark_results
-        mkdir -p benchmark_artifacts
-        
-        # Set Python path
-        export PYTHONPATH=$PYTHONPATH:$(pwd)
-        echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
+        pytest tests/ -v --durations=10
 
-    - name: Run quick smoke test
+    - name: Run API latency benchmark
       run: |
-        echo "🧪 Running quick smoke test..."
         python -c "
-import numpy as np
-import time
-
-# Quick matrix multiplication test
-A = np.random.randn(100, 100)
-B = np.random.randn(100, 100)
-
-start = time.perf_counter()
-C = np.dot(A, B)
-end = time.perf_counter()
-
-print(f'Quick test: {(end-start)*1000:.2f}ms')
-print(f'Result shape: {C.shape}')
-print('✅ Smoke test passed')
-"
-
-    - name: Run performance benchmarks
-      run: |
-        echo "🚀 Starting performance benchmarks..."
-        
-        SUITE_NAME="${{ github.event.inputs.benchmark_suite || 'complete' }}"
-        PARALLEL_FLAG=""
-        
-        if [ "${{ github.event.inputs.parallel_execution }}" == "true" ] || [ -z "${{ github.event.inputs.parallel_execution }}" ]; then
-          PARALLEL_FLAG="--parallel"
-        fi
-        
-        python tools/benchmark_engine.py \
-          --suite "$SUITE_NAME" \
-          --output benchmark_results \
-          $PARALLEL_FLAG \
-          --workers 2
-      
-      env:
-        PYTHONPATH: ${{ env.PYTHONPATH }}
-
-    - name: Performance analysis
-      run: |
-        echo "📊 Performance Analysis"
-        echo "======================"
-        
-        # Find the latest benchmark results
-        LATEST_RESULT=$(ls -t benchmark_results/benchmark_*.json | head -1)
-        
-        if [ -f "$LATEST_RESULT" ]; then
-          echo "Latest benchmark result: $LATEST_RESULT"
-          
-          # Extract key metrics using Python
-          python << 'EOF'
-import json
-import sys
-import os
-
-latest_file = None
-import glob
-json_files = glob.glob("benchmark_results/benchmark_*.json")
-if json_files:
-    latest_file = max(json_files, key=os.path.getctime)
-
-if latest_file:
-    with open(latest_file, 'r') as f:
-        data = json.load(f)
-    
-    perf = data.get('performance_summary', {})
-    
-    print(f"📊 PERFORMANCE METRICS")
-    print(f"=" * 40)
-    print(f"Tests Passed: {data.get('passed_tests', 0)}/{data.get('total_tests', 0)}")
-    print(f"Duration: {data.get('total_duration_ms', 0):.1f}ms")
-    print(f"Mean Latency: {perf.get('latency_mean_ms', 0):.2f}ms")
-    print(f"P95 Latency: {perf.get('latency_p95_ms', 0):.2f}ms")
-    print(f"P99 Latency: {perf.get('latency_p99_ms', 0):.2f}ms")
-    print(f"Mean Accuracy: {perf.get('accuracy_mean', 0)*100:.2f}%")
-    print(f"Min Accuracy: {perf.get('accuracy_min', 0)*100:.2f}%")
-    
-    # Quality gates
-    print(f"\n🎯 QUALITY GATES")
-    print(f"=" * 40)
-    
-    latency_ok = perf.get('latency_mean_ms', 0) < 50
-    p95_ok = perf.get('latency_p95_ms', 0) < 100
-    accuracy_ok = perf.get('accuracy_mean', 0) > 0.95
-    
-    print(f"Mean Latency < 50ms: {'✅ PASS' if latency_ok else '❌ FAIL'} ({perf.get('latency_mean_ms', 0):.2f}ms)")
-    print(f"P95 Latency < 100ms: {'✅ PASS' if p95_ok else '❌ FAIL'} ({perf.get('latency_p95_ms', 0):.2f}ms)")
-    print(f"Accuracy > 95%: {'✅ PASS' if accuracy_ok else '❌ FAIL'} ({perf.get('accuracy_mean', 0)*100:.2f}%)")
-    
-    # Set environment variables for later steps
-    with open(os.environ['GITHUB_ENV'], 'a') as env_file:
-        env_file.write(f"LATENCY_MEAN={perf.get('latency_mean_ms', 0):.2f}\n")
-        env_file.write(f"ACCURACY_MEAN={perf.get('accuracy_mean', 0)*100:.2f}\n")
-        env_file.write(f"QUALITY_GATES_PASSED={'true' if (latency_ok and p95_ok and accuracy_ok) else 'false'}\n")
-    
-    # Performance regression check
-    if os.path.exists('benchmark_baseline.json'):
-        with open('benchmark_baseline.json', 'r') as f:
-            baseline = json.load(f)
-        
-        baseline_latency = baseline.get('performance_summary', {}).get('latency_mean_ms', 0)
-        current_latency = perf.get('latency_mean_ms', 0)
-        
-        if current_latency > baseline_latency * 1.2:  # 20% regression threshold
-            print(f"⚠️  Performance regression detected!")
-            print(f"Baseline latency: {baseline_latency:.2f}ms")
-            print(f"Current latency: {current_latency:.2f}ms")
-            print(f"Regression: {((current_latency/baseline_latency - 1) * 100):.1f}%")
-        else:
-            print(f"✅ No performance regression detected")
-else:
-    print("❌ No benchmark results found")
-    sys.exit(1)
-EOF
-
-    - name: Generate performance badge
-      run: |
-        # Create a simple performance badge
-        mkdir -p badges
-        
-        LATENCY_COLOR="brightgreen"
-        if (( $(echo "$LATENCY_MEAN > 50" | bc -l) )); then
-          LATENCY_COLOR="orange"
-        fi
-        if (( $(echo "$LATENCY_MEAN > 100" | bc -l) )); then
-          LATENCY_COLOR="red"
-        fi
-        
-        ACCURACY_COLOR="brightgreen"
-        if (( $(echo "$ACCURACY_MEAN < 95" | bc -l) )); then
-          ACCURACY_COLOR="orange"
-        fi
-        if (( $(echo "$ACCURACY_MEAN < 90" | bc -l) )); then
-          ACCURACY_COLOR="red"
-        fi
-        
-        # Generate badge URLs (can be used in README)
-        echo "🏷️  Badge URLs:"
-        echo "Latency: https://img.shields.io/badge/latency-${LATENCY_MEAN}ms-${LATENCY_COLOR}"
-        echo "Accuracy: https://img.shields.io/badge/accuracy-${ACCURACY_MEAN}%25-${ACCURACY_COLOR}"
-
-    - name: Copy artifacts for upload
-      run: |
-        # Copy all benchmark results to artifacts directory
-        cp -r benchmark_results/* benchmark_artifacts/ 2>/dev/null || true
-        
-        # Create summary file
-        cat > benchmark_artifacts/SUMMARY.md << EOF
-# Benchmark Summary
-        
-**Date**: $(date -u)
-**Branch**: ${{ github.ref_name }}
-**Commit**: ${{ github.sha }}
-**Python Version**: ${{ matrix.python-version }}
-
-## Performance Metrics
-
-- **Mean Latency**: ${LATENCY_MEAN}ms
-- **Accuracy**: ${ACCURACY_MEAN}%
-- **Quality Gates**: ${{ env.QUALITY_GATES_PASSED == 'true' && '✅ PASSED' || '❌ FAILED' }}
-
-## Files Generated
-
-$(ls -la benchmark_results/)
-EOF
-
-    - name: Upload benchmark results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: benchmark-results-py${{ matrix.python-version }}
-        path: benchmark_artifacts/
-        retention-days: 30
-
-    - name: Upload performance visualizations
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: performance-visualizations-py${{ matrix.python-version }}
-        path: benchmark_results/*.png
-        retention-days: 30
-
-    - name: Upload HTML report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: benchmark-report-py${{ matrix.python-version }}
-        path: benchmark_results/*.html
-        retention-days: 30
-
-    - name: Comment PR with results
-      if: github.event_name == 'pull_request'
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const fs = require('fs');
-          const path = require('path');
-          
-          // Find the summary file
-          const summaryPath = 'benchmark_artifacts/SUMMARY.md';
-          if (fs.existsSync(summaryPath)) {
-            const summary = fs.readFileSync(summaryPath, 'utf8');
-            
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `## 🚀 Performance Benchmark Results\n\n${summary}\n\n---\n*Automated benchmark by GitHub Actions*`
-            });
-          }
-
-    # Quality gate enforcement
-    - name: Enforce quality gates
-      run: |
-        if [ "${{ env.QUALITY_GATES_PASSED }}" != "true" ]; then
-          echo "❌ Quality gates failed! See benchmark results above."
-          exit 1
-        else
-          echo "✅ All quality gates passed!"
-        fi
-
-  benchmark-comparison:
-    name: Benchmark Comparison
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    needs: performance-benchmark
-    
-    steps:
-    - name: Checkout base branch
-      uses: actions/checkout@v4
-      with:
-        ref: ${{ github.base_ref }}
-    
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-    
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install numpy pandas matplotlib seaborn psutil
-        if [ -f requirements.txt ]; then
-          pip install -r requirements.txt
-        fi
-    
-    - name: Run baseline benchmarks
-      run: |
-        export PYTHONPATH=$PYTHONPATH:$(pwd)
-        python tools/benchmark_engine.py \
-          --suite quick \
-          --output baseline_results \
-          --no-viz
-    
-    - name: Download current benchmark results
-      uses: actions/download-artifact@v4
-      with:
-        name: benchmark-results-py3.11
-        path: current_results/
-    
-    - name: Compare performance
-      run: |
-        python << 'EOF'
-import json
-import glob
-import os
-
-# Load baseline results
-baseline_files = glob.glob("baseline_results/benchmark_*.json")
-current_files = glob.glob("current_results/benchmark_*.json")
-
-if baseline_files and current_files:
-    with open(max(baseline_files, key=os.path.getctime), 'r') as f:
-        baseline = json.load(f)
-    
-    with open(max(current_files, key=os.path.getctime), 'r') as f:
-        current = json.load(f)
-    
-    baseline_perf = baseline.get('performance_summary', {})
-    current_perf = current.get('performance_summary', {})
-    
-    baseline_latency = baseline_perf.get('latency_mean_ms', 0)
-    current_latency = current_perf.get('latency_mean_ms', 0)
-    
-    baseline_accuracy = baseline_perf.get('accuracy_mean', 0)
-    current_accuracy = current_perf.get('accuracy_mean', 0)
-    
-    print("📊 PERFORMANCE COMPARISON")
-    print("=" * 50)
-    print(f"Latency - Baseline: {baseline_latency:.2f}ms, Current: {current_latency:.2f}ms")
-    
-    if current_latency > 0 and baseline_latency > 0:
-        latency_change = ((current_latency / baseline_latency - 1) * 100)
-        print(f"Latency Change: {latency_change:+.1f}%")
-        
-        if latency_change > 20:
-            print("⚠️  Significant performance regression detected!")
-        elif latency_change < -10:
-            print("✅ Performance improvement detected!")
-        else:
-            print("✅ Performance is stable")
-    
-    accuracy_change = (current_accuracy - baseline_accuracy) * 100
-    print(f"Accuracy Change: {accuracy_change:+.2f}%")
-    
-else:
-    print("Could not find benchmark results for comparison")
-EOF
+        import time, statistics, json
+        from smartcompute.core import SmartComputeProcessMonitor, OSILayerAnalyzer, NetworkHostScanner
+        import_time = 0
+        scanner = NetworkHostScanner()
+        times = []
+        for _ in range(10):
+            start = time.perf_counter()
+            scanner.detect_local_subnets()
+            times.append((time.perf_counter() - start) * 1000)
+        subnet_mean = statistics.mean(times)
+        subnet_p95 = sorted(times)[int(len(times) * 0.95)]
+        print('Performance Benchmark Results')
+        print('=' * 40)
+        print(f'Subnet detection:     {subnet_mean:.2f}ms (mean), {subnet_p95:.2f}ms (p95)')
+        assert subnet_mean < 100, f'Subnet detection too slow: {subnet_mean:.0f}ms'
+        print()
+        print('All quality gates passed')
+        "

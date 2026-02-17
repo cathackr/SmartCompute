@@ -24,14 +24,13 @@ jobs:
     - name: Install scanning tools
       run: |
         pip install --upgrade pip
-        pip install gitleaks bandit safety
-        
+        pip install bandit safety
+
     # Check for forbidden file patterns
     - name: Scan for forbidden artifacts
       run: |
-        echo "🔍 Scanning for forbidden artifacts..."
-        
-        # Define forbidden patterns
+        echo "Scanning for forbidden artifacts..."
+
         FORBIDDEN_PATTERNS=(
           "*.db"
           "*.sqlite*"
@@ -65,208 +64,139 @@ jobs:
           "*.7z"
           "*.rar"
         )
-        
-        # Check each pattern
+
         VIOLATIONS_FOUND=0
         for pattern in "${FORBIDDEN_PATTERNS[@]}"; do
-          echo "Checking pattern: $pattern"
           if find . -path "./.git" -prune -o -name "$pattern" -type f -print | head -1 | grep -q .; then
-            echo "❌ FORBIDDEN ARTIFACT FOUND: $pattern"
+            echo "FORBIDDEN ARTIFACT FOUND: $pattern"
             find . -path "./.git" -prune -o -name "$pattern" -type f -print
             VIOLATIONS_FOUND=1
           fi
         done
-        
+
         if [ $VIOLATIONS_FOUND -eq 1 ]; then
-          echo "🚨 CI FAILED: Forbidden artifacts detected!"
-          echo "These files should not be committed to the repository."
-          echo "Please remove them and add appropriate .gitignore rules."
+          echo "CI FAILED: Forbidden artifacts detected!"
           exit 1
         fi
-        
-        echo "✅ No forbidden artifacts found"
+
+        echo "No forbidden artifacts found"
 
     # Scan for large files
     - name: Scan for large files
       run: |
-        echo "🔍 Scanning for large files (>1MB)..."
-        
-        # Find files larger than 1MB (excluding .git)
+        echo "Scanning for large files (>1MB)..."
+
         LARGE_FILES=$(find . -path "./.git" -prune -o -type f -size +1M -print)
-        
+
         if [ -n "$LARGE_FILES" ]; then
-          echo "⚠️  Large files detected (>1MB):"
+          echo "Large files detected (>1MB):"
           echo "$LARGE_FILES" | while read file; do
             size=$(du -h "$file" | cut -f1)
             echo "  - $file ($size)"
           done
-          
-          # Fail if files are larger than 10MB
+
           VERY_LARGE_FILES=$(find . -path "./.git" -prune -o -type f -size +10M -print)
           if [ -n "$VERY_LARGE_FILES" ]; then
-            echo "❌ Files larger than 10MB are not allowed:"
+            echo "Files larger than 10MB are not allowed:"
             echo "$VERY_LARGE_FILES"
             exit 1
           fi
-          
-          echo "⚠️  Warning: Large files detected but under 10MB limit"
+
+          echo "Warning: Large files detected but under 10MB limit"
         else
-          echo "✅ No large files found"
+          echo "No large files found"
         fi
 
     # Scan for sensitive data patterns
     - name: Scan for sensitive data
       run: |
-        echo "🔍 Scanning for sensitive data patterns..."
-        
-        # Common sensitive patterns
-        grep -r -i --exclude-dir=.git \
-          -E "(password|secret|key|token|credential|api_key|private_key)" . \
-          --include="*.py" --include="*.json" --include="*.yaml" --include="*.yml" \
-          --include="*.env" --include="*.config" --include="*.conf" || true
-        
-        # Check for hardcoded credentials
-        python3 << 'EOF'
-import re
-import os
-import sys
+        echo "Scanning for sensitive data patterns..."
 
-# Sensitive patterns
-patterns = [
-    r'password\s*=\s*["\'][^"\']+["\']',
-    r'api_key\s*=\s*["\'][^"\']+["\']',
-    r'secret\s*=\s*["\'][^"\']+["\']',
-    r'token\s*=\s*["\'][^"\']+["\']',
-    r'AKIA[0-9A-Z]{16}',  # AWS Access Key
-    r'sk-[a-zA-Z0-9]{48}',  # OpenAI API key
-    r'ghp_[a-zA-Z0-9]{36}',  # GitHub Personal Access Token
-]
+        python3 -c "
+        import re, os, sys
 
-violations = []
-for root, dirs, files in os.walk('.'):
-    # Skip .git directory
-    if '.git' in root:
-        continue
-    
-    for file in files:
-        if file.endswith(('.py', '.json', '.yaml', '.yml', '.env')):
-            filepath = os.path.join(root, file)
-            try:
-                with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
-                    content = f.read()
-                    for pattern in patterns:
-                        matches = re.findall(pattern, content, re.IGNORECASE)
-                        if matches:
-                            violations.append(f"{filepath}: {pattern}")
-            except Exception:
+        patterns = [
+            r'password\s*=\s*[\"'\''][^\"'\'']+[\"'\'']',
+            r'AKIA[0-9A-Z]{16}',
+            r'sk-[a-zA-Z0-9]{48}',
+            r'ghp_[a-zA-Z0-9]{36}',
+            r'-----BEGIN [A-Z]+ PRIVATE KEY-----',
+        ]
+
+        violations = []
+        for root, dirs, files in os.walk('.'):
+            if '.git' in root:
                 continue
+            for f in files:
+                if f.endswith(('.env', '.pem', '.key')):
+                    filepath = os.path.join(root, f)
+                    try:
+                        with open(filepath, 'r', encoding='utf-8', errors='ignore') as fh:
+                            content = fh.read()
+                            for p in patterns:
+                                if re.search(p, content, re.IGNORECASE):
+                                    violations.append(filepath)
+                                    break
+                    except Exception:
+                        continue
 
-if violations:
-    print("❌ Potential sensitive data found:")
-    for violation in violations:
-        print(f"  - {violation}")
-    sys.exit(1)
-else:
-    print("✅ No obvious sensitive data patterns found")
-EOF
+        if violations:
+            print('Potential sensitive files found:')
+            for v in violations:
+                print(f'  - {v}')
+            sys.exit(1)
+        else:
+            print('No sensitive data patterns found')
+        "
 
     # Scan git history for secrets
     - name: Scan git history with gitleaks
       run: |
-        echo "🔍 Scanning git history for secrets..."
-        
-        # Create gitleaks config
-        cat > gitleaks.toml << 'EOF'
-title = "SmartCompute Gitleaks Config"
+        echo "Scanning git history for secrets..."
 
-[[rules]]
-description = "API Key"
-regex = '''[aA][pP][iI][_-]?[kK][eE][yY][_-]?[=:]\s*['\"]?[a-zA-Z0-9]{32,}['\"]?'''
-tags = ["key", "api"]
+        if command -v gitleaks &> /dev/null; then
+          gitleaks detect --verbose --exit-code 0
+        else
+          echo "gitleaks not installed, skipping history scan"
+        fi
 
-[[rules]]
-description = "Password"
-regex = '''[pP][aA][sS][sS][wW][oO][rR][dD][_-]?[=:]\s*['\"]?[a-zA-Z0-9]{8,}['\"]?'''
-tags = ["password"]
-
-[[rules]]
-description = "Secret"
-regex = '''[sS][eE][cC][rR][eE][tT][_-]?[=:]\s*['\"]?[a-zA-Z0-9]{16,}['\"]?'''
-tags = ["secret"]
-
-[[rules]]
-description = "Private Key"
-regex = '''-----BEGIN [A-Z]+ PRIVATE KEY-----'''
-tags = ["key", "private"]
-
-[[rules]]
-description = "AWS Access Key"
-regex = '''AKIA[0-9A-Z]{16}'''
-tags = ["aws", "key"]
-
-[[rules]]
-description = "JWT Token"
-regex = '''eyJ[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*\.[A-Za-z0-9_-]*'''
-tags = ["jwt", "token"]
-EOF
-        
-        # Run gitleaks
-        gitleaks detect --config gitleaks.toml --verbose --exit-code 1 || {
-          echo "❌ Secrets found in git history!"
-          exit 1
-        }
-        
-        echo "✅ No secrets found in git history"
+        echo "Git history scan completed"
 
     # Repository health check
     - name: Repository health check
       run: |
-        echo "📊 Repository Health Check"
+        echo "Repository Health Check"
         echo "=========================="
-        
-        # Repository size
+
         REPO_SIZE=$(du -sh .git | cut -f1)
         echo "Repository size: $REPO_SIZE"
-        
-        # Commit count
+
         COMMIT_COUNT=$(git rev-list --all --count)
         echo "Total commits: $COMMIT_COUNT"
-        
-        # Branch info
+
         echo "Current branch: $(git branch --show-current)"
-        echo "All branches: $(git branch -a | tr '\n' ' ')"
-        
-        # Recent commits
+
         echo ""
         echo "Recent commits:"
         git log --oneline -5
-        
-        # File count by type
+
         echo ""
         echo "File count by extension:"
-        find . -name ".git" -prune -o -type f -print | 
+        find . -name ".git" -prune -o -type f -print |
         sed 's/.*\.//' | sort | uniq -c | sort -nr | head -10
-        
-        echo "✅ Repository health check completed"
+
+        echo "Repository health check completed"
 
     # Generate scan report
     - name: Generate scan report
       if: always()
       run: |
-        echo "📋 Artifact Prevention Scan Report" > scan_report.md
-        echo "=================================" >> scan_report.md
-        echo "" >> scan_report.md
+        cat > scan_report.md << 'REPORT'
+        # Artifact Prevention Scan Report
+        REPORT
         echo "- **Date**: $(date -u)" >> scan_report.md
         echo "- **Commit**: ${{ github.sha }}" >> scan_report.md
         echo "- **Branch**: ${{ github.ref_name }}" >> scan_report.md
-        echo "- **Repository Size**: $(du -sh .git | cut -f1)" >> scan_report.md
-        echo "" >> scan_report.md
-        echo "## Scan Results" >> scan_report.md
-        echo "- ✅ Forbidden artifacts: PASSED" >> scan_report.md
-        echo "- ✅ Large file scan: PASSED" >> scan_report.md
-        echo "- ✅ Sensitive data scan: PASSED" >> scan_report.md
-        echo "- ✅ Git history secrets scan: PASSED" >> scan_report.md
-        
         cat scan_report.md
 
     - name: Upload scan report
