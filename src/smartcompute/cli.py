@@ -175,7 +175,7 @@ def _cmd_serve(args: argparse.Namespace) -> None:
         import uvicorn
     except ImportError:
         print(
-            "uvicorn is required: pip install smartcompute[enterprise]",
+            "uvicorn is required: pip install smartcompute[free]",
             file=sys.stderr,
         )
         sys.exit(1)

@@ -23,8 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Tier hierarchy: starter (free) < enterprise < industrial
 - **Unified CLI** with subcommands: `scan`, `monitor`, `report`, `activate`, `status`, `serve`, `enterprise`, `industrial`
 - **pyproject.toml** with hatchling build backend and optional dependency groups:
-  - `pip install smartcompute` (Starter, free)
-  - `pip install smartcompute[enterprise]` (Enterprise features)
+  - `pip install smartcompute` (Starter, core only)
+  - `pip install smartcompute[free]` (Dashboard + network discovery)
+  - `pip install smartcompute[enterprise]` (Enterprise features, includes free)
   - `pip install smartcompute[industrial]` (Industrial features)
   - `pip install smartcompute[dev]` (Development tools)
 - **LICENSE-COMMERCIAL** for enterprise/industrial modules

@@ -113,8 +113,9 @@ setup-dev: ## Full development setup
 info: ## Show project information
 	@echo "$(BLUE)SmartCompute v3.0.0 Info$(NC)"
 	@echo "========================"
-	@echo "Starter:    Free monitoring (pip install smartcompute)"
+	@echo "Starter:    Free monitoring + dashboard (pip install smartcompute[free])"
 	@echo "Enterprise: XDR/SIEM/ML (pip install smartcompute[enterprise])"
+	@echo "            (enterprise includes free dependencies)"
 	@echo "Industrial: SCADA/protocols (pip install smartcompute[industrial])"
 	@echo ""
 	@echo "Commands:   smartcompute --help"

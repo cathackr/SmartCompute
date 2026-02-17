@@ -34,7 +34,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-enterprise = [
+free = [
     "cryptography>=41.0.0",
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.31.0",
@@ -43,12 +43,13 @@ enterprise = [
     "requests>=2.32.0",
     "numpy>=1.21.0",
 ]
+enterprise = ["smartcompute[free]"]
 industrial = [
-    "smartcompute[enterprise]",
+    "smartcompute[free]",
     "scapy>=2.4.5",
 ]
 dev = [
-    "smartcompute[enterprise]",
+    "smartcompute[free]",
     "pytest>=7.4.0",
     "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.1.0",

@@ -30,17 +30,25 @@ smartcompute status
 smartcompute monitor
 ```
 
+### Dashboard & Network Discovery (free)
+
+```bash
+# Install free dashboard + monitoring
+pip install smartcompute[free]
+
+# Start the dashboard
+smartcompute serve
+# Open http://localhost:5000
+```
+
 ### Enterprise / Industrial
 
 ```bash
-# Install enterprise features
+# Install enterprise features (includes free)
 pip install smartcompute[enterprise]
 
 # Activate your license
 smartcompute activate <your-license-token>
-
-# Start the API server
-smartcompute serve
 ```
 
 ---
@@ -49,7 +57,7 @@ smartcompute serve
 
 | Tier | Price | Features |
 |------|-------|----------|
-| **Starter** | Free (MIT) | OSI analysis, process monitoring, system resources, HTML reports |
+| **Starter** | Free (MIT) | OSI analysis, process monitoring, system resources, HTML reports, live dashboard, network host discovery |
 | **Enterprise** | $200-750/year | XDR, SIEM, ML threat detection, MCP orchestration, auth, compliance |
 | **Industrial** | $5,000/3 years | All Enterprise + SCADA, industrial protocols (Modbus, OPC-UA, S7comm), industrial compliance |
 
@@ -60,13 +68,16 @@ Contact: ggwre04p0@mozmail.com
 ## Installation
 
 ```bash
-# Starter (free) — only psutil + netifaces
+# Starter (core only) — psutil + netifaces
 pip install smartcompute
 
-# Enterprise — adds cryptography, fastapi, numpy, etc.
+# Free dashboard + network discovery — adds fastapi, uvicorn, etc.
+pip install smartcompute[free]
+
+# Enterprise — same as free (license activates premium features)
 pip install smartcompute[enterprise]
 
-# Industrial — adds scapy + all enterprise deps
+# Industrial — adds scapy + all free deps
 pip install smartcompute[industrial]
 
 # Development

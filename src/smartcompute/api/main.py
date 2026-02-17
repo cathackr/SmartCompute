@@ -19,7 +19,7 @@ try:
 except ImportError:
     raise ImportError(
         "FastAPI is required for the API server. "
-        "Install with: pip install smartcompute[enterprise]"
+        "Install with: pip install smartcompute[free]"
     )
 
 from smartcompute._version import __version__
