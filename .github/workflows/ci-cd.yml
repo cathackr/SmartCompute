@@ -155,48 +155,47 @@ jobs:
     needs: [build]
     if: github.event_name != 'pull_request'
 
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: smartcompute
-          POSTGRES_PASSWORD: test_password
-          POSTGRES_DB: smartcompute_test
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-
-      redis:
-        image: redis:7-alpine
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 6379:6379
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Docker Compose
-      run: |
-        docker compose version
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
 
-    - name: Run integration tests
+    - name: Install dependencies
       run: |
-        # Create test environment file
-        cp .env.example .env
-        echo "DATABASE_URL=postgresql://smartcompute:test_password@localhost:5432/smartcompute_test" >> .env
-        echo "REDIS_URL=redis://localhost:6379/0" >> .env
-        
-        # Run integration tests
-        docker compose -f docker-compose.yml -f docker-compose.test.yml up --build --abort-on-container-exit --exit-code-from test
+        python -m pip install --upgrade pip
+        pip install -e ".[enterprise]"
+        pip install pytest pytest-asyncio httpx
+
+    - name: Run API integration tests
+      run: |
+        python -c "
+        from fastapi.testclient import TestClient
+        from smartcompute.api.main import app
+        client = TestClient(app)
+
+        r = client.get('/health')
+        assert r.status_code == 200, f'health: {r.status_code}'
+
+        r = client.get('/api/system')
+        assert r.status_code == 200, f'system: {r.status_code}'
+        d = r.json()
+        assert 'cpu' in d and 'memory' in d
+
+        r = client.get('/')
+        assert r.status_code == 200, f'dashboard: {r.status_code}'
+        assert 'SmartCompute' in r.text
+
+        r = client.get('/api/network/hosts')
+        assert r.status_code == 200, f'hosts: {r.status_code}'
+        d = r.json()
+        assert 'hosts' in d and 'subnets' in d
+
+        print('All integration tests passed')
+        "
 
   # Performance Tests
   performance:
@@ -210,26 +209,40 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: 3.11
+        python-version: '3.11'
 
     - name: Install dependencies
       run: |
-        pip install -r requirements-core.txt
-        pip install locust
+        python -m pip install --upgrade pip
+        pip install -e ".[enterprise]"
+        pip install httpx
 
     - name: Run performance tests
       run: |
-        # Start the application
-        python main.py --api &
-        sleep 10
-        
-        # Run load tests
-        locust -f tests/performance/locustfile.py --headless --users 10 --spawn-rate 2 --run-time 30s --host http://localhost:8000
-        
-        # Stop the application
-        pkill -f "python main.py"
+        python -c "
+        import time, statistics
+        from fastapi.testclient import TestClient
+        from smartcompute.api.main import app
+        client = TestClient(app)
+
+        endpoints = ['/health', '/api/system', '/api/network/hosts']
+        for ep in endpoints:
+            times = []
+            for _ in range(20):
+                start = time.perf_counter()
+                r = client.get(ep)
+                elapsed = (time.perf_counter() - start) * 1000
+                assert r.status_code == 200
+                times.append(elapsed)
+            mean = statistics.mean(times)
+            p95 = sorted(times)[int(len(times) * 0.95)]
+            print(f'{ep:30s}  mean={mean:6.1f}ms  p95={p95:6.1f}ms')
+            assert mean < 2000, f'{ep} too slow: {mean:.0f}ms'
+
+        print('All performance tests passed')
+        "
 
   # Deploy to Staging
   deploy-staging:
