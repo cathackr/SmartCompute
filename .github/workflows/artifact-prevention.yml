@@ -109,45 +109,29 @@ jobs:
 
     # Scan for sensitive data patterns
     - name: Scan for sensitive data
+      shell: bash
       run: |
         echo "Scanning for sensitive data patterns..."
 
-        python3 -c "
-        import re, os, sys
+        # Check for private keys
+        if grep -rl "BEGIN.*PRIVATE KEY" --include="*.pem" --include="*.key" . 2>/dev/null; then
+          echo "Private key files found in repo!"
+          exit 1
+        fi
 
-        patterns = [
-            r'password\s*=\s*[\"'\''][^\"'\'']+[\"'\'']',
-            r'AKIA[0-9A-Z]{16}',
-            r'sk-[a-zA-Z0-9]{48}',
-            r'ghp_[a-zA-Z0-9]{36}',
-            r'-----BEGIN [A-Z]+ PRIVATE KEY-----',
-        ]
+        # Check for AWS keys
+        if grep -rE "AKIA[0-9A-Z]{16}" --include="*.py" --include="*.json" --include="*.yml" --include="*.env" . 2>/dev/null; then
+          echo "AWS access key pattern found!"
+          exit 1
+        fi
 
-        violations = []
-        for root, dirs, files in os.walk('.'):
-            if '.git' in root:
-                continue
-            for f in files:
-                if f.endswith(('.env', '.pem', '.key')):
-                    filepath = os.path.join(root, f)
-                    try:
-                        with open(filepath, 'r', encoding='utf-8', errors='ignore') as fh:
-                            content = fh.read()
-                            for p in patterns:
-                                if re.search(p, content, re.IGNORECASE):
-                                    violations.append(filepath)
-                                    break
-                    except Exception:
-                        continue
+        # Check for GitHub tokens
+        if grep -rE "ghp_[a-zA-Z0-9]{36}" --include="*.py" --include="*.json" --include="*.yml" --include="*.env" . 2>/dev/null; then
+          echo "GitHub token pattern found!"
+          exit 1
+        fi
 
-        if violations:
-            print('Potential sensitive files found:')
-            for v in violations:
-                print(f'  - {v}')
-            sys.exit(1)
-        else:
-            print('No sensitive data patterns found')
-        "
+        echo "No sensitive data patterns found"
 
     # Scan git history for secrets
     - name: Scan git history with gitleaks
