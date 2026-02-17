@@ -152,9 +152,8 @@ Regular third-party security assessments:
 6. **Lessons Learned**: Process improvement
 
 ### Contact Information
-- **Security Team**: security@smartcompute.ai
-- **Emergency Response**: +1-555-SC-HELP (Industrial customers)
-- **General Support**: support@smartcompute.ai
+- **Security Reports**: Open a [confidential security advisory](https://github.com/cathackr/SmartCompute/security/advisories/new)
+- **General Support**: [GitHub Issues](https://github.com/cathackr/SmartCompute/issues)
 
 ## 📄 Security Updates
 
