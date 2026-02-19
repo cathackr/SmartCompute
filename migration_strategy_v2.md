@@ -8,12 +8,12 @@
 ```python
 payments/
 ├── payment_integration.py     # MercadoPago/Bitso integration
-├── industrial_checkout.html   # $75K Industrial license
-└── enterprise_checkout.html   # $15K Enterprise license
+├── industrial_checkout.html   # $5,000/3 years Industrial license
+└── enterprise_checkout.html   # $200-750/year Enterprise license
 
 # Precios actuales:
-- ENTERPRISE: $15,000 USD/año
-- INDUSTRIAL: $75,000 USD/año
+- ENTERPRISE: $200-750 USD/año
+- INDUSTRIAL: $5,000 USD/3 años
 ```
 
 #### **🏢 Sistema de Licencias (CRÍTICO):**
@@ -78,8 +78,8 @@ cryptography>=41.0.0
 SmartCompute-Industrial-v2.0/
 ├── 💳 payments/                    # PRESERVAR (del repo actual)
 │   ├── payment_integration.py     # MercadoPago/Bitso
-│   ├── industrial_checkout.html   # $75K checkout
-│   └── enterprise_checkout.html   # $15K checkout
+│   ├── industrial_checkout.html   # $5,000/3 years checkout
+│   └── enterprise_checkout.html   # $200-750/year checkout
 │
 ├── 🏢 enterprise/                  # PRESERVAR (del repo actual)
 │   ├── enterprise_licensing.py    # Sistema de licencias
@@ -184,8 +184,8 @@ numpy>=1.24.0
 ## 💰 **PRESERVACIÓN DEL MODELO DE NEGOCIO**
 
 ### **Precios Mantenidos:**
-- **Enterprise**: $15,000 USD/año
-- **Industrial**: $75,000 USD/año
+- **Enterprise**: $200-750 USD/año
+- **Industrial**: $5,000 USD/3 años
 
 ### **Nuevas Funcionalidades v2.0 (sin costo adicional):**
 - ✅ Análisis visual IA de equipos

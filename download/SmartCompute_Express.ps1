@@ -173,8 +173,8 @@ Write-Host "- LinkedIn: https://www.linkedin.com/in/mart%C3%ADn-iribarne-swtf"
 Write-Host "- Email: ggwre04p0@mozmail.com`n"
 
 Write-Host "Versiones de pago disponibles:" -ForegroundColor Cyan
-Write-Host "- Enterprise: `$15,000/año  | Analisis completo sin limites"
-Write-Host "- Industrial: `$25,000/año  | Proteccion infraestructura critica`n"
+Write-Host "- Enterprise: `$200-750/año  | Analisis completo sin limites"
+Write-Host "- Industrial: `$5,000/3 años  | Proteccion infraestructura critica`n"
 
 Write-Host "========================================" -ForegroundColor Green
 Write-Host " ✅ PROCESO COMPLETADO EXITOSAMENTE" -ForegroundColor Green

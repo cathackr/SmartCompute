@@ -421,7 +421,7 @@ class GitHubShowcaseGateway:
 
                 <div class="license-option" onclick="selectLicense('enterprise')">
                     <div class="license-title">Enterprise</div>
-                    <div class="license-price">$15,000 USD/año</div>
+                    <div class="license-price">$200-750 USD/year</div>
                     <ul class="license-features">
                         <li>✅ Hasta 100 agentes simultáneos</li>
                         <li>✅ Análisis avanzado de amenazas</li>
@@ -433,7 +433,7 @@ class GitHubShowcaseGateway:
 
                 <div class="license-option" onclick="selectLicense('industrial')">
                     <div class="license-title">Industrial</div>
-                    <div class="license-price">$25,000 USD/año</div>
+                    <div class="license-price">$5,000 USD/3 años</div>
                     <ul class="license-features">
                         <li>✅ Agentes ilimitados</li>
                         <li>✅ Protocolos industriales (Modbus, OPC UA)</li>
@@ -557,8 +557,8 @@ class GitHubShowcaseGateway:
         let selectedInstallments = null;
 
         const prices = {{
-            'enterprise': 15000,
-            'industrial': 25000
+            'enterprise': 750,
+            'industrial': 5000
         }};
 
         const exchangeRates = {{

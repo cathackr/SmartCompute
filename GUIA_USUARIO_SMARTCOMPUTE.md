@@ -9,7 +9,7 @@
 - ✅ Detección de protocolos y conexiones
 - ⏰ **Limitación**: 60 segundos de análisis
 
-### 💼 **SmartCompute Enterprise - $15,000/año**
+### 💼 **SmartCompute Enterprise - $200-750/año**
 - ✅ Todo lo anterior SIN limitaciones
 - ✅ Detección avanzada de amenazas en tiempo real
 - ✅ Integración Wazuh CTI (Threat Intelligence)
@@ -19,7 +19,7 @@
 - ✅ Soporte técnico prioritario
 - 📊 **ROI promedio**: 285% en el primer año
 
-### 🏭 **SmartCompute Industrial - $25,000/año**
+### 🏭 **SmartCompute Industrial - $5,000/3 años**
 - ✅ Todo lo de Enterprise +
 - ✅ **Detección electromagnética de malware** (Basado en investigación BOTCONF 2024)
 - ✅ Protección de protocolos industriales (SCADA/OT)
@@ -194,13 +194,13 @@ smartcompute_express_dashboard.html
 
 ### 📈 **Beneficios Empresariales**
 
-#### SmartCompute Enterprise ($15k/año)
+#### SmartCompute Enterprise ($200-750/año)
 - **ROI**: 285% promedio en primer año
 - **Ahorro**: $890k anuales en automatización
 - **Prevención**: $2.3M promedio en pérdidas evitadas
 - **Eficiencia**: 78% reducción en incidentes de seguridad
 
-#### SmartCompute Industrial ($25k/año)
+#### SmartCompute Industrial ($5,000/3 años)
 - **Continuidad**: Zero downtime en producción
 - **Cumplimiento**: Automatizado para auditorías
 - **Protección OT**: Especializada para SCADA/PLCs
@@ -234,7 +234,7 @@ smartcompute_express_dashboard.html
 ❌ Sin actualizaciones automáticas
 ```
 
-### 💼 **Enterprise ($15k/año)**
+### 💼 **Enterprise ($200-750/año)**
 ```
 ✅ Análisis ilimitado y en tiempo real
 ✅ Detección avanzada con ML/AI
@@ -248,7 +248,7 @@ smartcompute_express_dashboard.html
 ✅ Cumplimiento automatizado
 ```
 
-### 🏭 **Industrial ($25k/año)**
+### 🏭 **Industrial ($5,000/3 años)**
 ```
 ✅ Todo lo de Enterprise +
 ✅ Detección electromagnética (BOTCONF 2024)

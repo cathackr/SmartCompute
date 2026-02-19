@@ -42,14 +42,14 @@ class SmartComputeExpress:
         print("   • Dashboard HTML interactivo")
         print("   • Resumen de seguridad")
         print("")
-        print("🎯 Disponible en SmartCompute Enterprise ($15k/año):")
+        print("🎯 Disponible en SmartCompute Enterprise ($200-750/año):")
         print("   • Detección avanzada de amenazas en tiempo real")
         print("   • Integración Wazuh CTI")
         print("   • Monitoreo 24/7 automatizado")
         print("   • Alertas personalizadas")
         print("   • Análisis forense completo")
         print("")
-        print("🏭 Disponible en SmartCompute Industrial ($25k/año):")
+        print("🏭 Disponible en SmartCompute Industrial ($5,000/3 años):")
         print("   • Detección electromagnética de malware (BOTCONF 2024)")
         print("   • Protección de protocolos industriales (SCADA/OT)")
         print("   • Cumplimiento ISA/IEC 62443, NERC CIP")
@@ -737,7 +737,7 @@ class SmartComputeExpress:
             </div>
 
             <div class="version-card version-enterprise">
-                <h3><i class="fas fa-building"></i> SmartCompute Enterprise ($15k/año)</h3>
+                <h3><i class="fas fa-building"></i> SmartCompute Enterprise ($200-750/año)</h3>
                 <ul>
                     <li>✅ Todo lo de la versión gratuita</li>
                     <li>✅ Detección avanzada de amenazas</li>
@@ -752,7 +752,7 @@ class SmartComputeExpress:
             </div>
 
             <div class="version-card version-industrial">
-                <h3><i class="fas fa-industry"></i> SmartCompute Industrial ($25k/año)</h3>
+                <h3><i class="fas fa-industry"></i> SmartCompute Industrial ($5,000/3 años)</h3>
                 <ul>
                     <li>✅ Todo lo de Enterprise +</li>
                     <li>✅ Detección electromagnética (BOTCONF 2024)</li>
@@ -788,10 +788,10 @@ class SmartComputeExpress:
             <p>Esta es solo una vista previa. Desbloquea análisis profesional completo:</p>
             <div class="upgrade-buttons">
                 <a href="mailto:ggwre04p0@mozmail.com?subject=Interés en SmartCompute Enterprise" class="btn-upgrade">
-                    💼 Enterprise $15k/año
+                    💼 Enterprise $200-750/año
                 </a>
                 <a href="mailto:ggwre04p0@mozmail.com?subject=Interés en SmartCompute Industrial" class="btn-upgrade">
-                    🏭 Industrial $25k/año
+                    🏭 Industrial $5,000/3 años
                 </a>
             </div>
         </div>

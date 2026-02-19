@@ -312,12 +312,12 @@ git push origin feature/nueva-funcionalidad
 - 🐛 **Issues:** GitHub Issues únicamente
 - ⏱️ **Respuesta:** Best effort (community)
 
-### Enterprise ($15,000/año)
+### Enterprise ($200-750/año)
 - 📧 **Email:** Soporte business hours
 - 🎯 **SLA:** 99.5% uptime garantizado
 - ⏱️ **Respuesta:** 4h crítico, 24h normal
 
-### Industrial ($25,000/año)
+### Industrial ($5,000/3 años)
 - 📞 **24/7:** Soporte prioritario
 - 🎯 **SLA:** 99.9% uptime garantizado
 - ⏱️ **Respuesta:** 1h crítico, 4h normal

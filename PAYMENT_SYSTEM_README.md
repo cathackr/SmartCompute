@@ -21,8 +21,8 @@ Sistema completo de pagos integrado con SmartCompute Industrial v2.0
 - Look & feel idéntico a plataformas reales
 
 ### ✅ Precios y Cuotas
-- **Enterprise**: $15,000 USD = $13,500,000 ARS
-- **Industrial**: $25,000 USD = $22,500,000 ARS
+- **Enterprise**: $200-750 USD/year
+- **Industrial**: $5,000 USD/3 years
 - Cuotas sin interés automáticas
 
 ## 🚀 Instalación Rápida
@@ -86,8 +86,8 @@ smartcompute/
 - **₿ Bitso**: Para cuentas internacionales, USD y crypto
 
 ### 2. Selección de Versión
-- **Enterprise**: $15,000 USD/año (hasta 100 agentes)
-- **Industrial**: $25,000 USD/año (agentes ilimitados)
+- **Enterprise**: $200-750 USD/año (hasta 100 agentes)
+- **Industrial**: $5,000 USD/3 años (agentes ilimitados)
 
 ### 3. Selección de Cuotas
 - **1x**: Pago único sin interés
@@ -102,17 +102,11 @@ smartcompute/
 
 ## 💰 Ejemplos de Precios
 
-### Enterprise ($15,000 USD)
-- **MercadoPago 1x**: $13,500,000 ARS
-- **MercadoPago 12x**: $1,125,000 ARS/mes
-- **Bitso 1x**: $15,000 USD
-- **Bitso 6x**: $2,500 USD/cuota
+### Enterprise ($200-750 USD/year)
+- **Bitso 1x**: $200-750 USD
 
-### Industrial ($25,000 USD)
-- **MercadoPago 1x**: $22,500,000 ARS
-- **MercadoPago 12x**: $1,875,000 ARS/mes
-- **Bitso 1x**: $25,000 USD
-- **Bitso 3x**: $8,333 USD/cuota
+### Industrial ($5,000 USD/3 years)
+- **Bitso 1x**: $5,000 USD
 
 ## 🔐 Seguridad
 

@@ -181,7 +181,7 @@ class SmartComputePaymentDashboard:
             <!-- Enterprise License -->
             <div class="license-card enterprise">
                 <h2>🏢 SmartCompute Enterprise</h2>
-                <div class="license-price">$15,000<small>/año</small></div>
+                <div class="license-price">$200-750<small>/year</small></div>
                 <p><strong>Hasta 100 agentes</strong> · Integración XDR · AI Recommendations</p>
 
                 <div class="features">
@@ -201,7 +201,7 @@ class SmartComputePaymentDashboard:
             <!-- Industrial License -->
             <div class="license-card industrial">
                 <h2>🏭 SmartCompute Industrial</h2>
-                <div class="license-price">$25,000<small>/año</small></div>
+                <div class="license-price">$5,000<small>/3 años</small></div>
                 <p><strong>Agentes ilimitados</strong> · Protocolos industriales · 24/7 Support</p>
 
                 <div class="features">
@@ -360,8 +360,8 @@ class SmartComputePaymentDashboard:
             print(f"   📂 Manual open: {dashboard_path}")
 
         print(f"\n✅ SmartCompute Payment Integration Ready!")
-        print(f"   💰 Enterprise: $15,000/año")
-        print(f"   🏭 Industrial: $25,000/año")
+        print(f"   💰 Enterprise: $200-750/year")
+        print(f"   🏭 Industrial: $5,000/3 años")
         print(f"   🔐 Secure payment processing")
         print(f"   🌐 Professional checkout pages")
         print(f"   📧 B2B sales integration")

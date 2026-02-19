@@ -139,8 +139,8 @@ echo - LinkedIn: https://www.linkedin.com/in/mart%%C3%%ADn-iribarne-swtf
 echo - Email: ggwre04p0@mozmail.com
 echo.
 echo Versiones de pago disponibles:
-echo - Enterprise: $15,000/año  ^| Analisis completo sin limites
-echo - Industrial: $25,000/año  ^| Proteccion infraestructura critica
+echo - Enterprise: $200-750/año  ^| Analisis completo sin limites
+echo - Industrial: $5,000/3 años  ^| Proteccion infraestructura critica
 echo.
 echo ========================================
 echo  ✅ PROCESO COMPLETADO EXITOSAMENTE

@@ -41,13 +41,13 @@ SmartCompute represents a breakthrough in cybersecurity technology, combining ac
 - Community support and standard documentation
 - Ideal for small businesses and individual users
 
-### 2. SmartCompute Enterprise ($15,000/year)
+### 2. SmartCompute Enterprise ($200-750/year)
 - Advanced threat intelligence integration
 - Priority support with 24/7 assistance
 - Custom deployment and configuration
 - **Target Market**: Corporations, financial institutions, healthcare
 
-### 3. SmartCompute Industrial ($25,000/year)
+### 3. SmartCompute Industrial ($5,000/3 years)
 - Electromagnetic malware detection (BOTCONF 2024 implementation)
 - Industrial IoT security protocols
 - SCADA/OT network protection

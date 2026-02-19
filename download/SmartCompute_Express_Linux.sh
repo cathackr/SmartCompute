@@ -105,13 +105,13 @@ class SmartComputeExpress:
         print("   • Dashboard HTML interactivo")
         print("   • Monitoreo de recursos del sistema")
         print("")
-        print("🎯 Disponible en SmartCompute Enterprise ($15k/año):")
+        print("🎯 Disponible en SmartCompute Enterprise ($200-750/año):")
         print("   • Detección avanzada de amenazas en tiempo real")
         print("   • Integración Wazuh CTI")
         print("   • Monitoreo 24/7 automatizado")
         print("   • Análisis ilimitados")
         print("")
-        print("🏭 Disponible en SmartCompute Industrial ($25k/año):")
+        print("🏭 Disponible en SmartCompute Industrial ($5,000/3 años):")
         print("   • Detección electromagnética de malware (BOTCONF 2024)")
         print("   • Protección de protocolos industriales (SCADA/OT)")
         print("   • Cumplimiento ISA/IEC 62443, NERC CIP")
@@ -162,8 +162,8 @@ class SmartComputeExpress:
 <div class="result"><h3>✅ Análisis de Red Completado</h3>
 <p>• Comandos básicos ejecutados<br>• Recursos del sistema monitoreados<br>• Dashboard generado exitosamente</p></div>
 <div class="result"><h3>📈 Actualizar a Versión Completa</h3>
-<p><strong>Enterprise ($15k/año):</strong> Análisis completo sin límites<br>
-<strong>Industrial ($25k/año):</strong> Protección infraestructura crítica</p>
+<p><strong>Enterprise ($200-750/año):</strong> Análisis completo sin límites<br>
+<strong>Industrial ($5,000/3 años):</strong> Protección infraestructura crítica</p>
 <p><a href="https://www.linkedin.com/in/mart%C3%ADn-iribarne-swtf" style="color:#ffd700;">LinkedIn: Martín Iribarne</a></p>
 <p>📧 ggwre04p0@mozmail.com</p></div>
 </div></body></html>'''
@@ -224,7 +224,7 @@ echo "- LinkedIn: https://www.linkedin.com/in/mart%C3%ADn-iribarne-swtf"
 echo "- Email: ggwre04p0@mozmail.com"
 echo ""
 echo "Versiones de pago disponibles:"
-echo "- Enterprise: \$15,000/año | Análisis completo sin límites"
-echo "- Industrial: \$25,000/año | Protección infraestructura crítica"
+echo "- Enterprise: \$200-750/año | Análisis completo sin límites"
+echo "- Industrial: \$5,000/3 años | Protección infraestructura crítica"
 echo ""
 read -p "Presiona ENTER para continuar..."

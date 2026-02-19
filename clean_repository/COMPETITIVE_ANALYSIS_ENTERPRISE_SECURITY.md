@@ -298,10 +298,10 @@ Total 3 años: $210,000 - $610,000
 
 ### **SmartCompute MLE-STAR**
 ```
-Costo Inicial: $15,000 - $50,000
-Licencias Anuales: $8,000 - $25,000 (hosts ilimitados)
-Implementación: $5,000 - $15,000
-Total 3 años: $44,000 - $140,000
+Costo Inicial: $200 - $750
+Licencias Anuales: $200 - $750/year (Enterprise) | $5,000/3 years (Industrial)
+Implementación: Incluida
+Total 3 años: $600 - $5,000
 
 ROI vs Competidores: 300-400% mejor
 ```

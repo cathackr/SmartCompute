@@ -213,8 +213,8 @@ Tech highlights:
 
 Available now:
 🆓 Open source (MIT): Basic monitoring
-💼 Enterprise ($15k/yr): Advanced threat detection
-🏭 Industrial ($25k/yr): Full compliance suite
+💼 Enterprise ($200-750/yr): Advanced threat detection
+🏭 Industrial ($5,000/3 years): Full compliance suite
 
 Try the demo: https://github.com/cathackr/SmartCompute
 

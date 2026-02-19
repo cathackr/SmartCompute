@@ -289,7 +289,7 @@ class PaymentGateway:
         }}
 
         function updateFinalPrice() {{
-            const priceUSD = selectedLicense === 'enterprise' ? 15000 : 25000;
+            const priceUSD = selectedLicense === 'enterprise' ? 750 : 5000;
             let displayPrice, installmentText;
 
             if (selectedPaymentMethod === 'mercadopago') {{
@@ -340,7 +340,7 @@ class PaymentGateway:
                     license: selectedLicense,
                     payment_method: selectedPaymentMethod,
                     installments: selectedInstallments,
-                    amount_usd: selectedLicense === 'enterprise' ? 15000 : 25000
+                    amount_usd: selectedLicense === 'enterprise' ? 750 : 5000
                 }};
 
                 if (selectedPaymentMethod === 'mercadopago') {{
@@ -406,13 +406,13 @@ class PaymentGateway:
         # Test payments
         print("\n🏢 Enterprise License Test:")
         enterprise_mp = self.sc.mp('enterprise', 'test@company.com', 'Test Corp', 'AR')
-        print(f"   ✅ Price: $15,000 USD")
+        print(f"   ✅ Price: $200-750 USD/year")
         print(f"   ✅ MercadoPago ready")
         print(f"   ✅ Hash: {enterprise_mp['hash'][:16]}...")
 
         print("\n🏭 Industrial License Test:")
         industrial_bt = self.sc.bt('industrial', 'test@industrial.com', 'Industrial Corp')
-        print(f"   ✅ Price: $25,000 USD")
+        print(f"   ✅ Price: $5,000 USD/3 years")
         print(f"   ✅ Bitso ready")
         print(f"   ✅ Hash: {industrial_bt['hash'][:16]}...")
 
