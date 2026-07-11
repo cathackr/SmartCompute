@@ -1,0 +1,12 @@
+# SmartCompute OSS — dependencias mínimas del core
+# Solo lo que el código realmente usa hoy. Sin tensorflow/sklearn/pandas/aiohttp/redis/jwt.
+
+psutil>=5.8.0          # monitoreo de procesos, conexiones y recursos del host
+netifaces>=0.11.0      # enumeración de interfaces de red (system_resources)
+cryptography>=42.0.0   # cifrado AES-GCM/Fernet usado por el parsing industrial
+numpy>=1.21.0          # cálculos numéricos livianos en reports/métricas
+fastapi>=0.115.0       # API REST (trae pydantic como dependencia)
+requests>=2.32.0       # cliente HTTP para integraciones simples
+
+# Nota: para levantar el servidor de la API ('smartcompute serve') hace falta
+# uvicorn; instalalo aparte con:  pip install uvicorn[standard]

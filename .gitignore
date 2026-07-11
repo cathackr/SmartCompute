@@ -1,0 +1,53 @@
+# ── Secretos y entorno (EXCLUSIÓN DURA) ──────────────────
+.env
+.env.*
+*.env
+env/
+config_local.*
+client_config.json
+authorized_locations*.json
+
+# ── Datos reales / bases de datos ────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+monitoring_data/
+admin_auth_data/
+download_system/
+
+# ── Credenciales y claves ────────────────────────────────
+*.key
+*.pem
+*.p12
+*.pfx
+secrets*
+*_secret*
+*credential*
+*_token*
+*.token
+
+# ── Entornos virtuales ───────────────────────────────────
+.venv/
+venv/
+ENV/
+*_env/
+
+# ── Python ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# ── Reportes generados / salidas ─────────────────────────
+reports/
+*.html
+backups/
+
+# ── OS / editores ────────────────────────────────────────
+.DS_Store
+.idea/
+.vscode/
