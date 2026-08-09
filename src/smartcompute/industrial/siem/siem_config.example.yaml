@@ -1,0 +1,39 @@
+# SmartCompute — configuración de integraciones SIEM (ejemplo)
+# Copiá este archivo como siem_config.yaml y completá tus endpoints.
+# Todos los conectores vienen deshabilitados por defecto.
+
+siem_settings:
+  enabled: true
+  default_format: "cef"     # cef | json
+  min_risk_score: 0.3       # solo se envían eventos con risk_score >= este umbral
+
+# Splunk via HTTP Event Collector (HEC)
+splunk:
+  enabled: false
+  host: "your-splunk-server.example.com"
+  hec_port: 8088
+  hec_token: "your-hec-token-here"
+  index: "smartcompute"
+  source: "smartcompute"
+  sourcetype_anomaly: "smartcompute:cef"
+  use_ssl: true
+  verify_ssl: true
+
+# Wazuh Manager via JSON-over-syslog (RFC-3164)
+# Requiere <remote> syslog en ossec.conf y un decoder JSON_Decoder
+# para program_name "smartcompute" (ver docstring de WazuhConnector).
+wazuh:
+  enabled: false
+  host: "your-wazuh-manager.example.com"
+  port: 514
+  protocol: "udp"           # udp | tcp
+  tag: "smartcompute"
+
+# Alertas críticas (risk_score >= 0.9) a Slack
+notifications:
+  slack:
+    enabled: false
+    webhook_url: "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+
+debug:
+  log_level: "INFO"         # DEBUG | INFO | WARN | ERROR
