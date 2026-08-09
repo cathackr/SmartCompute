@@ -49,6 +49,14 @@ industrial = [
 serve = ["uvicorn[standard]>=0.31.0"]
 # Integraciones SIEM (Splunk/Wazuh): PyYAML para leer siem_config.yaml
 siem = ["PyYAML>=6.0"]
+# Instalación completa: todos los extras funcionales en un solo paso
+full = [
+    "matplotlib>=3.5.0",
+    "uvicorn[standard]>=0.31.0",
+    "scapy>=2.4.5",
+    "python-can>=4.3.0",
+    "PyYAML>=6.0",
+]
 dev = [
     "uvicorn[standard]>=0.31.0",
     "pytest>=7.4.0",

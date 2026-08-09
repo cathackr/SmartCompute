@@ -63,6 +63,15 @@ los reportes, la API y los parsers de protocolo.
 > El servidor de la API (`serve`) necesita además `uvicorn` — ver el extra
 > `serve` abajo.
 
+### Instalación completa (todo de una vez)
+
+```bash
+pip install "smartcompute[full]"
+```
+
+Instala el core más todos los extras funcionales: dashboard gráfico,
+servidor de la API, captura/IO de buses industriales e integraciones SIEM.
+
 ### Extras opcionales
 
 Si instalaste el paquete (`pip install smartcompute`), usá los extras:
@@ -73,6 +82,7 @@ Si instalaste el paquete (`pip install smartcompute`), usá los extras:
 | `viz` | `pip install "smartcompute[viz]"` (o `pip install matplotlib`) | Habilita `core/dashboard.py` (gráficos del dashboard). |
 | `industrial` | `pip install "smartcompute[industrial]"` (o `pip install scapy python-can`) | Captura/IO de buses (CAN real, etc.); base sobre la que se construirá la captura pasiva. |
 | `siem` | `pip install "smartcompute[siem]"` (o `pip install PyYAML`) | Lectura del `siem_config.yaml` para las [integraciones SIEM](#integraciones-siem). |
+| `full` | `pip install "smartcompute[full]"` | **Todo lo anterior en un solo paso** (`viz` + `serve` + `industrial` + `siem`). |
 
 ---
 
