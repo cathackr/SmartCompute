@@ -29,6 +29,9 @@ Licencia: **MIT** (ver [LICENSE](LICENSE)).
 - **Parsers de protocolos industriales (inicial):** funciones de
   decodificación de payloads para varios protocolos OT (ver
   [Protocolos industriales](#protocolos-industriales)).
+- **Integraciones SIEM:** reenvío de eventos a Splunk (HEC) y Wazuh
+  (JSON sobre syslog), con formateador CEF genérico (ver
+  [Integraciones SIEM](#integraciones-siem)).
 
 ## Qué NO hace todavía
 
@@ -69,6 +72,7 @@ Si instalaste el paquete (`pip install smartcompute`), usá los extras:
 | `serve` | `pip install "smartcompute[serve]"` (o `pip install "uvicorn[standard]"`) | `uvicorn`, para levantar la API con `serve`. |
 | `viz` | `pip install "smartcompute[viz]"` (o `pip install matplotlib`) | Habilita `core/dashboard.py` (gráficos del dashboard). |
 | `industrial` | `pip install "smartcompute[industrial]"` (o `pip install scapy python-can`) | Captura/IO de buses (CAN real, etc.); base sobre la que se construirá la captura pasiva. |
+| `siem` | `pip install "smartcompute[siem]"` (o `pip install PyYAML`) | Lectura del `siem_config.yaml` para las [integraciones SIEM](#integraciones-siem). |
 
 ---
 
@@ -101,6 +105,13 @@ Levantá la API con `python -m smartcompute serve` y consultá:
 | POST | `/api/network/scan` | Dispara un escaneo de host. |
 | GET | `/` | Dashboard HTML. |
 
+### Dashboard gráfico (extra `viz`)
+
+Con el extra `viz` instalado, `core/dashboard.py` genera paneles de análisis
+como este (salida real del template, con datos de ejemplo):
+
+![Dashboard SmartCompute — análisis por capa OSI](assets/dashboard_osi_example.png)
+
 ---
 
 ## Protocolos industriales
@@ -126,6 +137,56 @@ enfoque de monitoreo pasivo y está marcada para refactor: el objetivo es
 reutilizar las funciones de parsing sobre tráfico capturado pasivamente, sin
 levantar servidores ni inyectar tráfico. Hasta entonces, los parsers son la
 pieza estable y reutilizable.
+
+---
+
+## Integraciones SIEM
+
+`smartcompute.industrial.siem` reenvía las anomalías detectadas a los SIEMs
+configurados en un YAML (ver
+[`siem_config.example.yaml`](src/smartcompute/industrial/siem/siem_config.example.yaml)):
+
+| Destino | Transporte | Formato |
+|---|---|---|
+| **Splunk** | HTTP Event Collector (HEC) | CEF o JSON |
+| **Wazuh** | Syslog RFC-3164 (UDP/TCP) | JSON plano (decodificado con `JSON_Decoder`) |
+| Genérico (QRadar, ArcSight, LogRhythm) | — | CEF via `SmartComputeCEFFormatter` |
+
+```yaml
+# siem_config.yaml (mínimo para Wazuh)
+siem_settings:
+  min_risk_score: 0.3        # descarta eventos por debajo del umbral
+wazuh:
+  enabled: true
+  host: "wazuh-manager.example.com"
+  port: 514
+  protocol: "udp"
+```
+
+```python
+from smartcompute.industrial.siem import SIEMManager
+
+manager = SIEMManager("siem_config.yaml")
+manager.send_anomaly({
+    "anomaly_type": "ot_modbus_write",
+    "source_host": "plc-01",
+    "risk_score": 0.85,
+    "description": "Escritura Modbus fuera de ventana de mantenimiento",
+})
+```
+
+En el cable, cada evento viaja como syslog con cuerpo JSON — la severidad
+sale del `risk_score`:
+
+```
+<131>Aug 09 18:20:11 smartcompute smartcompute: {"anomaly_type": "ot_modbus_write", ...}
+```
+
+El conector Wazuh (JSON sobre syslog) está validado contra un Wazuh Manager
+real en un laboratorio OT; el lado Wazuh necesita el `<remote>` syslog y un
+decoder `JSON_Decoder` (el snippet exacto está en el docstring de
+`WazuhConnector`). Los eventos con `risk_score ≥ 0.9` pueden además
+dispararse como alerta a Slack vía webhook.
 
 ---
 
@@ -160,8 +221,8 @@ pip install -r requirements-core.txt pytest pytest-asyncio
 python -m pytest tests/unit
 ```
 
-Suite actual del core: **29 tests** (21 de monitoreo, 2 de análisis OSI,
-6 de CLI).
+Suite actual del core: **42 tests** (21 de monitoreo, 2 de análisis OSI,
+6 de CLI, 13 de integraciones SIEM).
 
 ---
 
